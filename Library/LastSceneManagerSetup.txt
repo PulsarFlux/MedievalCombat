@@ -1,0 +1,13 @@
+sceneSetups:
+- path: Assets/MainMenu.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/CardGame.unity
+  isLoaded: 1
+  isActive: 1
+- path: Assets/Map.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/CardGallery.unity
+  isLoaded: 0
+  isActive: 0

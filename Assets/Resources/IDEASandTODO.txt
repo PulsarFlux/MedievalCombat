@@ -1,0 +1,15 @@
+﻿TODO
+Implement the rest of the cards in the rules document
+Cards that spawn and only last as long as a particular thing is on the battlefield
+
+
+IDEAS
+Developing, multi-stage, contextual battles with non-binary outcomes
+eg.
+Siege battle:
+2 rounds to break down the wall (one needed to pass), final round in city if successful, outside if not.
+3 outcomes: win siege, forces repelled, forces counter-attacked.
+
+BUGS
+Orders not using CP
+Unleash Salvo not displaying number of uses
