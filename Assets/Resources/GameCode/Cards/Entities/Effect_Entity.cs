@@ -17,7 +17,14 @@ namespace Assets.GameCode.Cards.Entities
             Name = ECD.mName;
             Shared = ECD.EData.Shared;
             EData = ECD.EData;
-            Actions = new List<Actions.ActionInfo>(ECD.mActions);
+            if (ECD.mActions != null)
+            {
+                Actions = new List<Actions.ActionInfo>(ECD.mActions);
+            }
+            else
+            {
+                Actions = new List<Actions.ActionInfo>();
+            }
             if (ECD.mPlacedAction != null)
             {
                 PAHolder.AddAction(ECD.mPlacedAction);
