@@ -8,18 +8,18 @@ namespace Assets.GameCode.Cards.Actions
 {
     public class PlaceCard_Action : Action
     {
-        private UI.PlayingCard PlacedCard;
+        private Entity PlacedCard;
         private CardZoneType PlacedZone;
-        public PlaceCard_Action(UI.PlayingCard PlacedCard, CardZoneType PlacedZone)
+        public PlaceCard_Action(Entity PlacedCard, CardZoneType PlacedZone)
         {
             this.PlacedCard = PlacedCard;
             this.PlacedZone = PlacedZone;
         }
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (PlacedCard.GetEntity().getOwnerIndex() == TI.getCPI() && !TI.IsMulligan)
+            if (PlacedCard.getOwnerIndex() == TI.getCPI() && !TI.IsMulligan)
             {
-                  if (!PlacedCard.GetEntity().IsUnit() || !TI.WasUnitPlaced())
+                  if (!PlacedCard.IsUnit() || !TI.WasUnitPlaced())
                   {
                       return PlacedCard.CanBePlaced(TI, PlacedZone);
                   }
@@ -33,15 +33,10 @@ namespace Assets.GameCode.Cards.Actions
                 return false;
             }
         }
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
         {
-            GS.CardPlaced(PlacedZone, PlacedCard.GetEntity());
-            PlacedCard.Placed();
-            TM.CardPlaced(PlacedCard.GetEntity());
-        }
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
+            GS.CardPlaced(PlacedZone, PlacedCard);
+            TM.CardPlaced(PlacedCard);
         }
     }
 }

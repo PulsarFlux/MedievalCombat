@@ -1,6 +1,7 @@
 ﻿TODO
 Implement the rest of the cards in the rules document
 Cards that spawn and only last as long as a particular thing is on the battlefield
+Cards that are added to the hand by other cards
 
 
 IDEAS
@@ -13,3 +14,4 @@ Siege battle:
 BUGS
 Orders not using CP
 Unleash Salvo not displaying number of uses
+AIPlayer losing all cards in hand at start of new round

@@ -115,6 +115,17 @@ namespace Assets.GameCode.Cards
             mPassed = false;
             mCommandPoints = MaxCP;
         }
+        public bool CanSpendCP(int cost)
+        {
+            if (mCommandPoints - cost >= 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Returns whether player has 'cost' command points to spend, spends them if true

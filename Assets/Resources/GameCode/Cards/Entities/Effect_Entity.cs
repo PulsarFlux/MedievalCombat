@@ -8,14 +8,14 @@ namespace Assets.GameCode.Cards.Entities
     [Serializable()]
     public class Effect_Entity : Entity
     {
-        private bool Shared;
+        private bool mIsShared;
         private Loading.EffectData EData;
         public Effects.EffectNode Node;
 
         public Effect_Entity(Loading.EffectCardData ECD)
         {
             Name = ECD.mName;
-            Shared = ECD.EData.Shared;
+            mIsShared = ECD.EData.Shared;
             EData = ECD.EData;
             if (ECD.mActions != null)
             {
@@ -47,7 +47,7 @@ namespace Assets.GameCode.Cards.Entities
             {
                 return false;
             }
-            if (Shared)
+            if (mIsShared)
             {
                 return (CZ.getType() == ZoneType.SharedEffect);
             }
@@ -77,10 +77,37 @@ namespace Assets.GameCode.Cards.Entities
             return Actions;
         }
 
+        public override List<Actions.ActionOrder> GetAIActions(CardGameState gameState, TurnInfo TI)
+        {
+            List<Actions.ActionOrder> results = new List<Actions.ActionOrder>();
+            if (!IsPlaced)
+            {
+                CardZoneType effectCardZoneType = mIsShared ? gameState.SharedEffects.mCardZoneType : Owner.mEffects.mCardZoneType;
+                if (CanBePlaced(TI, effectCardZoneType))
+                {
+                    results.Add(new Actions.ActionOrder(new Actions.PlaceCard_Action(this, effectCardZoneType), null, null));
+                }
+            }
+            else
+            {
+                foreach (Actions.ActionInfo AI in GetActions())
+                {
+                    foreach (Actions.ActionOrder AO in AI.GetPossibleActionOrders(gameState, this))
+                    {
+                        if (AO.Action.CheckValidity(AO.Performer, AO.Selection, TI))
+                        {
+                            results.Add(AO);
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+
         public override void Placed(CardZoneType CZ, CardList CL, CardGameState GS)
         {
             Effects.EffectHolder targetHolder;
-            if (Shared)
+            if (mIsShared)
             {
                 targetHolder = GS.SharedEffects;
             }

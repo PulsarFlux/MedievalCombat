@@ -12,18 +12,6 @@ namespace Assets.GameCode.Cards.Effects
         private int Amount;
         private string AffectedClass;
 
-        //public override Effect DeepCopy(EffectNode node)
-       // {
-        //    AttackCostEffect newEffect = new AttackCostEffect(this, node);
-       //     return newEffect;
-      //  }
-        private AttackCostEffect(AttackCostEffect toCopy, EffectNode node) :
-        base(toCopy, node)
-        {
-            Amount = toCopy.Amount;
-           // AffectedClass = new string(toCopy.AffectedClass);
-        }
-
         public override void Setup(EffectNode EN, EffectData ED)
         {
             base.Setup(EN, ED);

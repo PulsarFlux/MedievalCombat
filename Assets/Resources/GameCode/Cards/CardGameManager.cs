@@ -39,7 +39,7 @@ namespace Assets.GameCode.Cards
 
         State.CardsSetupState mSetupState;
 
-        public void PassAction(Actions.Action Ac)
+        public void PassAction(Actions.ActionOrder Ac)
         {
             TheTurnManager.RecieveAction(Ac);
         }
@@ -74,6 +74,7 @@ namespace Assets.GameCode.Cards
         {
             TheTurnManager.NewRound();
             TheCardGameState.NewRound();
+            NewTurn();
         }
 
 		public void NewGame()

@@ -35,11 +35,11 @@ namespace Assets.GameCode.Cards
             TurnInformation.NewRound();
         }
 
-        public void RecieveAction(Actions.Action Ac)
+        public void RecieveAction(Actions.ActionOrder Ac)
         {
-            if (Ac.CheckValidity(TurnInformation))
+            if (Ac.Action.CheckValidity(Ac.Performer, Ac.Selection, TurnInformation))
             {
-                Ac.Execute(TheCardGameState, this);
+                Ac.Action.Execute(Ac.Performer, Ac.Selection, TheCardGameState, this);
             }
         }
 
@@ -93,8 +93,7 @@ namespace Assets.GameCode.Cards
                 {
                     // TODO - Really need to formalise the above process
                     // but also collecting the results of the match.
-                    TheCardGameManager.PlayerHasWon(playerOneHasWon && !playerTwoHasWon
-                    );
+                    TheCardGameManager.PlayerHasWon(playerOneHasWon && !playerTwoHasWon);
                 }
                 else
                 {

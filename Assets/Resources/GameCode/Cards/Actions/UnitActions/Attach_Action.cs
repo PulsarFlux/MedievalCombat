@@ -12,18 +12,15 @@ namespace Assets.GameCode.Cards.Actions
         public Attach_Action() {}
         public Attach_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        Entity AttachingUnit;
-        Entity TargetUnit;
-
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            return (AttachingUnit.getOwnerIndex() == TI.getCPI() && AttachingUnit.IsUnit() && TargetUnit.IsUnit());
+            return (Performer.getOwnerIndex() == TI.getCPI() && Performer.IsUnit() && Selection[0].IsUnit());
         }
 
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
         {
-            Unit AUnit = (Unit)AttachingUnit;
-            Unit TUnit = (Unit)TargetUnit;
+            Unit AUnit = (Unit)Performer;
+            Unit TUnit = (Unit)Selection[0];
             if (AUnit.getCurrentRange() == TUnit.getCurrentRange() && !AUnit.HasStatus("Attached this turn") && !TUnit.HasStatus("Attached:") && TUnit.IsClass("Infantry"))
             {
                 // Remove previous attach module if present
@@ -33,7 +30,7 @@ namespace Assets.GameCode.Cards.Actions
                     Check[0].Message();
                 }
                 Modules.Module M1 = new Modules.Target.Attached(AUnit, TUnit);
-                Modules.Module M3 = new Modules.NewTurn.Attached_NewTurn(TUnit, AttachingUnit.Name);
+                Modules.Module M3 = new Modules.NewTurn.Attached_NewTurn(TUnit, Performer.Name);
 
                 AUnit.AddStatus("Attached this turn");
                 AUnit.AddStatus("Attached:");
@@ -46,13 +43,6 @@ namespace Assets.GameCode.Cards.Actions
                 TUnit.AddModule(ModuleType.NewTurn, M3);
                 TUnit.AddModule(ModuleType.Removed, new Modules.Removed.RemovedLink(TUnit, M1, M3));
             }
-        }
-
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
-            AttachingUnit = Selector;
-            TargetUnit = Selection[0];
         }
     }
 }

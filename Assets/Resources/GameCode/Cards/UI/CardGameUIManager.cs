@@ -67,10 +67,10 @@ namespace Assets.GameCode.Cards.UI
             PlayingCard PlacedCard = (PlayingCard)inPlacedCard;
             if (!SecondSelect)
             {
-                SendAction(new PlaceCard_Action(PlacedCard, PlacedZone));
+                SendAction(new ActionOrder(new PlaceCard_Action(PlacedCard.GetEntity(), PlacedZone), null, null));
             }   
             UpdateUI();
-            if (((PlayingCard)PlacedCard).IsPlaced() && PlacedCard.GetEntity().PAHolder.HasAction())
+            if ((PlacedCard).IsPlaced() && PlacedCard.GetEntity().PAHolder.HasAction())
             {
                 StartPlacedAction(PlacedCard);
             }
@@ -173,7 +173,7 @@ namespace Assets.GameCode.Cards.UI
             }
             else
             {
-                if (CurrentPossibleActions[CurrentActionIndex].TheAction.IsAvailable(Selection[0].GetEntity()))
+                if (CurrentPossibleActions[CurrentActionIndex].mAction.IsAvailable(Selection[0].GetEntity()))
                 {
                     ActionButton.interactable = true;
                 }
@@ -234,7 +234,7 @@ namespace Assets.GameCode.Cards.UI
             Selection.Clear();
         }
 
-        private void SendAction(Actions.Action TheAction)
+        private void SendAction(Actions.ActionOrder TheAction)
         {
             TheCardGameManager.PassAction(TheAction);
         }
@@ -370,7 +370,7 @@ namespace Assets.GameCode.Cards.UI
 
         public void ContinueButtonPressed()
         {
-            SendAction(new Continue_Action());
+            SendAction(new ActionOrder(new Continue_Action(), null, null));
             ResetActions();
             ResetSelections();
             UpdateUI();
@@ -384,8 +384,7 @@ namespace Assets.GameCode.Cards.UI
                 {
                     if (CurrentAction.Max == 0)
                     {
-                        CurrentAction.TheAction.SetInfo(ActiveCard.GetEntity(), new List<Entities.Entity>());
-                        SendAction(CurrentAction.TheAction);
+                        SendAction(new ActionOrder(CurrentAction.mAction, ActiveCard.GetEntity(), new List<Entities.Entity>()));
                         ResetActions();
                         ResetSelections();
                         UpdateUI();
@@ -402,8 +401,7 @@ namespace Assets.GameCode.Cards.UI
                     {
                         Result.Add(C.GetEntity());
                     }
-                    CurrentAction.TheAction.SetInfo(ActiveCard.GetEntity(), Result);
-                    SendAction(CurrentAction.TheAction);
+                    SendAction(new ActionOrder(CurrentAction.mAction, ActiveCard.GetEntity(), Result));
                     ResetActions();
                     ResetSelections();
                     UpdateUI();

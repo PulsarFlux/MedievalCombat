@@ -123,21 +123,22 @@ namespace Assets.GameCode.Cards.Entities
             }
         }
 
-        public virtual bool CanAttack(Unit Target)
+        public virtual int CanAttack(Unit Target)
         {
             int Result = TMCombiner.Run(this, Target);
-            if (Result != -1)
+            if (Result == -1 || !Owner.CanSpendCP(Result))
             {
-                return Owner.SpendCP(Result);
+                Result = -1;
             }
-            else
-            {
-                return false;
-            }
+            return Result;
         }
         public void DoAttack(Unit Target)
         {
-            AMCombiner.Run(this, Target);
+            int cost = CanAttack(Target);
+            if (cost != -1 && Owner.SpendCP(cost))
+            {
+                AMCombiner.Run(this, Target);
+            }
         }
 
         public void CheckTargetStatus(Unit Attacker, TargettingData TD, ref int Cost)
@@ -222,6 +223,35 @@ namespace Assets.GameCode.Cards.Entities
         public override List<ActionInfo> GetActions()
         {
             return Actions;
+        }
+
+        public override List<ActionOrder> GetAIActions(CardGameState gameState, TurnInfo TI)
+        {
+            List<ActionOrder> results = new List<ActionOrder>();
+            if (!IsPlaced)
+            {
+                foreach (CardZone CZ in Owner.mBoard.RangeZones)
+                {
+                    if (CanBePlaced(TI, CZ.Type))
+                    {
+                        results.Add(new ActionOrder(new PlaceCard_Action(this, CZ.Type), null, null));
+                    }
+                }
+            }
+            else
+            {
+                foreach (ActionInfo AI in GetActions())
+                {
+                    foreach (ActionOrder AO in AI.GetPossibleActionOrders(gameState, this))
+                    {
+                        if (AO.Action.CheckValidity(AO.Performer, AO.Selection, TI))
+                        {
+                            results.Add(AO);
+                        }
+                    }
+                }
+            }
+            return results;
         }
 
         public void AddModule(ModuleType Type, Module TheModule)

@@ -12,11 +12,10 @@ namespace Assets.GameCode.Cards.Effects
         protected int NumNewTurns;
         protected List<PersistanceModule> mPersistanceModules;
 
-       // public abstract Effect DeepCopy(EffectNode node);
         protected Effect()
         {
         }
-        protected Effect(Effect toCopy, EffectNode node)
+        /*protected Effect(Effect toCopy, EffectNode node)
         {
             Node = toCopy.Node;
             NewTurnLength = toCopy.NewTurnLength;
@@ -26,7 +25,7 @@ namespace Assets.GameCode.Cards.Effects
             {
               //  mPersistanceModules.Add(PM.DeepCopy());
             }
-        }
+        }*/
         public virtual bool NewTurn(CardGameState GS)
         {
             NumNewTurns += 1;
@@ -55,12 +54,15 @@ namespace Assets.GameCode.Cards.Effects
         }
         public virtual void Setup(EffectNode EN, Loading.EffectData ED)
         {
-            foreach (Loading.ModuleData MD in ED.Modules)
+            if (ED.Modules != null)
             {
-                Modules.Persistance.PersistanceModule M =
-                        (Modules.Persistance.PersistanceModule)Loading.CardLoading.GetModuleFromData(MD);
-                M.Setup(EN.GetEntity(), MD);
-                AddPersistanceModule(M);
+                foreach (Loading.ModuleData MD in ED.Modules)
+                {
+                    Modules.Persistance.PersistanceModule M =
+                            (Modules.Persistance.PersistanceModule)Loading.CardLoading.GetModuleFromData(MD);
+                    M.Setup(EN.GetEntity(), MD);
+                    AddPersistanceModule(M);
+                }
             }
         }
         public abstract void PassSelection(List<Entities.Entity> Selection);

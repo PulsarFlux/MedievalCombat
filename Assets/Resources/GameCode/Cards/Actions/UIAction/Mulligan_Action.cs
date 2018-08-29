@@ -12,9 +12,9 @@ namespace Assets.GameCode.Cards.Actions
         public Mulligan_Action()
         {
         }
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (mMulliganedCard.getOwnerIndex() == TI.getCPI() && TI.IsMulligan)
+            if (Performer.getOwnerIndex() == TI.getCPI() && TI.IsMulligan)
             {
                 return true;
             }
@@ -23,14 +23,9 @@ namespace Assets.GameCode.Cards.Actions
                 return false;
             }
         }
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
         {
-            GS.MulliganCard(mMulliganedCard);
-        }
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
-            mMulliganedCard = Selector;
+            GS.MulliganCard(Performer);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Assets.GameCode.Cards
             mDefaultDeckSpec = State.StateHolder.StateManager.DefaultDeckSpec;
             mTurnInfo = new TurnInfo();
         }
-        public CardGameState(CardGameState toCopy)
+        /*public CardGameState(CardGameState toCopy)
         {
             SharedEffects = new Effects.EffectHolder(toCopy.SharedEffects, this);
             for (int i = 0; i < Players.Length; i++)
@@ -37,7 +37,7 @@ namespace Assets.GameCode.Cards
             mCardPool = State.StateHolder.StateManager.CardPool;
             mDefaultDeckSpec = State.StateHolder.StateManager.DefaultDeckSpec;
           //  mTurnInfo = new TurnInfo(toCopy.mTurnInfo);
-        }
+        }*/
 
         public void Init()
         {

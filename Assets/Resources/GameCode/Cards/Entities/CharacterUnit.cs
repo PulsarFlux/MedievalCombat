@@ -60,24 +60,18 @@ namespace Assets.GameCode.Cards.Entities
             return true;
         }
 
-        public override bool CanAttack(Unit Target)
+        public override int CanAttack(Unit Target)
         {
+            int result = -1;
             if ((getCurrentRange() == Range.Short && CanBeShort) | (getCurrentRange() == Range.Long && CanBeLong))
             {
-                int Result = TMCombiner.Run(this, Target);
-                if (Result != -1)
+                result = TMCombiner.Run(this, Target);
+                if (result == -1 || !Owner.CanSpendCP(result))
                 {
-                    return Owner.SpendCP(Result);
-                }
-                else
-                {
-                    return false;
+                    result = -1;
                 }
             }
-            else
-            {
-                return false;
-            }
+            return result;
         }
     }
 }

@@ -12,12 +12,12 @@ namespace Assets.GameCode.Cards.Actions
         public Continue_Action()
         {
         }
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             return true;
         }
 
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
         {
             if (TM.getTI().WasCardPlaced() ||
                 GS.Players[TM.getTI().getCPI()].HasSpentCP() ||
@@ -38,10 +38,6 @@ namespace Assets.GameCode.Cards.Actions
                     TM.Continue();
                 }
             }
-        }
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
         }
     }
 }

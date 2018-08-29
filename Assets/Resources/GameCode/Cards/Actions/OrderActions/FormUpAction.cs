@@ -11,29 +11,27 @@ namespace Assets.GameCode.Cards.Actions
 
         private int mTempHPAmount;
         private string mClassRestriction;
-        private Effects.Orders.Order mPerformer;
-        private List<Entities.Unit> mSelection;
 
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             bool result = true;
             if (mClassRestriction != "")
             {
-                foreach (Entities.Unit U in mSelection)
+                foreach (Entities.Unit U in Selection)
                 {
                     result &= U.IsClass(mClassRestriction);
                 }
             }
-            return result && mSelection[0].Owner.getCP() >= GetMinCost();
+            return result && Selection[0].Owner.getCP() >= GetMinCost();
         }
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
         {
-            foreach (Entities.Unit U in mSelection)
+            foreach (Entities.Unit U in Selection)
             {
                 U.TemporaryHP += mTempHPAmount;
             }
-            mSelection[0].Owner.SpendCP(GetMinCost());
-            mPerformer.OrderUsed();
+            Selection[0].Owner.SpendCP(GetMinCost());
+            ((Effects.Orders.Order)((Entities.Effect_Entity)Performer).GetEffect()).OrderUsed();
         }
         public override void SetInitialData(List<string> data)
         {
@@ -45,15 +43,6 @@ namespace Assets.GameCode.Cards.Actions
             else
             {
                 mClassRestriction = "";
-            }
-        }
-        public override void SetInfo(Entities.Entity Performer, List<Entities.Entity> Selection)
-        {
-            mPerformer = ((Effects.Orders.Order)(((Entities.Effect_Entity)Performer).GetEffect()));
-            mSelection = new List<Assets.GameCode.Cards.Entities.Unit>();
-            foreach (Entities.Entity E in Selection)
-            {
-                mSelection.Add((Entities.Unit)E);
             }
         }
         public override bool IsAvailable(Entities.Entity Performer)

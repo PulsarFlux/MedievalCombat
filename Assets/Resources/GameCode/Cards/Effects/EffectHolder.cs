@@ -12,13 +12,15 @@ namespace Assets.GameCode.Cards.Effects
         private CardGameState TheCardGameState;
         public int OwnerIndex;
         public List<EffectNode> Nodes = new List<EffectNode>();
+        public CardZoneType mCardZoneType { get; private set; }
         public EffectHolder(CardGameState GS, bool Shared, int OwnerIndex)
         {
             TheCardGameState = GS;
             this.Shared = Shared;
             this.OwnerIndex = OwnerIndex;
+            mCardZoneType = new CardZoneType(Shared ? ZoneType.SharedEffect : ZoneType.Effect, Range.NA, OwnerIndex);
         }
-        public EffectHolder(EffectHolder toCopy, CardGameState GS)
+        /*public EffectHolder(EffectHolder toCopy, CardGameState GS)
         {
             TheCardGameState = GS;
             this.Shared = toCopy.Shared;
@@ -27,7 +29,7 @@ namespace Assets.GameCode.Cards.Effects
             {
               //  Nodes.Add(new EffectNode(EN));
             }
-        }
+        }*/
 
         public void AddNode(EffectNode EN)
         {
