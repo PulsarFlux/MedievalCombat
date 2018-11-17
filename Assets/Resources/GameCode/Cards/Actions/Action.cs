@@ -29,7 +29,7 @@ namespace Assets.GameCode.Cards.Actions
             SetCostInfo(hasCertainCost, minCost);
         }
         public abstract bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI);
-        public abstract void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM);
+        public abstract void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS);
         public void SetCostInfo(bool hasCertainCost, int minCost)
         {
             mHasCertainCost = hasCertainCost;

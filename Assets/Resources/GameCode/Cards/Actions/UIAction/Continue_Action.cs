@@ -9,33 +9,35 @@ namespace Assets.GameCode.Cards.Actions
 {
     class Continue_Action : Action
     {
-        public Continue_Action()
+        private TurnManager mTurnManager;
+        public Continue_Action(TurnManager turnManager)
         {
+            mTurnManager = turnManager;
         }
         public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             return true;
         }
 
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            if (TM.getTI().WasCardPlaced() ||
-                GS.Players[TM.getTI().getCPI()].HasSpentCP() ||
-                TM.getTI().IsDeployment() ||
-                TM.getTI().IsMulligan)
+            if (mTurnManager.getTI().WasCardPlaced() ||
+                GS.Players[mTurnManager.getTI().getCPI()].HasSpentCP() ||
+                mTurnManager.getTI().IsDeployment() ||
+                mTurnManager.getTI().IsMulligan)
             {
-                TM.Continue();
+                mTurnManager.Continue();
             }
             else
             {
-                if (GS.Players[TM.getTI().getCPI()].SpendCP(1))
+                if (GS.Players[mTurnManager.getTI().getCPI()].SpendCP(1))
                 {
-                    TM.Continue();
+                    mTurnManager.Continue();
                 }
                 else
                 {
-                    GS.Players[TM.getTI().getCPI()].Pass();
-                    TM.Continue();
+                    GS.Players[mTurnManager.getTI().getCPI()].Pass();
+                    mTurnManager.Continue();
                 }
             }
         }

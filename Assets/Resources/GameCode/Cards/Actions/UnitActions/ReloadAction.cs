@@ -26,7 +26,7 @@ namespace Assets.GameCode.Cards.Actions
             return ((Unit)Performer).HasStatus("Needs reloading");
         }
 
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             if (((Unit)Performer).Owner.SpendCP(mMinCost))
             {

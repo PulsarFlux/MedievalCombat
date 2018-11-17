@@ -17,7 +17,7 @@ namespace Assets.GameCode.Cards.Actions
             return (Performer.getOwnerIndex() == TI.getCPI() && Performer.IsUnit() && Selection[0].IsUnit());
         }
 
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             Unit AUnit = (Unit)Performer;
             Unit TUnit = (Unit)Selection[0];

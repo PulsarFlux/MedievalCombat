@@ -370,7 +370,7 @@ namespace Assets.GameCode.Cards.UI
 
         public void ContinueButtonPressed()
         {
-            SendAction(new ActionOrder(new Continue_Action(), null, null));
+            TheCardGameManager.Continue();
             ResetActions();
             ResetSelections();
             UpdateUI();

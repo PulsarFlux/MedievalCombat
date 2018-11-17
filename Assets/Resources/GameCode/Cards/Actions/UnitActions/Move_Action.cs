@@ -21,7 +21,7 @@ namespace Assets.GameCode.Cards.Actions
             return false;
         }
 
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             if (!((Unit)Performer).HasStatus("Moved"))
             {

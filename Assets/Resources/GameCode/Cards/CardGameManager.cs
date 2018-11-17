@@ -43,6 +43,12 @@ namespace Assets.GameCode.Cards
         {
             TheTurnManager.RecieveAction(Ac);
         }
+        // Wrap passing a continue action as it is awkward
+        // and contains no information we do not already have.
+        public void Continue()
+        {
+            TheTurnManager.RecieveAction(new Actions.ActionOrder(new Actions.Continue_Action(TheTurnManager), null, null));
+        }
 
        /* private void AddCardListToUI(CardList Hand)
         {

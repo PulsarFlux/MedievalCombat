@@ -39,7 +39,7 @@ namespace Assets.GameCode.Cards
         {
             if (Ac.Action.CheckValidity(Ac.Performer, Ac.Selection, TurnInformation))
             {
-                Ac.Action.Execute(Ac.Performer, Ac.Selection, TheCardGameState, this);
+                Ac.Action.Execute(Ac.Performer, Ac.Selection, TheCardGameState);
             }
         }
 

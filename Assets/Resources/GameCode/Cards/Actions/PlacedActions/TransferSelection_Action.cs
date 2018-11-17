@@ -17,7 +17,7 @@ namespace Assets.GameCode.Cards.Actions
             return (Performer.getType() == CardType.Effect);
         }
 
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             ((Effect_Entity)Performer).GetEffect().PassSelection(Selection);
         }

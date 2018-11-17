@@ -16,7 +16,7 @@ namespace Assets.GameCode.Cards.Actions
         {
             return ((Entities.Effect_Entity)Performer).Owner.getCP() >= GetMinCost();
         }
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             int numSalvos = 0;
             foreach (CardZone CZ in ((Entities.Effect_Entity)Performer).Owner.mBoard.RangeZones)

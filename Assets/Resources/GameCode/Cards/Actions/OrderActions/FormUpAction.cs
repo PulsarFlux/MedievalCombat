@@ -24,7 +24,7 @@ namespace Assets.GameCode.Cards.Actions
             }
             return result && Selection[0].Owner.getCP() >= GetMinCost();
         }
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             foreach (Entities.Unit U in Selection)
             {

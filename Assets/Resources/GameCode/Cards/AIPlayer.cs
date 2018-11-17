@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.GameCode.Cards.Entities;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
-using System.IO;
 
 namespace Assets.GameCode.Cards
 {
@@ -23,58 +20,81 @@ namespace Assets.GameCode.Cards
         {
             if (turnInfo.IsMulligan)
             {
-                // Pass in the mulligan for now
-                manager.PassAction(new Actions.ActionOrder(new Actions.Continue_Action(), null, null));
+                // Pass in the mulligan for now 
+                manager.Continue();
             }
             else
             {
-                List<Actions.ActionOrder> availableActions = new List<Actions.ActionOrder>();
-                foreach (Entity E in mHand.Cards)
+                bool shouldPass = false;
+                List<Actions.ActionOrder> availableActions = GetAvailableActions(turnInfo, gameState);
+
+                while (!shouldPass && availableActions.Count > 0)
                 {
-                    availableActions.AddRange(E.GetAIActions(gameState, turnInfo));
-                }
-                foreach (Effects.EffectNode EN in mEffects.Nodes)
-                {
-                    availableActions.AddRange(EN.GetEntity().GetAIActions(gameState, turnInfo));
-                }
-                foreach (Effects.EffectNode EN in gameState.SharedEffects.Nodes)
-                {
-                    availableActions.AddRange(EN.GetEntity().GetAIActions(gameState, turnInfo));
-                }
-                foreach (CardZone CZ in mBoard.RangeZones)
-                {
-                    foreach (Entity E in CZ.List.Cards)
+                    float passScore = EvaluateGameState(gameState);
+                    float maxScore = 0;
+                    Actions.ActionOrder bestAction = null;
+                    foreach (Actions.ActionOrder action in availableActions)
                     {
-                        availableActions.AddRange(E.GetAIActions(gameState, turnInfo));
+                        float actionScore = EvaluateAction(action, gameState);
+                        if (actionScore > maxScore)
+                        {
+                            maxScore = actionScore;
+                            bestAction = action;
+                        }
+                    }
+                    if (maxScore > passScore)
+                    {
+                        // Update real game state with action.
+                        manager.PassAction(bestAction);
+                        availableActions = GetAvailableActions(turnInfo, gameState);
+                    }
+                    else
+                    {
+                        shouldPass = true;
                     }
                 }
 
-                // We are supposed to serialise the actions along with the game state
-                // and then measure the impact of the action on the new game state to
-                // see which one is best.
-
-                if (availableActions.Count != 0)
-                {
-                    Actions.ActionOrder chosenAction = availableActions[mRandom.Next(0, availableActions.Count)];
-                    manager.PassAction(chosenAction);
-                }
-
                 // Continue at the end of the turn
-                manager.PassAction(new Actions.ActionOrder(new Actions.Continue_Action(), null, null));
-
-                /*
-                 * Serializes the game state
-                 * Probably want to move serialisation to Utility class
-                 * 
-                MemoryStream stream = new MemoryStream();
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, gameState);
-                stream.Seek(0, SeekOrigin.Begin);
-                CardGameState copyState = (CardGameState)formatter.Deserialize(stream); */
+                manager.Continue();
             }
         }
 
-        //private 
+        private List<Actions.ActionOrder> GetAvailableActions(TurnInfo turnInfo, CardGameState gameState)
+        {
+            List<Actions.ActionOrder> availableActions = new List<Actions.ActionOrder>();
+            foreach (Entity E in mHand.Cards)
+            {
+                availableActions.AddRange(E.GetAIActions(gameState, turnInfo));
+            }
+            foreach (Effects.EffectNode EN in mEffects.Nodes)
+            {
+                availableActions.AddRange(EN.GetEntity().GetAIActions(gameState, turnInfo));
+            }
+            foreach (Effects.EffectNode EN in gameState.SharedEffects.Nodes)
+            {
+                availableActions.AddRange(EN.GetEntity().GetAIActions(gameState, turnInfo));
+            }
+            foreach (CardZone CZ in mBoard.RangeZones)
+            {
+                foreach (Entity E in CZ.List.Cards)
+                {
+                    availableActions.AddRange(E.GetAIActions(gameState, turnInfo));
+                }
+            }
+            return availableActions;
+        }
+
+        private static float EvaluateGameState(CardGameState gameState)
+        {
+            return 1.0f;
+        }
+        private static float EvaluateAction(Actions.ActionOrder action, CardGameState gameState)
+        {
+            Actions.ActionOrder actionCopy = null;
+            CardGameState stateCopy = null;
+            Utility.Serialiser.CopyCardGameStateAndAction(gameState, out stateCopy, action, out actionCopy);
+            return 1.0f;
+        }
     }
 }
 

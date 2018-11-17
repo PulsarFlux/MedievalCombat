@@ -18,7 +18,7 @@ namespace Assets.GameCode.Cards.Actions
             return Performer.IsUnit();
         }
 
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             Unit D = (Unit)Performer;
             if (D.HasStatus("Defending"))
