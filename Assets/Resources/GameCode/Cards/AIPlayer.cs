@@ -16,6 +16,7 @@ namespace Assets.GameCode.Cards
             mRandom = new Random();
         }
 
+        // Remember that actions that were not made from a certain game state cannot be used in any way with it.
         public override void TakeTurn(TurnInfo turnInfo, CardGameState gameState, CardGameManager manager)
         {
             if (turnInfo.IsMulligan)
@@ -30,12 +31,12 @@ namespace Assets.GameCode.Cards
 
                 while (!shouldPass && availableActions.Count > 0)
                 {
-                    float passScore = EvaluateGameState(gameState);
+                    float passScore = EvaluateGameState(getIndex(), gameState);
                     float maxScore = 0;
                     Actions.ActionOrder bestAction = null;
                     foreach (Actions.ActionOrder action in availableActions)
                     {
-                        float actionScore = EvaluateAction(action, gameState);
+                        float actionScore = EvaluateAction(getIndex(), action, gameState);
                         if (actionScore > maxScore)
                         {
                             maxScore = actionScore;
@@ -84,16 +85,20 @@ namespace Assets.GameCode.Cards
             return availableActions;
         }
 
-        private static float EvaluateGameState(CardGameState gameState)
+        private static float EvaluateGameState(int playerIndex, CardGameState gameState)
         {
             return 1.0f;
         }
-        private static float EvaluateAction(Actions.ActionOrder action, CardGameState gameState)
+        // This assumes the action is valid, it will not check!
+        private static float EvaluateAction(int playerIndex, Actions.ActionOrder action, CardGameState gameState)
         {
             Actions.ActionOrder actionCopy = null;
             CardGameState stateCopy = null;
             Utility.Serialiser.CopyCardGameStateAndAction(gameState, out stateCopy, action, out actionCopy);
-            return 1.0f;
+
+            // We assume this is a valid action otherwise this action should never have been made available.
+            actionCopy.Action.Execute(actionCopy.Performer, actionCopy.Selection, stateCopy);
+            return EvaluateGameState(playerIndex, stateCopy);
         }
     }
 }
