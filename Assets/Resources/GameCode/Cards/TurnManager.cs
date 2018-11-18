@@ -45,7 +45,6 @@ namespace Assets.GameCode.Cards
 
         public void CardPlaced(Entities.Entity Card)
         {
-            TurnInformation.CardPlaced(Card);
             if (TurnInformation.IsFirstDeployment())
             {
                 ((Entities.Unit)Card).AddStatus("Deployed");

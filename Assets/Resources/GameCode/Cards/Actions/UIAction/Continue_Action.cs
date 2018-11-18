@@ -21,7 +21,7 @@ namespace Assets.GameCode.Cards.Actions
 
         public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            if (mTurnManager.getTI().WasCardPlaced() ||
+            if (GS.Players[mTurnManager.getTI().getCPI()].WasCardPlaced() ||
                 GS.Players[mTurnManager.getTI().getCPI()].HasSpentCP() ||
                 mTurnManager.getTI().IsDeployment() ||
                 mTurnManager.getTI().IsMulligan)

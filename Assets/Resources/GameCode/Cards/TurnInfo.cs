@@ -10,8 +10,6 @@ namespace Assets.GameCode.Cards
     {
         int FirstPlayerIndex = 0;
         int CurrentPlayerIndex;
-        int UnitCardsPlaced = 0;
-        int OtherCardsPlaced = 0;
         bool mIsFirstDeployment;
         bool mIsDeployment;
         bool mIsMulligan;
@@ -34,17 +32,6 @@ namespace Assets.GameCode.Cards
             get { return mIsMulligan; } 
             private set { mIsMulligan = value; } }
 
-        public void CardPlaced(Entities.Entity C)
-        {
-            if (C.IsUnit())
-            {
-                UnitCardsPlaced += 1;
-            }
-            else
-            {
-                OtherCardsPlaced += 1;
-            }
-        }
         public bool NewTurn()
         {
             bool finishedMulligan = false;
@@ -64,8 +51,6 @@ namespace Assets.GameCode.Cards
             else
             {
                 ChangePlayer();
-                UnitCardsPlaced = 0;
-                OtherCardsPlaced = 0;
                 if (!mIsFirstDeployment)
                 {
                     mIsDeployment = false;
@@ -89,8 +74,6 @@ namespace Assets.GameCode.Cards
             {
                 FirstPlayerIndex = 0;
             }
-            UnitCardsPlaced = 0;
-            OtherCardsPlaced = 0;
             if (!mIsMulligan)
             {
                 StartBattle();
@@ -110,29 +93,6 @@ namespace Assets.GameCode.Cards
             else
             {
                 CurrentPlayerIndex = 0;
-            }
-        }
-
-        public bool WasUnitPlaced()
-        {
-            if (UnitCardsPlaced > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public bool WasCardPlaced()
-        {
-            if (UnitCardsPlaced + OtherCardsPlaced > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
     }

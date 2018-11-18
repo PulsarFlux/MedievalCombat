@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Assets.GameCode.Cards.Actions
 {
+    [Serializable()]
     public class ActionOrder
     {
         public ActionOrder(Action action, Entities.Entity performer, List<Entities.Entity> selection)

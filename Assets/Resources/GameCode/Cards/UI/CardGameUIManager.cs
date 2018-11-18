@@ -294,7 +294,7 @@ namespace Assets.GameCode.Cards.UI
             {
                 ContinueButton.GetComponentInChildren<Text>().text = "Done";
             }
-            else if (TheTurnInformation.WasCardPlaced() | TheCardGameState.Players[TheTurnInformation.getCPI()].HasSpentCP() | TheTurnInformation.IsDeployment())
+            else if (TheCardGameState.Players[TheTurnInformation.getCPI()].WasCardPlaced() || TheCardGameState.Players[TheTurnInformation.getCPI()].HasSpentCP() || TheTurnInformation.IsDeployment())
             {
                 ContinueButton.GetComponentInChildren<Text>().text = "Continue";
             }

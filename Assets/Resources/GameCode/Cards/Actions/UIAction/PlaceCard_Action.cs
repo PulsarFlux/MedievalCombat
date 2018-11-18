@@ -6,6 +6,7 @@ using Assets.GameCode.Cards.Entities;
 
 namespace Assets.GameCode.Cards.Actions
 {
+    [Serializable()]
     public class PlaceCard_Action : Action
     {
         private Entity PlacedCard;
@@ -19,7 +20,7 @@ namespace Assets.GameCode.Cards.Actions
         {
             if (PlacedCard.getOwnerIndex() == TI.getCPI() && !TI.IsMulligan)
             {
-                  if (!PlacedCard.IsUnit() || !TI.WasUnitPlaced())
+                  if (!PlacedCard.IsUnit() || !PlacedCard.Owner.WasUnitPlaced())
                   {
                       return PlacedCard.CanBePlaced(TI, PlacedZone);
                   }
@@ -36,7 +37,6 @@ namespace Assets.GameCode.Cards.Actions
         public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             GS.CardPlaced(PlacedZone, PlacedCard);
-            TM.CardPlaced(PlacedCard);
         }
     }
 }

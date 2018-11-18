@@ -17,6 +17,8 @@ namespace Assets.GameCode.Cards
 
         private bool mSpentCP;
         private bool mPassed;
+        private int mUnitCardsPlaced;
+        private int mOtherCardsPlaced;
 
         private int mMulligansUsed;
         private int mMaxMulligans;
@@ -36,7 +38,9 @@ namespace Assets.GameCode.Cards
             mEffects = new Effects.EffectHolder(GS, false, mPlayerIndex);
             mMaxMulligans = 5;
             mMulligansUsed = 0;
-        }
+            mUnitCardsPlaced = 0;
+            mOtherCardsPlaced = 0;
+    }
 
         public void AddDeck(CardList CL)
         {
@@ -83,13 +87,23 @@ namespace Assets.GameCode.Cards
             mMulliganedCards.Cards.Clear();
             mMulligansUsed = 0;
         }
-
+        public void CardPlaced(Entities.Entity C)
+        {
+            if (C.IsUnit())
+            {
+                mUnitCardsPlaced += 1;
+            }
+            else
+            {
+                mOtherCardsPlaced += 1;
+            }
+            RemoveFromList(C);
+        }
         public void RemoveFromList(Entity C)
         {
             mDeck.RemoveCard(C);
             mHand.RemoveCard(C);
             mGraveyard.RemoveCard(C);
-            //Effects.RemoveCard(C);
             for (int i = 0; i < mBoard.RangeZones.Length; i++)
             {
                 mBoard.RangeZones[i].List.RemoveCard(C);
@@ -189,6 +203,28 @@ namespace Assets.GameCode.Cards
         {
             return mPassed;
         }
+        public bool WasUnitPlaced()
+        {
+            if (mUnitCardsPlaced > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool WasCardPlaced()
+        {
+            if (mUnitCardsPlaced + mOtherCardsPlaced > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public void GetMulliganInfo(out int usedMulligans, out int maxMulligans)
         {
             usedMulligans = mMulligansUsed;
@@ -215,6 +251,8 @@ namespace Assets.GameCode.Cards
         {
             mEffects.NewTurn();
             mSpentCP = false;
+            mUnitCardsPlaced = 0;
+            mOtherCardsPlaced = 0;
             foreach (CardZone CZ in mBoard.RangeZones)
             {
                 foreach (Entity E in CZ.List.Cards)

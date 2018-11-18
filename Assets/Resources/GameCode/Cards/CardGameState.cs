@@ -79,8 +79,9 @@ namespace Assets.GameCode.Cards
         }
         public void CardPlaced(CardZoneType CZ, Entities.Entity Card)
         {
-            Players[0].RemoveFromList(Card);
-            Players[1].RemoveFromList(Card);
+            // The player will remove the card from its current
+            // card list and Card.Placed will add it to the new one.
+            Players[Card.Owner.getIndex()].CardPlaced(Card);
             Card.Placed(CZ, getCardList(CZ), this);
         }
         public void Update(TurnInfo TI)

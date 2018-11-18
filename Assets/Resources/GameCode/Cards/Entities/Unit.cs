@@ -84,6 +84,10 @@ namespace Assets.GameCode.Cards.Entities
             Zone = CZ;
             CL.AddCard(this);
             AddStatus("Placed this turn");
+            if (GS.mTurnInfo.IsFirstDeployment())
+            {
+                AddStatus("Deployed");
+            }
         }
 
         public override bool IsUnit()

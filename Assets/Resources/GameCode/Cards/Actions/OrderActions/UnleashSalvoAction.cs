@@ -73,7 +73,7 @@ namespace Assets.GameCode.Cards.Actions
             TheTarget.CheckTargetStatus(null, TD, ref cost);
             return TheOrder.GetNumUses(mActionIndex) > 0 && TD.Result();
         }
-        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             Effects.Orders.OrderWithUses TheOrder = (Effects.Orders.OrderWithUses)(((Entities.Effect_Entity)Performer).GetEffect());
 
