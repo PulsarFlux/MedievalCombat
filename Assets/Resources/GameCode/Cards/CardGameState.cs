@@ -95,9 +95,9 @@ namespace Assets.GameCode.Cards
         }
         public void NewTurn(TurnInfo TI, CardGameManager manager)
         {
-            Players[TI.getCPI()].NewTurn(this);
+            Players[TI.GetCPI()].NewTurn(this);
             SharedEffects.NewTurn();
-            Players[TI.getCPI()].TakeTurn(TI, this, manager);
+            Players[TI.GetCPI()].TakeTurn(TI, this, manager);
         }
 
         public void NewRound()

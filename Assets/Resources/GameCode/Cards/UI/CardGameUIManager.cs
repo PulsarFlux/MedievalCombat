@@ -96,12 +96,12 @@ namespace Assets.GameCode.Cards.UI
                 if (SecondSelect)
                 {
                     if (CurrentPossibleActions[CurrentActionIndex].SelectType == PlayerType.Ally &&
-                        SelectedCard.GetEntity().getOwnerIndex() != TheTurnInformation.getCPI())
+                        SelectedCard.GetEntity().getOwnerIndex() != TheTurnInformation.GetCPI())
                     {
                         return;
                     }
                     if (CurrentPossibleActions[CurrentActionIndex].SelectType == PlayerType.Enemy &&
-                        SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.getCPI())
+                        SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.GetCPI())
                     {
                         return;
                     }
@@ -120,7 +120,7 @@ namespace Assets.GameCode.Cards.UI
                     TestActionConditions();
                     return;
                 }
-                if (SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.getCPI())
+                if (SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.GetCPI())
                 {
                     if (SelectedCard.ToggleSelect(false))
                     {
@@ -294,7 +294,7 @@ namespace Assets.GameCode.Cards.UI
             {
                 ContinueButton.GetComponentInChildren<Text>().text = "Done";
             }
-            else if (TheCardGameState.Players[TheTurnInformation.getCPI()].WasCardPlaced() || TheCardGameState.Players[TheTurnInformation.getCPI()].HasSpentCP() || TheTurnInformation.IsDeployment())
+            else if (TheCardGameState.Players[TheTurnInformation.GetCPI()].WasCardPlaced() || TheCardGameState.Players[TheTurnInformation.GetCPI()].HasSpentCP() || TheTurnInformation.IsDeployment())
             {
                 ContinueButton.GetComponentInChildren<Text>().text = "Continue";
             }
@@ -316,7 +316,7 @@ namespace Assets.GameCode.Cards.UI
                 InfoPanel.transform.Find("CurrentPhaseText").GetComponent<Text>().text = "Battle";
             }
             InfoPanel.transform.Find("PlayerTurnText").GetComponent<Text>().text = 
-                "Player " + (TheTurnInformation.getCPI() + 1).ToString() + "'s Turn";
+                "Player " + (TheTurnInformation.GetCPI() + 1).ToString() + "'s Turn";
             if (TheTurnInformation.IsMulligan)
             {
                 MulliganInfoPanel.SetActive(true);
@@ -339,17 +339,17 @@ namespace Assets.GameCode.Cards.UI
                 MulliganInfoPanel.SetActive(false);
                 GameplayInfoPanel.SetActive(true);
                 GameplayInfoPanel.transform.Find("P1CPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[0].getCP().ToString() + " CP";
+                    TheCardGameState.Players[0].GetCP().ToString() + " CP";
                 GameplayInfoPanel.transform.Find("P2CPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[1].getCP().ToString() + " CP";
+                    TheCardGameState.Players[1].GetCP().ToString() + " CP";
                 GameplayInfoPanel.transform.Find("P1RoundsText").GetComponent<Text>().text = 
                     "Player 1. Rounds: " + TheCardGameState.Players[0].RoundsWon().ToString();
                 GameplayInfoPanel.transform.Find("P2RoundsText").GetComponent<Text>().text = 
                     "Player 2. Rounds: " + TheCardGameState.Players[1].RoundsWon().ToString();
                 GameplayInfoPanel.transform.Find("P1VPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[0].getVP().ToString() + " VP";
+                    TheCardGameState.Players[0].GetVP().ToString() + " VP";
                 GameplayInfoPanel.transform.Find("P2VPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[1].getVP().ToString() + " VP";
+                    TheCardGameState.Players[1].GetVP().ToString() + " VP";
                 GameplayInfoPanel.transform.Find("P1CRText").GetComponent<Text>().text = 
                     TheCardGameState.Players[0].mHand.Cards.Count() + " Cards";
                 GameplayInfoPanel.transform.Find("P2CRText").GetComponent<Text>().text = 

@@ -161,19 +161,19 @@ namespace Assets.GameCode.Cards
         {
             return mSpentCP;
         }
-        public int getCP()
+        public int GetCP()
         {
             return mCommandPoints;
         }
 
-        public int getVP()
+        public int GetVP()
         {
             int VP = 0;
             foreach (CardZone CZ in mBoard.RangeZones)
             {
                 foreach (Entity E in CZ.List.Cards)
                 {
-                    VP += ((Unit)E).getVP();
+                    VP += ((Unit)E).GetVP();
                 }
             }
             return VP;

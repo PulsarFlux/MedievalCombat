@@ -16,7 +16,8 @@ namespace Assets.GameCode.Cards.Actions
             Entities.Unit attacker = (Entities.Unit)Performer;
             Entities.Unit target = (Entities.Unit)Selection[0];
 
-            if (Performer.IsUnit() && Selection[0].IsUnit() && Performer.getOwnerIndex() != Selection[0].getOwnerIndex() && TI.getCPI() == Performer.getOwnerIndex())
+            if (Performer.IsUnit() && Selection[0].IsUnit() && Performer.getOwnerIndex() != Selection[0].getOwnerIndex() &&
+                TI.GetCPI() == Performer.getOwnerIndex() && !attacker.HasStatus("Can't attack"))
             {
                 return attacker.CanAttack(target) != -1;
             }

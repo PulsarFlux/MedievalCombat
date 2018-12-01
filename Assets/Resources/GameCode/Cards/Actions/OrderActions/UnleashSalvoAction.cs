@@ -14,7 +14,7 @@ namespace Assets.GameCode.Cards.Actions
 
         public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            return ((Entities.Effect_Entity)Performer).Owner.getCP() >= GetMinCost();
+            return ((Entities.Effect_Entity)Performer).Owner.GetCP() >= GetMinCost();
         }
         public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {

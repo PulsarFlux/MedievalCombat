@@ -65,11 +65,14 @@ namespace Assets.GameCode.Cards.Entities
             {
                 PAHolder.AddAction(Data.mPlacedAction);
             }
-            foreach (Loading.ModuleData MD in Data.Modules)
+            if (Data.mModules != null)
             {
-                Modules.Module M = Loading.CardLoading.GetModuleFromData(MD);
-                M.Setup(this, MD);
-                AddModule(MD.Type, M);
+                foreach (Loading.ModuleData MD in Data.mModules)
+                {
+                    Modules.Module M = Loading.CardLoading.GetModuleFromData(MD);
+                    M.Setup(this, MD);
+                    AddModule(MD.Type, M);
+                }
             }
             Classes = new List<string>(Data.Classes);
         }
@@ -99,7 +102,7 @@ namespace Assets.GameCode.Cards.Entities
             return CardType.Unit;
         }
 
-        public int getVP()
+        public int GetVP()
         {
             return BaseVP + VPModifier;
         }
@@ -194,6 +197,10 @@ namespace Assets.GameCode.Cards.Entities
                 TemporaryHP -= Amount;
             }
         }
+        public int CalcHealth()
+        {
+            return BaseHealth + HealthModifier + TemporaryHP;
+        }
         public void Heal(int Amount)
         {
             HealthModifier += Amount;
@@ -236,21 +243,25 @@ namespace Assets.GameCode.Cards.Entities
             {
                 foreach (CardZone CZ in Owner.mBoard.RangeZones)
                 {
-                    if (CanBePlaced(TI, CZ.Type))
+                    Actions.Action placeCardAction = new PlaceCard_Action(this, CZ.Type);
+                    if (placeCardAction.CheckValidity(null, null, TI))
                     {
-                        results.Add(new ActionOrder(new PlaceCard_Action(this, CZ.Type), null, null));
+                        results.Add(new ActionOrder(placeCardAction, null, null));
                     }
                 }
             }
             else
             {
-                foreach (ActionInfo AI in GetActions())
-                {
-                    foreach (ActionOrder AO in AI.GetPossibleActionOrders(gameState, this))
+                if (!TI.IsDeployment())
+                { 
+                    foreach (ActionInfo AI in GetActions())
                     {
-                        if (AO.Action.CheckValidity(AO.Performer, AO.Selection, TI))
+                        foreach (ActionOrder AO in AI.GetPossibleActionOrders(gameState, this))
                         {
-                            results.Add(AO);
+                            if (AO.Action.CheckValidity(AO.Performer, AO.Selection, TI))
+                            {
+                                results.Add(AO);
+                            }
                         }
                     }
                 }

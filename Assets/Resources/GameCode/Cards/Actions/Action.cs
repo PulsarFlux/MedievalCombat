@@ -40,7 +40,7 @@ namespace Assets.GameCode.Cards.Actions
 
         public virtual bool IsAvailable(Entities.Entity Performer)
         {
-            return Performer.Owner.getCP() >= GetMinCost();
+            return Performer.Owner.GetCP() >= GetMinCost();
         }
         protected virtual int GetMinCost()
         {

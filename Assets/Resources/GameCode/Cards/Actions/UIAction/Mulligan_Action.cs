@@ -14,7 +14,7 @@ namespace Assets.GameCode.Cards.Actions
         }
         public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (Performer.getOwnerIndex() == TI.getCPI() && TI.IsMulligan)
+            if (Performer.getOwnerIndex() == TI.GetCPI() && TI.IsMulligan)
             {
                 return true;
             }

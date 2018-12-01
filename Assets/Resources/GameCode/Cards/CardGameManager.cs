@@ -30,6 +30,7 @@ namespace Assets.GameCode.Cards
     {
         UI.CardGameUIManager TheUIManager;
         TurnManager TheTurnManager;
+        public int GetRoundVictoryLimit() { return TurnManager.RoundVictoryLimit; }
 
         [System.NonSerialized]
         CardGameState TheCardGameState;

@@ -16,7 +16,7 @@ namespace Assets.GameCode.Cards
         /// <summary>
         /// Gets the index of the current player
         /// </summary>
-        public int getCPI()
+        public int GetCPI()
         {
             return CurrentPlayerIndex;
         }

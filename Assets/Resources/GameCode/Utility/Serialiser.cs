@@ -9,17 +9,32 @@ namespace Assets.Utility
 {
     static class Serialiser
     {
+        [Serializable()]
+        private class StateAndActionHolder
+        {
+            public CardGameState cardGameState;
+            public ActionOrder actionOrder;
+        }
         public static void CopyCardGameStateAndAction(
             CardGameState stateToCopy, out CardGameState stateToReturn, 
             ActionOrder actionToCopy, out ActionOrder actionToReturn)
         {
             MemoryStream stream = new MemoryStream();
             BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(stream, stateToCopy);
-            formatter.Serialize(stream, actionToCopy);
+
+            // We need a dummy holder object to make sure that both the
+            // state and action are serialised together so that any references
+            // to the same object still point to the same new object after deserialisation.
+            StateAndActionHolder holder = new StateAndActionHolder();
+            holder.actionOrder = actionToCopy;
+            holder.cardGameState = stateToCopy;
+
+            formatter.Serialize(stream, holder);
             stream.Seek(0, SeekOrigin.Begin);
-            stateToReturn = (CardGameState)formatter.Deserialize(stream);
-            actionToReturn = (ActionOrder)formatter.Deserialize(stream);
+
+            StateAndActionHolder holderCopy = (StateAndActionHolder)formatter.Deserialize(stream);
+            actionToReturn = holderCopy.actionOrder;
+            stateToReturn = holderCopy.cardGameState;
         }
     }
 }

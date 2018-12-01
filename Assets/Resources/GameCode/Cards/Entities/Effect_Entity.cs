@@ -83,20 +83,24 @@ namespace Assets.GameCode.Cards.Entities
             if (!IsPlaced)
             {
                 CardZoneType effectCardZoneType = mIsShared ? gameState.SharedEffects.mCardZoneType : Owner.mEffects.mCardZoneType;
-                if (CanBePlaced(TI, effectCardZoneType))
+                Actions.Action placeCardAction = new Actions.PlaceCard_Action(this, effectCardZoneType);
+                if (placeCardAction.CheckValidity(null, null, TI))
                 {
-                    results.Add(new Actions.ActionOrder(new Actions.PlaceCard_Action(this, effectCardZoneType), null, null));
+                    results.Add(new Actions.ActionOrder(placeCardAction, null, null));
                 }
             }
             else
             {
                 foreach (Actions.ActionInfo AI in GetActions())
                 {
-                    foreach (Actions.ActionOrder AO in AI.GetPossibleActionOrders(gameState, this))
+                    if (AI.mAction.IsAvailable(this))
                     {
-                        if (AO.Action.CheckValidity(AO.Performer, AO.Selection, TI))
+                        foreach (Actions.ActionOrder AO in AI.GetPossibleActionOrders(gameState, this))
                         {
-                            results.Add(AO);
+                            if (AO.Action.CheckValidity(AO.Performer, AO.Selection, TI))
+                            {
+                                results.Add(AO);
+                            }
                         }
                     }
                 }

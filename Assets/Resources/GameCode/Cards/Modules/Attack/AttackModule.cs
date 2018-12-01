@@ -16,6 +16,7 @@ namespace Assets.GameCode.Cards.Modules.Attack
         public abstract void Run(Entities.Unit Target);
     }
 
+    [Serializable()]
     public abstract class PreAttackModule : AttackModule
     {
         public PreAttackModule()
@@ -24,6 +25,7 @@ namespace Assets.GameCode.Cards.Modules.Attack
         }
     }
 
+    [Serializable()]
     public abstract class PostAttackModule : AttackModule
     {
         public PostAttackModule()

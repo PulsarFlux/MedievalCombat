@@ -14,21 +14,22 @@ namespace Assets.GameCode.Cards.Actions
 
         public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            bool result = true;
-            if (mClassRestriction != "")
+            bool result = Selection[0].Owner.GetCP() >= GetMinCost();
+            if (result && mClassRestriction != "")
             {
                 foreach (Entities.Unit U in Selection)
                 {
-                    result &= U.IsClass(mClassRestriction);
+                    result &= U.IsClass(mClassRestriction) && !U.HasStatus("Attacked");
                 }
             }
-            return result && Selection[0].Owner.getCP() >= GetMinCost();
+            return result;
         }
         public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
             foreach (Entities.Unit U in Selection)
             {
                 U.TemporaryHP += mTempHPAmount;
+                U.AddStatus("Can't attack");
             }
             Selection[0].Owner.SpendCP(GetMinCost());
             ((Effects.Orders.Order)((Entities.Effect_Entity)Performer).GetEffect()).OrderUsed();

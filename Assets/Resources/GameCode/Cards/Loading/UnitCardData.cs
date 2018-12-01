@@ -14,7 +14,6 @@ namespace Assets.GameCode.Cards.Loading
         public int Victory;
         public bool CanBeShort = false;
         public bool CanBeLong = false;
-        public List<ModuleData> Modules = new List<ModuleData>();
         public List<string> Classes = new List<string>();
         public UnitCardData(string Name, string Type, string Attack, string Health, string Victory, string CanBeShort, string CanBeLong)
         {
