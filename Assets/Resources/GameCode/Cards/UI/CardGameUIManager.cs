@@ -67,10 +67,10 @@ namespace Assets.GameCode.Cards.UI
             PlayingCard PlacedCard = (PlayingCard)inPlacedCard;
             if (!SecondSelect)
             {
-                SendAction(new PlaceCard_Action(PlacedCard, PlacedZone));
+                SendAction(new ActionOrder(new PlaceCard_Action(PlacedCard.GetEntity(), PlacedZone), null, null));
             }   
             UpdateUI();
-            if (((PlayingCard)PlacedCard).IsPlaced() && PlacedCard.GetEntity().PAHolder.HasAction())
+            if ((PlacedCard).IsPlaced() && PlacedCard.GetEntity().PAHolder.HasAction())
             {
                 StartPlacedAction(PlacedCard);
             }
@@ -96,12 +96,12 @@ namespace Assets.GameCode.Cards.UI
                 if (SecondSelect)
                 {
                     if (CurrentPossibleActions[CurrentActionIndex].SelectType == PlayerType.Ally &&
-                        SelectedCard.GetEntity().getOwnerIndex() != TheTurnInformation.getCPI())
+                        SelectedCard.GetEntity().getOwnerIndex() != TheTurnInformation.GetCPI())
                     {
                         return;
                     }
                     if (CurrentPossibleActions[CurrentActionIndex].SelectType == PlayerType.Enemy &&
-                        SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.getCPI())
+                        SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.GetCPI())
                     {
                         return;
                     }
@@ -120,7 +120,7 @@ namespace Assets.GameCode.Cards.UI
                     TestActionConditions();
                     return;
                 }
-                if (SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.getCPI())
+                if (SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.GetCPI())
                 {
                     if (SelectedCard.ToggleSelect(false))
                     {
@@ -173,7 +173,7 @@ namespace Assets.GameCode.Cards.UI
             }
             else
             {
-                if (CurrentPossibleActions[CurrentActionIndex].TheAction.IsAvailable(Selection[0].GetEntity()))
+                if (CurrentPossibleActions[CurrentActionIndex].mAction.IsAvailable(Selection[0].GetEntity()))
                 {
                     ActionButton.interactable = true;
                 }
@@ -234,7 +234,7 @@ namespace Assets.GameCode.Cards.UI
             Selection.Clear();
         }
 
-        private void SendAction(Actions.Action TheAction)
+        private void SendAction(Actions.ActionOrder TheAction)
         {
             TheCardGameManager.PassAction(TheAction);
         }
@@ -294,7 +294,7 @@ namespace Assets.GameCode.Cards.UI
             {
                 ContinueButton.GetComponentInChildren<Text>().text = "Done";
             }
-            else if (TheTurnInformation.WasCardPlaced() | TheCardGameState.Players[TheTurnInformation.getCPI()].HasSpentCP() | TheTurnInformation.IsDeployment())
+            else if (TheCardGameState.Players[TheTurnInformation.GetCPI()].WasCardPlaced() || TheCardGameState.Players[TheTurnInformation.GetCPI()].HasSpentCP() || TheTurnInformation.IsDeployment())
             {
                 ContinueButton.GetComponentInChildren<Text>().text = "Continue";
             }
@@ -316,7 +316,7 @@ namespace Assets.GameCode.Cards.UI
                 InfoPanel.transform.Find("CurrentPhaseText").GetComponent<Text>().text = "Battle";
             }
             InfoPanel.transform.Find("PlayerTurnText").GetComponent<Text>().text = 
-                "Player " + (TheTurnInformation.getCPI() + 1).ToString() + "'s Turn";
+                "Player " + (TheTurnInformation.GetCPI() + 1).ToString() + "'s Turn";
             if (TheTurnInformation.IsMulligan)
             {
                 MulliganInfoPanel.SetActive(true);
@@ -339,17 +339,17 @@ namespace Assets.GameCode.Cards.UI
                 MulliganInfoPanel.SetActive(false);
                 GameplayInfoPanel.SetActive(true);
                 GameplayInfoPanel.transform.Find("P1CPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[0].getCP().ToString() + " CP";
+                    TheCardGameState.Players[0].GetCP().ToString() + " CP";
                 GameplayInfoPanel.transform.Find("P2CPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[1].getCP().ToString() + " CP";
+                    TheCardGameState.Players[1].GetCP().ToString() + " CP";
                 GameplayInfoPanel.transform.Find("P1RoundsText").GetComponent<Text>().text = 
                     "Player 1. Rounds: " + TheCardGameState.Players[0].RoundsWon().ToString();
                 GameplayInfoPanel.transform.Find("P2RoundsText").GetComponent<Text>().text = 
                     "Player 2. Rounds: " + TheCardGameState.Players[1].RoundsWon().ToString();
                 GameplayInfoPanel.transform.Find("P1VPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[0].getVP().ToString() + " VP";
+                    TheCardGameState.Players[0].GetVP().ToString() + " VP";
                 GameplayInfoPanel.transform.Find("P2VPText").GetComponent<Text>().text = 
-                    TheCardGameState.Players[1].getVP().ToString() + " VP";
+                    TheCardGameState.Players[1].GetVP().ToString() + " VP";
                 GameplayInfoPanel.transform.Find("P1CRText").GetComponent<Text>().text = 
                     TheCardGameState.Players[0].mHand.Cards.Count() + " Cards";
                 GameplayInfoPanel.transform.Find("P2CRText").GetComponent<Text>().text = 
@@ -370,7 +370,7 @@ namespace Assets.GameCode.Cards.UI
 
         public void ContinueButtonPressed()
         {
-            SendAction(new Continue_Action());
+            TheCardGameManager.Continue();
             ResetActions();
             ResetSelections();
             UpdateUI();
@@ -384,8 +384,7 @@ namespace Assets.GameCode.Cards.UI
                 {
                     if (CurrentAction.Max == 0)
                     {
-                        CurrentAction.TheAction.SetInfo(ActiveCard.GetEntity(), new List<Entities.Entity>());
-                        SendAction(CurrentAction.TheAction);
+                        SendAction(new ActionOrder(CurrentAction.mAction, ActiveCard.GetEntity(), new List<Entities.Entity>()));
                         ResetActions();
                         ResetSelections();
                         UpdateUI();
@@ -402,8 +401,7 @@ namespace Assets.GameCode.Cards.UI
                     {
                         Result.Add(C.GetEntity());
                     }
-                    CurrentAction.TheAction.SetInfo(ActiveCard.GetEntity(), Result);
-                    SendAction(CurrentAction.TheAction);
+                    SendAction(new ActionOrder(CurrentAction.mAction, ActiveCard.GetEntity(), Result));
                     ResetActions();
                     ResetSelections();
                     UpdateUI();

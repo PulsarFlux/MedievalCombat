@@ -6,7 +6,7 @@ namespace Assets.GameCode.Map
 {
     public class MapItem
     {
-        public MapItem(System.Random R, Cards.Loading.CardPool cardPool)
+        public MapItem(System.Random R, Cards.Loading.CardPool cardPool, string name)
         {
             mRewards = new Cards.CardList();
             for (int i = 0; i < 3; i++)
@@ -17,6 +17,7 @@ namespace Assets.GameCode.Map
             }
             Completed = false;
             Available = false;
+            mName = name;
         }
 
         public bool Available { get; set; }
@@ -34,6 +35,7 @@ namespace Assets.GameCode.Map
         private Cards.CardList mRewards;
 
         public TreeNode<MapItem> mTreeNode;
+        public string mName;
     }
 }
 

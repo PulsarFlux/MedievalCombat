@@ -12,11 +12,9 @@ namespace Assets.GameCode.Cards.Actions
         public ReloadAction() {}
         public ReloadAction(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        private Unit mUnit;
-
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (mUnit.HasStatus("Needs reloading"))
+            if (((Unit)Performer).HasStatus("Needs reloading"))
             {
                 return true;
             }
@@ -28,18 +26,13 @@ namespace Assets.GameCode.Cards.Actions
             return ((Unit)Performer).HasStatus("Needs reloading");
         }
 
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            if (mUnit.Owner.SpendCP(mMinCost))
+            if (((Unit)Performer).Owner.SpendCP(mMinCost))
             {
-                mUnit.RemoveStatus("Needs reloading");
-                mUnit.AddStatus("Reloading");
+                ((Unit)Performer).RemoveStatus("Needs reloading");
+                ((Unit)Performer).AddStatus("Reloading");
             }
-        }
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
-            mUnit = (Unit)Selector;
         }
     }
 }

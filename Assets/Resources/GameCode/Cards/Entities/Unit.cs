@@ -65,11 +65,14 @@ namespace Assets.GameCode.Cards.Entities
             {
                 PAHolder.AddAction(Data.mPlacedAction);
             }
-            foreach (Loading.ModuleData MD in Data.Modules)
+            if (Data.mModules != null)
             {
-                Modules.Module M = Loading.CardLoading.GetModuleFromData(MD);
-                M.Setup(this, MD);
-                AddModule(MD.Type, M);
+                foreach (Loading.ModuleData MD in Data.mModules)
+                {
+                    Modules.Module M = Loading.CardLoading.GetModuleFromData(MD);
+                    M.Setup(this, MD);
+                    AddModule(MD.Type, M);
+                }
             }
             Classes = new List<string>(Data.Classes);
         }
@@ -84,6 +87,10 @@ namespace Assets.GameCode.Cards.Entities
             Zone = CZ;
             CL.AddCard(this);
             AddStatus("Placed this turn");
+            if (GS.mTurnInfo.IsFirstDeployment())
+            {
+                AddStatus("Deployed");
+            }
         }
 
         public override bool IsUnit()
@@ -95,7 +102,7 @@ namespace Assets.GameCode.Cards.Entities
             return CardType.Unit;
         }
 
-        public int getVP()
+        public int GetVP()
         {
             return BaseVP + VPModifier;
         }
@@ -123,21 +130,22 @@ namespace Assets.GameCode.Cards.Entities
             }
         }
 
-        public virtual bool CanAttack(Unit Target)
+        public virtual int CanAttack(Unit Target)
         {
             int Result = TMCombiner.Run(this, Target);
-            if (Result != -1)
+            if (Result == -1 || !Owner.CanSpendCP(Result))
             {
-                return Owner.SpendCP(Result);
+                Result = -1;
             }
-            else
-            {
-                return false;
-            }
+            return Result;
         }
         public void DoAttack(Unit Target)
         {
-            AMCombiner.Run(this, Target);
+            int cost = CanAttack(Target);
+            if (cost != -1 && Owner.SpendCP(cost))
+            {
+                AMCombiner.Run(this, Target);
+            }
         }
 
         public void CheckTargetStatus(Unit Attacker, TargettingData TD, ref int Cost)
@@ -189,6 +197,10 @@ namespace Assets.GameCode.Cards.Entities
                 TemporaryHP -= Amount;
             }
         }
+        public int CalcHealth()
+        {
+            return BaseHealth + HealthModifier + TemporaryHP;
+        }
         public void Heal(int Amount)
         {
             HealthModifier += Amount;
@@ -222,6 +234,39 @@ namespace Assets.GameCode.Cards.Entities
         public override List<ActionInfo> GetActions()
         {
             return Actions;
+        }
+
+        public override List<ActionOrder> GetAIActions(CardGameState gameState, TurnInfo TI)
+        {
+            List<ActionOrder> results = new List<ActionOrder>();
+            if (!IsPlaced)
+            {
+                foreach (CardZone CZ in Owner.mBoard.RangeZones)
+                {
+                    Actions.Action placeCardAction = new PlaceCard_Action(this, CZ.Type);
+                    if (placeCardAction.CheckValidity(null, null, TI))
+                    {
+                        results.Add(new ActionOrder(placeCardAction, null, null));
+                    }
+                }
+            }
+            else
+            {
+                if (!TI.IsDeployment())
+                { 
+                    foreach (ActionInfo AI in GetActions())
+                    {
+                        foreach (ActionOrder AO in AI.GetPossibleActionOrders(gameState, this))
+                        {
+                            if (AO.Action.CheckValidity(AO.Performer, AO.Selection, TI))
+                            {
+                                results.Add(AO);
+                            }
+                        }
+                    }
+                }
+            }
+            return results;
         }
 
         public void AddModule(ModuleType Type, Module TheModule)

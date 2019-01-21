@@ -12,44 +12,38 @@ namespace Assets.GameCode.Cards.Actions
         public Move_Action() {}
         public Move_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        Entity MovingUnit;
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (TI.getCPI() == MovingUnit.getOwnerIndex() && MovingUnit.IsUnit())
+            if (TI.GetCPI() == Performer.getOwnerIndex() && Performer.IsUnit())
             {
                 return true;
             }
             return false;
         }
 
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            if (!((Unit)MovingUnit).HasStatus("Moved"))
+            if (!((Unit)Performer).HasStatus("Moved"))
             {
-                List<Modules.Module> AttachedModule = ((Unit)MovingUnit).GetModules(ModuleType.Targetting, typeof(Modules.Target.Attached));
+                List<Modules.Module> AttachedModule = ((Unit)Performer).GetModules(ModuleType.Targetting, typeof(Modules.Target.Attached));
                 if (AttachedModule.Count > 0)
                 {
                     AttachedModule[0].Message();
                 }
-                if (MovingUnit.Zone.getRange() == Range.Short)
+                if (Performer.Zone.getRange() == Range.Short)
                 {
-                    MovingUnit.Zone = GS.Players[MovingUnit.getOwnerIndex()].mBoard.RangeZones[(int)Range.Long].Type;
-                    GS.Players[MovingUnit.getOwnerIndex()].RemoveFromList(MovingUnit);
-                    GS.Players[MovingUnit.getOwnerIndex()].mBoard.RangeZones[(int)Range.Long].List.AddCard(MovingUnit);
+                    Performer.Zone = GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Long].Type;
+                    GS.Players[Performer.getOwnerIndex()].RemoveFromList(Performer);
+                    GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Long].List.AddCard(Performer);
                 }
                 else
                 {
-                    MovingUnit.Zone = GS.Players[MovingUnit.getOwnerIndex()].mBoard.RangeZones[(int)Range.Short].Type;
-                    GS.Players[MovingUnit.getOwnerIndex()].RemoveFromList(MovingUnit);
-                    GS.Players[MovingUnit.getOwnerIndex()].mBoard.RangeZones[(int)Range.Short].List.AddCard(MovingUnit);
+                    Performer.Zone = GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Short].Type;
+                    GS.Players[Performer.getOwnerIndex()].RemoveFromList(Performer);
+                    GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Short].List.AddCard(Performer);
                 }
-                ((Unit)MovingUnit).AddStatus("Moved");
+                ((Unit)Performer).AddStatus("Moved");
             }
-        }
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
-            MovingUnit = Selector;
         }
     }
 }

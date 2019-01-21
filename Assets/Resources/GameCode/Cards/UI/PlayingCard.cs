@@ -53,9 +53,6 @@ namespace Assets.GameCode.Cards.UI
         {
             return mEntity.CanBePlaced(TI, CZ);
         }
-        public void Placed()
-        {
-        }
         public bool IsPlaced()
         {
             return mEntity.IsPlaced;

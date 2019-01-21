@@ -13,14 +13,14 @@ namespace Assets.GameCode.Cards.Actions
         public ToggleDefending_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
         Entity Defender;
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            return Defender.IsUnit();
+            return Performer.IsUnit();
         }
 
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            Unit D = (Unit)Defender;
+            Unit D = (Unit)Performer;
             if (D.HasStatus("Defending"))
             {
                 D.AddStatus("Not Defending");
@@ -31,11 +31,6 @@ namespace Assets.GameCode.Cards.Actions
                 D.AddStatus("Defending");
                 D.RemoveStatus("Not Defending");
             }
-        }
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
-            Defender = Selector;
         }
     }
 

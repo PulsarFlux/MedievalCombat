@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cards>
+  <card type="basicunit" name="Spearmen" number="5"></card>
+  <card type="basicunit" name="Longbows" number="5"></card>
+  <card type="basicunit" name="Crossbows" number="5"></card>
+  <card type="effect" name="Defensive Formations" number="4"></card>
+  <card type="effect" name="Unleash Salvo" number="4"></card>
+</cards>

@@ -15,16 +15,6 @@ namespace Assets.GameCode.Cards.Effects
         private int TwoHeal;
         private bool Done;
 
-        //public override Effect DeepCopy(EffectNode node)
-        //{
-        //    return new Heal(this, node);
-        //}
-        private Heal(Heal toCopy, EffectNode node) :
-        base(toCopy, node)
-        {
-        }
-
-
         public override void Message(Entity Sender)
         {
         }

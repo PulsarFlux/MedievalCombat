@@ -11,29 +11,28 @@ namespace Assets.GameCode.Cards.Actions
 
         private int mTempHPAmount;
         private string mClassRestriction;
-        private Effects.Orders.Order mPerformer;
-        private List<Entities.Unit> mSelection;
 
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            bool result = true;
-            if (mClassRestriction != "")
+            bool result = Selection[0].Owner.GetCP() >= GetMinCost();
+            if (result && mClassRestriction != "")
             {
-                foreach (Entities.Unit U in mSelection)
+                foreach (Entities.Unit U in Selection)
                 {
-                    result &= U.IsClass(mClassRestriction);
+                    result &= U.IsClass(mClassRestriction) && !U.HasStatus("Attacked");
                 }
             }
-            return result && mSelection[0].Owner.getCP() >= GetMinCost();
+            return result;
         }
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            foreach (Entities.Unit U in mSelection)
+            foreach (Entities.Unit U in Selection)
             {
                 U.TemporaryHP += mTempHPAmount;
+                U.AddStatus("Can't attack");
             }
-            mSelection[0].Owner.SpendCP(GetMinCost());
-            mPerformer.OrderUsed();
+            Selection[0].Owner.SpendCP(GetMinCost());
+            ((Effects.Orders.Order)((Entities.Effect_Entity)Performer).GetEffect()).OrderUsed();
         }
         public override void SetInitialData(List<string> data)
         {
@@ -45,15 +44,6 @@ namespace Assets.GameCode.Cards.Actions
             else
             {
                 mClassRestriction = "";
-            }
-        }
-        public override void SetInfo(Entities.Entity Performer, List<Entities.Entity> Selection)
-        {
-            mPerformer = ((Effects.Orders.Order)(((Entities.Effect_Entity)Performer).GetEffect()));
-            mSelection = new List<Assets.GameCode.Cards.Entities.Unit>();
-            foreach (Entities.Entity E in Selection)
-            {
-                mSelection.Add((Entities.Unit)E);
             }
         }
         public override bool IsAvailable(Entities.Entity Performer)

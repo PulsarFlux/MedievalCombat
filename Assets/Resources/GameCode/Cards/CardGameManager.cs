@@ -30,6 +30,7 @@ namespace Assets.GameCode.Cards
     {
         UI.CardGameUIManager TheUIManager;
         TurnManager TheTurnManager;
+        public int GetRoundVictoryLimit() { return TurnManager.RoundVictoryLimit; }
 
         [System.NonSerialized]
         CardGameState TheCardGameState;
@@ -39,9 +40,15 @@ namespace Assets.GameCode.Cards
 
         State.CardsSetupState mSetupState;
 
-        public void PassAction(Actions.Action Ac)
+        public void PassAction(Actions.ActionOrder Ac)
         {
             TheTurnManager.RecieveAction(Ac);
+        }
+        // Wrap passing a continue action as it is awkward
+        // and contains no information we do not already have.
+        public void Continue()
+        {
+            TheTurnManager.RecieveAction(new Actions.ActionOrder(new Actions.Continue_Action(TheTurnManager), null, null));
         }
 
        /* private void AddCardListToUI(CardList Hand)
@@ -74,6 +81,7 @@ namespace Assets.GameCode.Cards
         {
             TheTurnManager.NewRound();
             TheCardGameState.NewRound();
+            NewTurn();
         }
 
 		public void NewGame()

@@ -8,31 +8,30 @@ namespace Assets.GameCode.Cards.Actions
     [Serializable()]
     class Attack_Action : Action
     {
-        private Entities.Entity Attacker;
-        private Entities.Entity Target;
-
         public Attack_Action() {}
         public Attack_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
-        public override void SetInfo(Entities.Entity Attacker, List<Entities.Entity> Target)
+
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            this.Attacker = Attacker;
-            this.Target = Target[0];
-        }
-        public override bool CheckValidity(TurnInfo TI)
-        {
-            if (Attacker.IsUnit() && Target.IsUnit() && Attacker.getOwnerIndex() != Target.getOwnerIndex() && TI.getCPI() == Attacker.getOwnerIndex())
+            Entities.Unit attacker = (Entities.Unit)Performer;
+            Entities.Unit target = (Entities.Unit)Selection[0];
+
+            if (Performer.IsUnit() && Selection[0].IsUnit() && Performer.getOwnerIndex() != Selection[0].getOwnerIndex() &&
+                TI.GetCPI() == Performer.getOwnerIndex() && !attacker.HasStatus("Can't attack"))
             {
-                return ((Entities.Unit)Attacker).CanAttack(((Entities.Unit)Target));
+                return attacker.CanAttack(target) != -1;
             }
             else
             {
                 return false;
             }
         }
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            ((Entities.Unit)Attacker).DoAttack(((Entities.Unit)Target));
-        }
+            Entities.Unit attacker = (Entities.Unit)Performer;
+            Entities.Unit target = (Entities.Unit)Selection[0];
 
+            attacker.DoAttack(target);
+        }
     }
 }

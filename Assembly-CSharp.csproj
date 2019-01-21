@@ -139,6 +139,7 @@
     <Compile Include="Assets\Resources\GameCode\State\CampaignState.cs" />
     <Compile Include="Assets\Resources\GameCode\State\PrefabManager.cs" />
     <Compile Include="Assets\Resources\GameCode\State\StateManager.cs" />
+    <Compile Include="Assets\Resources\GameCode\Utility\Serialiser.cs" />
     <Compile Include="Assets\Resources\GameCode\Utility\Tree.cs" />
     <Compile Include="Assets\Scripts\Cards\BoardArea.cs" />
     <Compile Include="Assets\Scripts\Cards\CardHolder.cs" />
@@ -205,9 +206,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Assets\Resources\GameCode\Cards\Modules\" />
-    <Folder Include="Assets\Resources\GameCode\Cards\Modules\Removed\" />
-    <Folder Include="Assets\Resources\GameCode\Cards\Modules\Persistance\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -10,6 +10,8 @@ namespace Assets.GameCode.Map.UI
     {
         // The actual node item
         public GameObject mTreeUIItem;
+        // UI lines connected to our child items.
+        public List<GameObject> mUILines = null;
         // The associated game object
         public MapItem mMapItem;
         // Helper references to this nodes
@@ -28,14 +30,17 @@ namespace Assets.GameCode.Map.UI
         public GameObject MapTreeBranchPrefab;
         public GameObject MapTreeTwigPrefab;
         public GameObject MapTreeItemPrefab;
+        public GameObject LinePrefab;
 
         public GameObject ConfirmButtonObject;
         private UnityEngine.UI.Button mConfirmButton;
 
         public GameObject mCardRewardPanel;
         public GameObject mMap;
+        public GameObject mMapLines;
 
         private System.Random mRandom;
+        private int mNumUpdates;
 
         public class LayerTreeNode
         {
@@ -60,6 +65,7 @@ namespace Assets.GameCode.Map.UI
 
     	// Use this for initialization
     	void Start () {
+            mNumUpdates = 0;
             mRandom = new System.Random();
             mRewardCards = new List<UICard>();
             mCurrentRewardCards = new Cards.CardList();
@@ -74,14 +80,7 @@ namespace Assets.GameCode.Map.UI
             // in the UI manager.
             TreeNode<MapItem> mapRoot = mMapState.GetMapTree();
 
-            mTreeRoot = new TreeNode<MapTreeItem>();
-
-            MapTreeItem rootItem = new MapTreeItem();
-            rootItem.mTreeUIItem = CreateMapUIItem(this, MapTreeItemPrefab, mTreeRoot);
-            rootItem.mMapItem = mapRoot.mItem;
-            mTreeRoot.mItem = rootItem;
-
-            BuildTree(mapRoot, mTreeRoot);
+            mTreeRoot = BuildTree(mapRoot, null, null);
 
             mTreeLayers = new List<List<TreeNode<MapTreeItem>>>();
             mTreeLayers.Add(new List<TreeNode<MapTreeItem>>());
@@ -94,7 +93,10 @@ namespace Assets.GameCode.Map.UI
                 {
                     for (int i = 0; i < mapTreeNode.GetNumChildren(); i++)
                     {
-                        mTreeLayers[layer + 1].Add(mapTreeNode.GetChild(i));
+                        if (!mTreeLayers[layer + 1].Contains(mapTreeNode.GetChild(i)))
+                        {
+                            mTreeLayers[layer + 1].Add(mapTreeNode.GetChild(i));
+                        }
                     }
                 }
             }
@@ -108,20 +110,76 @@ namespace Assets.GameCode.Map.UI
 
             FillOutTree(mTreeLayers);
 
+            //CreateLines(mTreeRoot);
+
             UpdateUI();
         }
 
-        private void BuildTree(TreeNode<MapItem> mapItemTreeNode, TreeNode<MapTreeItem> currentParent)
+        private TreeNode<MapTreeItem> BuildTree(TreeNode<MapItem> mapItemTreeNode, TreeNode<MapTreeItem> currentParent, 
+            Dictionary<TreeNode<MapItem>, TreeNode<MapTreeItem>> nodesAlreadyUsed)
         {
-            for (int i = 0; i < mapItemTreeNode.GetNumChildren(); i++)
+            TreeNode<MapTreeItem> rootNode = null;
+
+            if (nodesAlreadyUsed == null || (nodesAlreadyUsed != null && !nodesAlreadyUsed.ContainsKey(mapItemTreeNode)))
             {
-                TreeNode<MapItem> childMapItem = mapItemTreeNode.GetChild(i);
                 MapTreeItem newMapTreeItem = new MapTreeItem();
-                newMapTreeItem.mMapItem = childMapItem.mItem;
-                TreeNode<MapTreeItem> newMapTreeItemNode = currentParent.AddChild(newMapTreeItem);
-                newMapTreeItem.mTreeUIItem = CreateMapUIItem(this, MapTreeItemPrefab, newMapTreeItemNode);
-                BuildTree(childMapItem, newMapTreeItemNode);
+                newMapTreeItem.mMapItem = mapItemTreeNode.mItem;
+                TreeNode<MapTreeItem> newMapTreeItemNode = null;
+                if (currentParent != null)
+                {
+                    newMapTreeItemNode = currentParent.AddChild(newMapTreeItem);
+                }
+                else
+                {
+                    newMapTreeItemNode = new TreeNode<MapTreeItem>(newMapTreeItem);
+                }
+                rootNode = newMapTreeItemNode;
+                newMapTreeItem.mTreeUIItem = CreateMapUIItem(this, MapTreeItemPrefab, newMapTreeItemNode, mapItemTreeNode.mItem.mName);
+
+                if (nodesAlreadyUsed == null)
+                {
+                    nodesAlreadyUsed = new Dictionary<TreeNode<MapItem>, TreeNode<MapTreeItem>>();
+                }
+                nodesAlreadyUsed.Add(mapItemTreeNode, newMapTreeItemNode);
+
+                for (int i = 0; i < mapItemTreeNode.GetNumChildren(); i++)
+                {
+                    BuildTree(mapItemTreeNode.GetChild(i), newMapTreeItemNode, nodesAlreadyUsed);
+                }
             }
+            else if (nodesAlreadyUsed != null && nodesAlreadyUsed.ContainsKey(mapItemTreeNode))
+            {
+                Debug.Assert(currentParent != null);
+                currentParent.LinkChild(nodesAlreadyUsed[mapItemTreeNode]);
+            }
+            return rootNode;
+        }
+
+        private void CreateLines(TreeNode<MapTreeItem> tree)
+        {
+            tree.DoForAllTreeNodes((m) =>
+            {
+                for (int i = 0; i < m.GetNumChildren(); i++)
+                {
+                    GameObject line = GameObject.Instantiate(LinePrefab);
+                    if (m.mItem.mUILines == null)
+                    {
+                        m.mItem.mUILines = new List<GameObject>();
+                    }
+                    m.mItem.mUILines.Add(line);
+                    line.transform.SetParent(mMapLines.transform, false);
+
+                    Vector3 pos = mMapLines.transform.worldToLocalMatrix * m.mItem.mTreeUIItem.transform.position;
+                    pos.z = 0;
+                    (line.GetComponent<LineRenderer>()).SetPosition(0, pos);
+
+                    pos = mMapLines.transform.worldToLocalMatrix * m.GetChild(i).mItem.mTreeUIItem.transform.position;
+                    pos.z = 0;
+                    (line.GetComponent<LineRenderer>()).SetPosition(1, pos);
+                }
+
+                return true;
+            });
         }
 
         // The first layer of the tree must have been manually filled out
@@ -240,13 +298,27 @@ namespace Assets.GameCode.Map.UI
             return;
         }
 
-        public static GameObject CreateMapUIItem(MapUIManager uiManager, GameObject mapItemPrefab, TreeNode<MapTreeItem> mapTreeItem)
+        public static GameObject CreateMapUIItem(MapUIManager uiManager, GameObject mapItemPrefab, TreeNode<MapTreeItem> mapTreeItem, string name)
         {
             GameObject newMapItem = GameObject.Instantiate(mapItemPrefab);
+            newMapItem.GetComponentInChildren<UnityEngine.UI.Text>().text = name;
             Assets.Scripts.MapItemHolder holder = newMapItem.GetComponentInChildren<Assets.Scripts.MapItemHolder>();
             holder.TheMapItem = mapTreeItem;
             holder.TheUIManager = uiManager;
             return newMapItem;
+        }
+
+        void Update()
+        {
+            if (mNumUpdates == 1)
+            {
+                CreateLines(mTreeRoot);
+                mNumUpdates += 1;
+            }
+            else if (mNumUpdates == 0)
+            {
+                mNumUpdates += 1;
+            }
         }
 
         public override void UpdateUI()
@@ -266,15 +338,32 @@ namespace Assets.GameCode.Map.UI
                         m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.grey;
                     }
 
+                    m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Text>().text =
+                        "world: " + m.mTreeUIItem.transform.position.ToString() + "local: " + m.mTreeUIItem.transform.localPosition.ToString();
+
                     return true;
                 });
 
             if (mSelectedMapItem != null &&
                 !mSelectedMapItem.mItem.mMapItem.Completed)
             {
-                mSelectedMapItem.mItem.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.yellow;
-                mConfirmButton.interactable = true;
+                if (mSelectedMapItem.mItem.mMapItem.Available)
+                {
+                    mSelectedMapItem.mItem.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.yellow;
+                }
+                else
+                {
+                    mSelectedMapItem.mItem.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.Lerp(Color.red, Color.yellow, 0.5f);
+                }
+                
                 mCurrentRewardCards = mSelectedMapItem.mItem.mMapItem.Rewards;
+            }
+
+            if (mSelectedMapItem != null &&
+                !mSelectedMapItem.mItem.mMapItem.Completed &&
+                mSelectedMapItem.mItem.mMapItem.Available)
+            {
+                mConfirmButton.interactable = true;
             }
             else
             {
@@ -283,7 +372,7 @@ namespace Assets.GameCode.Map.UI
 
             foreach (Cards.UI.UICard card in mRewardCards)
             {
-                card.UnityCard.transform.SetParent(null);
+                card.UnityCard.transform.SetParent(null, false);
             }
             foreach (Cards.Entities.Entity entity in mCurrentRewardCards.Cards)
             {
@@ -305,11 +394,8 @@ namespace Assets.GameCode.Map.UI
     	
         public void ItemSelected(TreeNode<MapTreeItem> mapTreeItem)
         {
-            if (mapTreeItem.mItem.mMapItem.Available)
-            {
-                mSelectedMapItem = mapTreeItem;    
-                UpdateUI();
-            }
+            mSelectedMapItem = mapTreeItem;
+            UpdateUI();
         }
 
         public void ConfirmButtonPressed()

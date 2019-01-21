@@ -26,7 +26,7 @@ namespace Assets.GameCode.Cards
             mDefaultDeckSpec = State.StateHolder.StateManager.DefaultDeckSpec;
             mTurnInfo = new TurnInfo();
         }
-        public CardGameState(CardGameState toCopy)
+        /*public CardGameState(CardGameState toCopy)
         {
             SharedEffects = new Effects.EffectHolder(toCopy.SharedEffects, this);
             for (int i = 0; i < Players.Length; i++)
@@ -37,7 +37,7 @@ namespace Assets.GameCode.Cards
             mCardPool = State.StateHolder.StateManager.CardPool;
             mDefaultDeckSpec = State.StateHolder.StateManager.DefaultDeckSpec;
           //  mTurnInfo = new TurnInfo(toCopy.mTurnInfo);
-        }
+        }*/
 
         public void Init()
         {
@@ -79,8 +79,9 @@ namespace Assets.GameCode.Cards
         }
         public void CardPlaced(CardZoneType CZ, Entities.Entity Card)
         {
-            Players[0].RemoveFromList(Card);
-            Players[1].RemoveFromList(Card);
+            // The player will remove the card from its current
+            // card list and Card.Placed will add it to the new one.
+            Players[Card.Owner.getIndex()].CardPlaced(Card);
             Card.Placed(CZ, getCardList(CZ), this);
         }
         public void Update(TurnInfo TI)
@@ -94,9 +95,9 @@ namespace Assets.GameCode.Cards
         }
         public void NewTurn(TurnInfo TI, CardGameManager manager)
         {
-            Players[TI.getCPI()].NewTurn(this);
+            Players[TI.GetCPI()].NewTurn(this);
             SharedEffects.NewTurn();
-            Players[TI.getCPI()].TakeTurn(TI, this, manager);
+            Players[TI.GetCPI()].TakeTurn(TI, this, manager);
         }
 
         public void NewRound()

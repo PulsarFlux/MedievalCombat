@@ -12,22 +12,14 @@ namespace Assets.GameCode.Cards.Actions
         public TransferSelection_Action() {}
         public TransferSelection_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        Entity Selector;
-        List<Entity> Selection;
-        public override bool CheckValidity(TurnInfo TI)
+        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            return (Selector.getType() == CardType.Effect);
+            return (Performer.getType() == CardType.Effect);
         }
 
-        public override void Execute(CardGameState GS, TurnManager TM)
+        public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            ((Effect_Entity)Selector).GetEffect().PassSelection(Selection);
-        }
-
-        public override void SetInfo(Entity Selector, List<Entity> Selection)
-        {
-            this.Selector = Selector;
-            this.Selection = Selection;
+            ((Effect_Entity)Performer).GetEffect().PassSelection(Selection);
         }
     }
 }

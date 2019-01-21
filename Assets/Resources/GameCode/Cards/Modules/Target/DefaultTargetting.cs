@@ -24,7 +24,7 @@ namespace Assets.GameCode.Cards.Modules.Target
 
         public override void Run(Unit Spare, Unit Target, TargettingData TD, ref int Cost)
         {
-            if (Parent.HasStatus("Was Deployed"))
+            if (Parent.HasStatus("Was Deployed") || Parent.HasStatus("Deployed"))
             {
                 TD.CanTarget.Short = false;
                 TD.CanTarget.Long = false;

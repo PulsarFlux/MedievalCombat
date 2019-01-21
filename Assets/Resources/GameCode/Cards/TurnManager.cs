@@ -7,7 +7,7 @@ namespace Assets.GameCode.Cards
 {
     public class TurnManager
     {
-        const int RoundVictoryLimit = 2;
+        public const int RoundVictoryLimit = 2;
 
         private TurnInfo TurnInformation;
         private CardGameState TheCardGameState;
@@ -35,17 +35,16 @@ namespace Assets.GameCode.Cards
             TurnInformation.NewRound();
         }
 
-        public void RecieveAction(Actions.Action Ac)
+        public void RecieveAction(Actions.ActionOrder Ac)
         {
-            if (Ac.CheckValidity(TurnInformation))
+            if (Ac.Action.CheckValidity(Ac.Performer, Ac.Selection, TurnInformation))
             {
-                Ac.Execute(TheCardGameState, this);
+                Ac.Action.Execute(Ac.Performer, Ac.Selection, TheCardGameState);
             }
         }
 
         public void CardPlaced(Entities.Entity Card)
         {
-            TurnInformation.CardPlaced(Card);
             if (TurnInformation.IsFirstDeployment())
             {
                 ((Entities.Unit)Card).AddStatus("Deployed");
@@ -63,14 +62,14 @@ namespace Assets.GameCode.Cards
             {
                 bool playerOneHasWon = false;
                 bool playerTwoHasWon = false;
-                if (TheCardGameState.Players[0].getVP() > TheCardGameState.Players[1].getVP())
+                if (TheCardGameState.Players[0].GetVP() > TheCardGameState.Players[1].GetVP())
                 {
                     if (TheCardGameState.Players[0].WonRound(RoundVictoryLimit))
                     {
                         playerOneHasWon = true;
                     }
                 }
-                else if (TheCardGameState.Players[0].getVP() < TheCardGameState.Players[1].getVP())
+                else if (TheCardGameState.Players[0].GetVP() < TheCardGameState.Players[1].GetVP())
                 {
                     if (TheCardGameState.Players[1].WonRound(RoundVictoryLimit))
                     {
@@ -93,8 +92,7 @@ namespace Assets.GameCode.Cards
                 {
                     // TODO - Really need to formalise the above process
                     // but also collecting the results of the match.
-                    TheCardGameManager.PlayerHasWon(playerOneHasWon && !playerTwoHasWon
-                    );
+                    TheCardGameManager.PlayerHasWon(playerOneHasWon && !playerTwoHasWon);
                 }
                 else
                 {
@@ -108,7 +106,7 @@ namespace Assets.GameCode.Cards
                     FinishMulligan();
                 }
                 TheCardGameManager.NewTurn();
-                if (TheCardGameState.Players[TurnInformation.getCPI()].HasPassed())
+                if (TheCardGameState.Players[TurnInformation.GetCPI()].HasPassed())
                 {
                     TurnInformation.NewTurn();
                     TheCardGameManager.NewTurn();
