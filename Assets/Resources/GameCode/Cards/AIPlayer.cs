@@ -12,7 +12,7 @@ namespace Assets.GameCode.Cards
         private System.Random mRandom;
         private static float kVPtoBattlePointsScoreRatio = 3;
         private static float kAPtoBattlePointsScoreRatio = 2;
-        private static float kCPtoBattlePointsScoreRatio = 3;
+        private static float kCPtoBattlePointsScoreRatio = 0; //Test out not valuing CP 3;
 
         public AIPlayer(int index, CardGameState GS) : base(index, GS)
         {
