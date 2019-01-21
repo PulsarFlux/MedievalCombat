@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<cards>
+  <card type="basicunit" name="Spearmen" number="4"></card>
+  <card type="basicunit" name="Pikemen" number="2"></card>
+  <card type="basicunit" name="Longbows" number="4"></card>
+  <card type="character" name="King" number="1"></card>
+  <card type="basicunit" name="Knight" number="2"></card>
+  <card type="effect" name="Boggy Ground" number="1"></card>
+  <card type="effect" name="Strong Winds" number="1"></card>
+  <card type="effect" name="Flaming Blades" number="1"></card>
+  <card type="effect" name="Field Medic" number="1"></card>
+  <card type="effect" name="Spear Wall" number="1"></card>
+  <card type="effect" name="Archer Corps" number="1"></card>
+</cards>
