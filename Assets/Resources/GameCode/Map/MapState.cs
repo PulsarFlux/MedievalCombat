@@ -18,7 +18,7 @@ namespace Assets.GameCode.Map
             // TODO - Take in a tree to parse
             mMapTree = new TreeNode<MapItem>();
 
-            MapItem rootItem = new MapItem(R, State.StateHolder.StateManager.CardPool);
+            MapItem rootItem = new MapItem(R, State.StateHolder.StateManager.CardPool, "root");
             rootItem.mTreeNode = mMapTree;
             mMapTree.mItem = rootItem;
 
@@ -34,6 +34,7 @@ namespace Assets.GameCode.Map
                 {
                     int minChildForNode = 0;
                     if (childNodesFromThisLayer == 0 &&
+                        // Is this the last node in this layer?
                         (currentLayer.Count - 1) == currentLayer.IndexOf(mapTreeNode))
                     {
                         minChildForNode = 1;
@@ -42,10 +43,47 @@ namespace Assets.GameCode.Map
                     childNodesFromThisLayer += childrenToAdd;
                     for (int i = 0; i < childrenToAdd; i++)
                     {
-                        MapItem newItem = new MapItem(R, State.StateHolder.StateManager.CardPool);
+                        MapItem newItem = new MapItem(R, State.StateHolder.StateManager.CardPool, 
+                            "layer: " + layer.ToString() + ", node: " + currentLayer.IndexOf(mapTreeNode).ToString() + ", child: " + i.ToString());
                         TreeNode<MapItem> newTreeNode = mapTreeNode.AddChild(newItem);
                         newItem.mTreeNode = newTreeNode;
                         nextLayer.Add(newTreeNode);
+                    }
+                }
+                // Add extra links to nodes with few links
+                foreach (TreeNode<MapItem> mapTreeNode in currentLayer)
+                {
+                    if (mapTreeNode.GetNumChildren() < 1)
+                    {
+                        int sideToLinkTo = R.Next(0, 2);
+                        int nodeIndex = currentLayer.IndexOf(mapTreeNode);
+
+                        bool canDoLeftSide = nodeIndex != 0 &&
+                            currentLayer[nodeIndex - 1].GetNumChildren() > 0;
+
+                        bool canDoRightSide = nodeIndex != currentLayer.Count - 1 &&
+                            currentLayer[nodeIndex + 1].GetNumChildren() > 0;
+
+                        TreeNode<MapItem> newLinkNode = null;
+                        // Left
+                        if ((sideToLinkTo == 0 && canDoLeftSide) || 
+                            (sideToLinkTo == 1 && canDoLeftSide && !canDoRightSide))
+                        {
+                            TreeNode<MapItem> leftNode = currentLayer[nodeIndex - 1];
+                            newLinkNode = leftNode.GetChild(leftNode.GetNumChildren() - 1);
+                        }
+                        // Right
+                        else if ((sideToLinkTo == 1 && canDoRightSide) ||
+                                 (sideToLinkTo == 0 && canDoRightSide && !canDoLeftSide))
+                        {
+                            TreeNode<MapItem> rightNode = currentLayer[nodeIndex + 1];
+                            newLinkNode = rightNode.GetChild(0);
+                        }
+
+                        if (newLinkNode != null)
+                        {
+                            mapTreeNode.LinkChild(newLinkNode);
+                        }
                     }
                 }
                 List<TreeNode<MapItem>> tempLayer = currentLayer;
