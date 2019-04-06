@@ -1,52 +1,182 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <cards>
+  <card type="basicunit" name="Peasant Militia" attack="2" health="6" victory="1" canbeshort="true" canbelong="false" class1="Melee" class2="Rabble"></card>
+
+  <card type="basicunit" name="Swordsmen" attack="4" health="8" victory="2" canbeshort="true" canbelong="false" class1="Melee" class2="Infantry"></card>
+
+  <card type="basicunit" name="Askari Raiders" attack="6" health="7" victory="3" 
+  	canbeshort="true" canbelong="false" class1="Light" class2="Melee" class3="Infantry"></card>
+
+  <card type="basicunit" name="Gremor Guardians" attack="4" health="10" victory="3" 
+  	canbeshort="true" canbelong="false" class1="Heavy" class2="Melee" class3="Infantry">
+	<action name="Toggle Defence" placed="False" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="0"></action>
+    <module name="DefendingBlock" type="Blocking"></module>
+  </card>
+
+  <card type="basicunit" name="Shieldmen" attack="2" health="12" victory="2" 
+  	canbeshort="true" canbelong="false" class1="Heavy" class2="Melee" class3="Infantry">
+	<action name="Toggle Defence" placed="False" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="0"></action>
+    <module name="DefendingBlock" type="Blocking"></module>
+  </card>
+
   <card type="basicunit" name="Spearmen" attack="3" health="8" victory="2" canbeshort="true" canbelong="false" class1="Melee" class2="Pole" class3="Infantry">
     <module name="CondDmgPre" type="PreAttack" Condition="Cavalry" Dmg="1"></module>
     <module name="CondDmgPost" type="PostAttack" Condition="Cavalry" Dmg="1"></module>
   </card>
+
   <card type="basicunit" name="Pikemen" attack="3" health="8" victory="2" canbeshort="true" canbelong="false" class1="Melee" class2="Pole" class3="Infantry">
     <action name="Toggle Defence" placed="False" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="0"></action>
     <module name="CondDmgPre" type="PreAttack" Condition="Cavalry" Dmg="1"></module>
     <module name="CondDmgPost" type="PostAttack" Condition="Cavalry" Dmg="1"></module>
     <module name="DefendingBlock" type="Blocking"></module>
   </card>
-  <card type="basicunit" name="Longbows" attack="2" health="6" victory="3" canbeshort="false" canbelong="true" class1="Ranged" class2="Bow" class3="Infantry"></card>
+
+  <card type="basicunit" name="Longbows" attack="2" 
+  health="6" victory="3" canbeshort="false" canbelong="true" class1="Ranged" class2="Bow" class3="Infantry">
+  	<action name="SpawnEntity" placed="true" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="0"
+  			spawn="Unleash Salvo" number="1" unique="true" zone="effect" range="na"></action>
+  </card>
+
   <card type="basicunit" name="Crossbows" attack="2" health="6" victory="2" canbeshort="false" canbelong="true" class1="Ranged" class2="Crossbow" class3="Infantry">
-    <module name="Reloading" type="Target"></module>
-    <module name="OnAttackStatus" type="Attack" statustext="Needs reloading" persists="true"></module>
-    <action name="ReloadAction" placed="false" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="0"></action>
+  	<!-- All of this just implements reloading! -->
+    <module name="OnAttack" type="Attack">
+    	<infotag type="Status" value="Needs reloading"/>
+    </module>
+    <module name="OnUpdate" type="Update">
+    	<infotag type="Status" value="Can't attack"/>
+    	<conditional type="HasStatus" value="Needs reloading"/>
+    </module>
+    <module name="OnUpdate" type="Update">
+    	<infotag type="Status" value="Can't attack"/>
+    	<conditional type="HasStatus" value="Reloading"/>
+    </module>
+    <module name="OnNewTurn" type="NewTurn">
+    	<infotag type="Status" value="Needs reloading"/>
+    	<conditional type="HasStatus" value="Needs reloading"/>
+    </module>
+    <module name="OnNewTurn" type="NewTurn">
+    	<infotag type="Status" value="Reloading"/>
+    	<conditional type="HasStatus" value="Will reload"/>
+    </module>
+    <action name="Buff Selection" displayname="Reload" placed="false" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="0">
+    	<infotag type="AddSelf" value="NA"/>
+    	<infotag type="Status" value="Will reload"/>
+    	<infotag type="RemoveStatus" value="Needs reloading"/>
+    	<conditional type="HasStatus" value="Needs reloading"/>
+    </action>
   </card>
-  <card type="basicunit" name="Catapult" attack="5" health="6" victory="2" canbeshort="false" canbelong="true" class1="Ranged" class2="Siege" class3="Weapon">
-    <module name="Reloading" type="Target"></module>
-    <module name="OnAttackStatus" type="Attack" statustext="Needs reloading" persists="true"></module>
-    <action name="ReloadAction" placed="false" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="1"></action>
+
+  <card type="basicunit" name="Catapult" attack="5" health="6" victory="3" canbeshort="false" canbelong="true" class1="Ranged" class2="Siege" class3="Weapon">
+  	<!-- All of this just implements reloading! -->
+    <module name="OnAttack" type="Attack">
+    	<infotag type="Status" value="Needs reloading"/>
+    </module>
+    <module name="OnUpdate" type="Update">
+    	<infotag type="Status" value="Can't attack"/>
+    	<conditional type="HasStatus" value="Needs reloading"/>
+    </module>
+    <module name="OnUpdate" type="Update">
+    	<infotag type="Status" value="Can't attack"/>
+    	<conditional type="HasStatus" value="Reloading"/>
+    </module>
+    <module name="OnNewTurn" type="NewTurn">
+    	<infotag type="Status" value="Needs reloading"/>
+    	<conditional type="HasStatus" value="Needs reloading"/>
+    </module>
+    <module name="OnNewTurn" type="NewTurn">
+    	<infotag type="Status" value="Reloading"/>
+    	<conditional type="HasStatus" value="Will reload"/>
+    </module>
+    <action name="Buff Selection" displayname="Reload" placed="false" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="1">
+    	<infotag type="AddSelf" value="NA"/>
+    	<infotag type="Status" value="Will reload"/>
+    	<infotag type="RemoveStatus" value="Needs reloading"/>
+    	<conditional type="HasStatus" value="Needs reloading"/>
+    </action>
   </card>
+
   <card type="character" name="King" attack="2" health="2" victory="7" canbeshort="true" canbelong="false" class1="Melee" class2="Character"></card>
+
+  <card type="character" name="Fire Mage" attack="4" health="4" victory="5" canbeshort="true" canbelong="true" class1="Fire" class2="Spellcaster" class3="Character">
+  	<action name="SpawnEntity" placed="true" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="0"
+		spawn="Flaming Blades" number="1" unique="true" zone="effect" range="na"></action>
+  </card>
+
   <card type="effect" cardname="Boggy Ground" effectname="Weather" shared="True" turns="-1" Debuff="2" Range="Short"></card>
+
   <card type="effect" cardname="Strong Winds" effectname="Weather" shared="True" turns="-1" Debuff="2" Range="Long"></card>
+
   <card type="effect" cardname="Spear Wall" effectname="AttackCostEffect" shared="False" turns="-1" Amount="-1" Class="Pole"></card>
+
   <card type="effect" cardname="Archer Corps" effectname="AttackCostEffect" shared="False" turns="-1" Amount="-1" Class="Bow"></card>
-  <card type="basicunit" name="Knight" attack="4" health="10" victory="4" canbeshort="true" canbelong="false" class1="Melee" class2="Heavy" class3="Cavalry">
-    <module name="Charge" type="Update" Damage="2"></module>
-    <module name="AttackLastCheck" type="NewTurn"></module>
+
+  <card type="basicunit" name="Knights" attack="4" health="10" victory="4" canbeshort="true" canbelong="false" class1="Melee" class2="Heavy" class3="Cavalry">
+    <module name="OnUpdate" type="Update">
+    	<infotag type="AttackBuff" value="2"/>
+    	<conditional type="NoStatus" value="Attacked last turn"/>
+    	<conditional type="NoStatus" value="Attacked"/>
+    </module>
+    <module name="OnNewTurn" type="NewTurn">
+    	<infotag type="Status" value="Attacked last turn"/>
+    	<conditional type="HasStatus" value="Attacked"/>
+    </module>
   </card>
-  <card type="effect" cardname="Flaming Blades" effectname="SelectBuff" shared="False" turns="-1" buff="2" class="Melee">
-    <action name="Choose Selection" placed="true" selecttype="Ally" min="1" max="2" hascertaincost="true" mincost="0"></action>
+
+  <card type="effect" cardname="Flanking Assault" effectname="ActionOnly" shared="False" turns="1">
+    <action name="Buff Selection" displayname="Choose selection" placed="true" selecttype="Ally" min="1" max="3" hascertaincost="true" mincost="0">
+    	<infotag type="Class" value="Melee"/>
+    	<infotag type="Status" value="Flanking"/>
+    	<module name="Bypass" type="Target" lifetime="1" shortonshort="true" shortonlong="false" longonshort="false" longonlong="false"></module>
+    </action>
   </card>
-  <card type="effect" cardname="Flanking Assault" effectname="SelectBuff" shared="False" turns="1" buff="2" class="Melee">
-    <action name="Choose Selection" placed="true" selecttype="Ally" min="1" max="3" hascertaincost="true" mincost="0"></action>
-    <module name="Bypass" type="Target" shortonshort="true" shortonlong="false" longonshort="false" longonlong="false"></module>
-    <module name="StatusText" type="NewTurn" statustext="Flanking"></module>
+
+  <card type="effect" cardname="Infiltration" effectname="ActionOnly" shared="False" turns="1">
+    <action name="Buff Selection" displayname="Choose selection" placed="true" selecttype="Ally" min="1" max="3" hascertaincost="true" mincost="0">
+    	<infotag type="Class" value="Infantry"/>
+    	<infotag type="Class" value="Melee"/>
+    	<infotag type="Status" value="Infiltrating"/>
+    	<module name="Bypass" type="Target" lifetime="1" shortonshort="true" shortonlong="true" longonshort="false" longonlong="false"></module>
+    </action>
   </card>
+
   <card type="effect" cardname="Field Medic" effectname="Heal" shared="False" turns="1" OneHeal="10" TwoHeal="4">
     <action name="Choose Selection" placed="true" selecttype="Ally" min="1" max="2" hascertaincost="true" mincost="0"></action>
   </card>
+
   <card type="effect" cardname="Defensive Formations" effectname="Order" shared="False" turns="-1">
-    <action name="Form Up" placed="False" selecttype="Ally" min="1" max="3" hascertaincost="true" mincost="1" tempHP="3" class="Infantry"></action>
+    <action name="Buff Selection" displayname="Choose selection" placed="false" selecttype="Ally" min="1" max="3" hascertaincost="true" mincost="1">
+    	<infotag type="TempHPBuff" value="3"/>
+    	<infotag type="Class" value="Infantry"/>
+    	<infotag type="Class" value="Melee"/>
+    	<infotag type="IsOrder" value="NA"/>
+    	<conditional type="OrderNotUsed" data=""/>
+    </action>
   </card>
+
   <card type="effect" cardname="Unleash Salvo" effectname="OrderWithUses" shared="false" turns="-1">
-  	<action name="Unleash Salvo" placed="false" selecttype="Enemy" min="1" max="1" hascertaincost="true" mincost="0" actionindex="0" damage="1"></action>
-  	<action name="Ready Salvo" placed="false" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="1" actionindex="0"></action>
+  	<action name="Unleash Salvo" placed="false" selecttype="Enemy" min="1" max="1" hascertaincost="true" mincost="0">
+  		<infotag type="ActionIndex" value="0"/>
+  		<infotag type="Damage" value="1"/>
+  	</action>
+  	<action name="Ready Salvo" placed="false" selecttype="NA" min="0" max="0" hascertaincost="true" mincost="1">
+  		<infotag type="ActionIndex" value="0"/>
+  	</action>
   	<module name="NeedsUnit" type="Persistance" unitname="Longbows"></module>
+  </card>
+
+  <card type="effect" cardname="Flaming Blades" effectname="Order" shared="False" turns="-1">
+    <action name="Buff Selection" displayname="Choose selection" placed="false" selecttype="Ally" min="1" max="2" hascertaincost="true" mincost="2">
+    	<infotag type="Class" value="Melee"/>
+    	<infotag type="Status" value="Flaming Blades"/>
+    	<module name="OnUpdate" type="Update">
+    		<infotag type="AttackBuff" value="2"/>
+    	</module>
+    	<module name="OnNewTurn" type="NewTurn">
+    		<infotag type="Status" value="Flaming Blades"/>
+    	</module>
+    	<infotag type="IsOrder" value="NA"/>
+    	<conditional type="OrderNotUsed" data=""/>
+    </action>
+  	<module name="NeedsUnit" type="Persistance" unitname="Fire Mage"></module>
   </card>
 </cards>

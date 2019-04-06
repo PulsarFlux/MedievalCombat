@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <cards>
+	<!-- <card type="basicunit" name="Peasant Militia" number="15"></card> -->
+	<card type="basicunit" name="Knights" number="5"></card>
+	<card type="basicunit" name="Swordsmen" number="8"></card>
+	<card type="basicunit" name="Crossbows" number="5"></card>
+<!--	<card type="character" name="Fire Mage" number="5"></card>
   <card type="basicunit" name="Spearmen" number="5"></card>
   <card type="basicunit" name="Longbows" number="5"></card>
   <card type="basicunit" name="Crossbows" number="5"></card>
+  -->
   <card type="effect" name="Defensive Formations" number="4"></card>
-  <card type="effect" name="Unleash Salvo" number="4"></card>
+  <card type="effect" name="Infiltration" number="4"></card>
 </cards>
