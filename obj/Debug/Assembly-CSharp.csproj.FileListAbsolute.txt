@@ -33,3 +33,38 @@ C:\Users\pulsa\Downloads\MedievelCombat_TheCG_NEW-20180417T185858Z-001\MedievelC
 C:\Users\pulsa\Downloads\MedievelCombat_TheCG_NEW-20180417T185858Z-001\MedievelCombat_TheCG_NEW\MedievalCombat_TheCG\MedievalCombat_TheCG - Copy\Temp\bin\Debug\UnityEngine.SpatialTracking.xml
 C:\Users\pulsa\Downloads\MedievelCombat_TheCG_NEW-20180417T185858Z-001\MedievelCombat_TheCG_NEW\MedievalCombat_TheCG\MedievalCombat_TheCG - Copy\obj\Debug\Assembly-CSharp.dll
 C:\Users\pulsa\Downloads\MedievelCombat_TheCG_NEW-20180417T185858Z-001\MedievelCombat_TheCG_NEW\MedievalCombat_TheCG\MedievalCombat_TheCG - Copy\obj\Debug\Assembly-CSharp.pdb
+C:\Users\pulsa\Code\medievalcombat\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+C:\Users\pulsa\Code\medievalcombat\obj\Debug\Assembly-CSharp.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\Assembly-CSharp.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\nunit.framework.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEditor.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.Advertisements.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.Analytics.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.GoogleAudioSpatializer.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.HoloLens.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.Networking.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.Purchasing.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.SpatialTracking.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.StandardEvents.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.TestRunner.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.Timeline.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.UI.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\Unity.Cecil.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\Unity.SerializationLogic.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\Unity.DataContract.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\ExCSS.Unity.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\Unity.Legacy.NRefactory.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\Unity.CecilTools.dll
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEditor.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.UI.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.Networking.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.TestRunner.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\nunit.framework.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.Timeline.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.GoogleAudioSpatializer.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.HoloLens.xml
+C:\Users\pulsa\Code\medievalcombat\Temp\bin\Debug\UnityEngine.SpatialTracking.xml
+C:\Users\pulsa\Code\medievalcombat\obj\Debug\Assembly-CSharp.pdb
