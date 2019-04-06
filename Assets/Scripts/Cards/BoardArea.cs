@@ -11,6 +11,12 @@ namespace Assets.Scripts
         public int OwnerIndex;
         public GameCode.Cards.ZoneType Type;
         public GameCode.Cards.Range Range;
+
+        // Custom parent to give cards when being
+        // dragged out of this area rather than the
+        // default of this objects parent.
+        public GameObject CardDragParent = null;
+
         private GameCode.Cards.CardZoneType Zone;
         public bool IsOverlapArea;
 

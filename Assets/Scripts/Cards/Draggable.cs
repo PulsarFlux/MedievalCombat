@@ -27,7 +27,16 @@ namespace Assets.Scripts
             dragoffset = new Vector2(this.transform.position.x, this.transform.position.y) - data.position;
             OriginalParent = this.transform.parent;
             ReturnObject = this.transform.parent;
-            this.transform.SetParent(ReturnObject.parent);
+
+            BoardArea boardArea = OriginalParent.GetComponent<BoardArea>();
+            if (boardArea != null && boardArea.CardDragParent)
+            {
+                this.transform.SetParent(boardArea.CardDragParent.transform);
+            }
+            else
+            {
+                this.transform.SetParent(ReturnObject.parent);
+            }
         }
 
         public void OnDrag(PointerEventData data)
