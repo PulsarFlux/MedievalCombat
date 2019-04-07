@@ -12,7 +12,7 @@ namespace Assets.GameCode.Cards
         private System.Random mRandom;
         private static float kVPtoBattlePointsScoreRatio = 3;
         private static float kAPtoBattlePointsScoreRatio = 2;
-        private static float kCPtoBattlePointsScoreRatio = 0; //Test out not valuing CP 3;
+        private static float kCPtoBattlePointsScoreRatio = 0; //Test out not valuing CP // 3;
 
         public AIPlayer(int index, CardGameState GS) : base(index, GS)
         {
@@ -29,12 +29,13 @@ namespace Assets.GameCode.Cards
             }
             else
             {
-                bool shouldPass = false;
+                bool shouldContinue = false;
+                bool hasTakenAction = false;
                 List<Actions.ActionOrder> availableActions = GetAvailableActions(turnInfo, gameState);
 
-                while (!shouldPass && availableActions.Count > 0)
+                while (!shouldContinue && availableActions.Count > 0)
                 {
-                    float passScore = EvaluateMatchWinChance(getIndex(), gameState, manager.GetRoundVictoryLimit(), true);
+                    float continueScore = EvaluateMatchWinChance(getIndex(), gameState, manager.GetRoundVictoryLimit(), !hasTakenAction);
                     float maxScore = 0;
                     Actions.ActionOrder bestAction = null;
                     foreach (Actions.ActionOrder action in availableActions)
@@ -46,15 +47,16 @@ namespace Assets.GameCode.Cards
                             bestAction = action;
                         }
                     }
-                    if (maxScore > passScore)
+                    if (maxScore > continueScore)
                     {
                         // Update real game state with action.
                         manager.PassAction(bestAction);
                         availableActions = GetAvailableActions(turnInfo, gameState);
+                        hasTakenAction = HasSpentCP() || WasCardPlaced();
                     }
                     else
                     {
-                        shouldPass = true;
+                        shouldContinue = true;
                     }
                 }
 
@@ -215,7 +217,12 @@ namespace Assets.GameCode.Cards
 
             // We assume this is a valid action otherwise this action should never have been made available.
             actionCopy.Action.Execute(actionCopy.Performer, actionCopy.Selection, stateCopy);
-            return EvaluateMatchWinChance(playerIndex, stateCopy, roundVictoryLimit);
+
+            Player thisPlayerCopy = stateCopy.Players[playerIndex];
+            // Check whether this action (or preceding actions this turn) allows us not to pass this turn.
+            bool stillPassing = !(thisPlayerCopy.HasSpentCP() || thisPlayerCopy.WasCardPlaced());
+
+            return EvaluateMatchWinChance(playerIndex, stateCopy, roundVictoryLimit, stillPassing);
         }
 
         private static float ScoreHand(CardList hand)
@@ -240,7 +247,8 @@ namespace Assets.GameCode.Cards
         {
             return (kVPtoBattlePointsScoreRatio * unit.GetVP() +
                 (unit.HasStatus("Can't attack") ? 0 : kAPtoBattlePointsScoreRatio * unit.CalcAttack()) +
-                unit.CalcHealth());
+                // Do not consider TempHP so cant use CalcHealth
+                (unit.BaseHealth + unit.HealthModifier));
         }
         private static float ScorePlayer(Player player)
         {
