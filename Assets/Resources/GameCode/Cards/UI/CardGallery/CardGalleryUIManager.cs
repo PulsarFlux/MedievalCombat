@@ -8,6 +8,8 @@ namespace Assets.GameCode.Cards.UI
     public class CardGalleryUIManager : CardsUIManager, ICardPlacedHandler
     {
         public GameObject UnitCardPrefab, ExpandedUnitCardPrefab, CardPrefab, ExpandedCardPrefab;
+        public GameObject ExpandedEffectCardPrefab;
+        public GameObject EffectCardPrefab;
 
         public GameObject mMainDisplayArea;
 
@@ -57,13 +59,17 @@ namespace Assets.GameCode.Cards.UI
             }
             foreach (Entities.Entity E in mCards.Cards)
             {
-                UpdateCard<UICard, UnitDisplayCard, UnitExpandingCard, DisplayCard, ExpandingCard>(E, 
+                UpdateCard<UICard, UnitDisplayCard, UnitExpandingCard, 
+                DisplayCard, ExpandingCard, DisplayCard, ExpandingCard>(
+                    E, 
                     mMainDisplayArea.transform,
                     mUICards,
                     CardPrefab,
                     ExpandedCardPrefab,
                     UnitCardPrefab,
-                    ExpandedUnitCardPrefab);
+                    ExpandedUnitCardPrefab,
+                    EffectCardPrefab,
+                    ExpandedEffectCardPrefab);
             }
         }
 
