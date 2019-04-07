@@ -38,7 +38,7 @@ namespace Assets.GameCode.Cards
 		CardPool TheCardPool;
 		DeckSpec TheDeckSpec;
 
-        State.CardsSetupState mSetupState;
+        bool mIsCampaignCardGame;
 
         public void PassAction(Actions.ActionOrder Ac)
         {
@@ -97,22 +97,30 @@ namespace Assets.GameCode.Cards
         public void PlayerHasWon(bool inPlayerOneWon)
         {
             State.StateHolder.StateManager.SetPassedState(new State.CardGameResult(inPlayerOneWon));
-            State.StateHolder.StateManager.MoveToNextScene(mSetupState == null || !mSetupState.mIsCampaign ?
+            State.StateHolder.StateManager.MoveToNextScene(!mIsCampaignCardGame ?
                                                 State.GameScene.MainMenu : State.GameScene.CampaignMap);
         }
 
 	    // Use this for initialization
 	    void Start ()
         {
-            mSetupState = (State.CardsSetupState)State.StateHolder.StateManager.GetAndClearPassedState();
+            State.CardsSetupState setupState = (State.CardsSetupState)State.StateHolder.StateManager.GetAndClearPassedState();
+            if (setupState == null)
+            {
+                mIsCampaignCardGame = false;
+            }
+            else
+            {
+                mIsCampaignCardGame = setupState.mIsCampaign;
+            }
 
             TheCardGameState = State.StateHolder.StateManager.LoadCardGameState();
 
-            if (mSetupState == null || mSetupState.mNeedsInit)
+            if (setupState == null || setupState.mNeedsInit)
             {
                 TheCardGameState.Init();
-                TheCardGameState.GeneratePlayerDecks(mSetupState == null ? null : mSetupState.mPlayerDeck,
-                                                     mSetupState == null ? null : mSetupState.mOpposingDeck);
+                TheCardGameState.GeneratePlayerDecks(setupState == null ? null : setupState.mPlayerDeck,
+                    setupState == null ? null : setupState.mOpposingDeck);
                 TheCardGameState.NewMatch();
             }
 
@@ -121,7 +129,7 @@ namespace Assets.GameCode.Cards
             TheUIManager = this.gameObject.GetComponent<UI.CardGameUIManager>();
             TheUIManager.SetUp(this, TheCardGameState, TheTurnManager.getTI());
 
-            if (mSetupState == null || mSetupState.mNeedsInit)
+            if (setupState == null || setupState.mNeedsInit)
             {
                 TheTurnManager.NewMatch();
                 NewRound();
@@ -132,14 +140,14 @@ namespace Assets.GameCode.Cards
         public void ViewDeck()
         {
             State.CardGallerySetupState setupState = new State.CardGallerySetupState(TheCardGameState.Players[0].mDeck, 
-                (mSetupState != null) && mSetupState.mIsCampaign ? State.GameScene.CampaignCardGame : State.GameScene.CardGame);
+                mIsCampaignCardGame ? State.GameScene.CampaignCardGame : State.GameScene.CardGame);
             State.StateHolder.StateManager.SetPassedState(setupState);
             State.StateHolder.StateManager.MoveToNextScene(Assets.GameCode.State.GameScene.CardGallery);
         }
         public void ViewGraveyard()
         {
             State.CardGallerySetupState setupState = new State.CardGallerySetupState(TheCardGameState.Players[0].mGraveyard, 
-                (mSetupState != null) && mSetupState.mIsCampaign ? State.GameScene.CampaignCardGame : State.GameScene.CardGame);
+                mIsCampaignCardGame ? State.GameScene.CampaignCardGame : State.GameScene.CardGame);
             State.StateHolder.StateManager.SetPassedState(setupState);
             State.StateHolder.StateManager.MoveToNextScene(Assets.GameCode.State.GameScene.CardGallery);
         }
