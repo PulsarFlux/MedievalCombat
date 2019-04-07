@@ -8,6 +8,7 @@ namespace Assets.Utility
     // a node can be the child of two or more
     // other nodes, but it should still have the
     // same hierarchy and directedness of a tree.
+    [Serializable()]
     public class TreeNode<N>
     {
         public N mItem;

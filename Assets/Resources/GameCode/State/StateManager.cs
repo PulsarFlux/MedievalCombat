@@ -84,6 +84,21 @@ namespace Assets.GameCode.State
         public Cards.CardCollection mCardCollection;
         public GameScene mLastScene;
     }
+
+    public class LoadOrSaveState : PassedState
+    {
+        public LoadOrSaveState(Menus.SaveScreenMode mode)
+        {
+            mType = PassedStateType.LoadOrSave;
+            mSaveScreenMode = mode;
+            // TODO - LoadOrSave screen always returns to main menu atm
+            mReturnScene = GameScene.MainMenu;
+            UnityEngine.Debug.Assert(State.StateHolder.StateManager.GetCurrentScene() == mReturnScene);
+        }
+        public Menus.SaveScreenMode mSaveScreenMode;
+        public GameScene mReturnScene;
+    }
+
     public class MapSetupState : PassedState
     {
         public MapSetupState(bool needsNewMap)
@@ -94,6 +109,13 @@ namespace Assets.GameCode.State
 
         public bool mCreateNewMap;
     }
+
+    public struct SaveDescription
+    {
+        public Saves.SaveSlot slot;
+        public string saveName;
+    }
+
     public enum PassedStateType
     {
         Map,
@@ -213,6 +235,8 @@ namespace Assets.GameCode.State
             mCurrentPassedState = null;
             mCurrentMapState = null;
             mCurrentCardGameState = null;
+            mCurrentSaveDesc = new SaveDescription();
+            mCurrentSaveDesc.slot = Assets.GameCode.Saves.SaveSlot.None;
         }
 
         public void SetPassedState(PassedState theState)
@@ -258,9 +282,55 @@ namespace Assets.GameCode.State
                     mCurrentGameScene = GameScene.DeckBuilder;
                     SceneManager.LoadScene("DeckBuilder", LoadSceneMode.Single);
                     break;
+                case GameScene.LoadOrSave:
+                    mCurrentGameScene = GameScene.LoadOrSave;
+                    SceneManager.LoadScene("SaveGames", LoadSceneMode.Single);
+                    break;
                 default:
                     UnityEngine.Debug.DebugBreak(); // Unhandled scene move request
                     break;
+            }
+        }
+
+        public SaveDescription GetCurrentSaveDesc()
+        {
+            return mCurrentSaveDesc;
+
+        }
+        public void SetCurrentSaveDesc(Saves.SaveSlot saveSlot, string saveName)
+        {
+            mCurrentSaveDesc.slot = saveSlot;
+            mCurrentSaveDesc.saveName = saveName;
+
+            UnityEngine.Debug.Log("Set current save, slot: " + saveSlot.ToString() + ", name: " + saveName);
+        }
+
+        public void LoadSave(Saves.SaveSlot slot)
+        {
+            Saves.SaveGame saveGame;
+            string saveName = null;
+
+            if (Saves.SaveManager.LoadSave(slot, ref saveName, out saveGame))
+            {
+                mCurrentSaveDesc.slot = slot;
+                mCurrentSaveDesc.saveName = saveName;
+
+                mCurrentMapState = saveGame.mMapState;
+                mCurrentCardGameState = saveGame.mCardGameState;
+                mCurrentCampaignState = saveGame.mCampaignState;
+
+                // TODO card game should not be special cased like this - maybe?
+                if (saveGame.mLoadScene == GameScene.CampaignCardGame ||
+                    saveGame.mLoadScene == GameScene.CardGame)
+                {
+                    CardsSetupState setupState = new CardsSetupState(saveGame.mLoadScene == GameScene.CampaignCardGame, false);
+                    SetPassedState(setupState);
+                }
+                MoveToNextScene(saveGame.mLoadScene);
+            }
+            else
+            {
+                UnityEngine.Debug.Log("Failed to load save: " + saveName);
             }
         }
     }

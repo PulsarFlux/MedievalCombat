@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Assets.GameCode.Map
@@ -95,6 +95,19 @@ namespace Assets.GameCode.Map
             State.StateHolder.StateManager.SetPassedState(deckBuilderStateState);
             State.StateHolder.StateManager.MoveToNextScene(State.GameScene.DeckBuilder);
         }
+
+        public void SaveGame()
+        {
+            Saves.SaveGame theSave = new Assets.GameCode.Saves.SaveGame();
+            theSave.mCampaignState = mCampaignState;
+            theSave.mMapState = mMapState;
+            theSave.mCardGameState = null;
+            theSave.mLoadScene = Assets.GameCode.State.GameScene.CampaignMap;
+
+            State.SaveDescription saveDesc = State.StateHolder.StateManager.GetCurrentSaveDesc();
+            Saves.SaveManager.SaveGame(saveDesc.slot, saveDesc.saveName, theSave);
+        }
+
         private static Cards.Loading.DeckSpec GenerateOpposingDeck(int difficulty, Cards.Loading.MetaDataLibrary metaDataLibrary)
         {
             const int kNumCardsInDeck = Cards.CardGameState.kNumStartingCards;

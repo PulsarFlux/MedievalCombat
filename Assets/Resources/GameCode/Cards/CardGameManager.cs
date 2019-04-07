@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Loading;
 using System.Runtime.Serialization;
@@ -145,6 +145,12 @@ namespace Assets.GameCode.Cards
                 TheTurnManager.NewMatch();
                 NewRound();
             }
+
+            if (mIsCampaignCardGame)
+            {
+                SaveGame();
+            }
+
             TheUIManager.UpdateUI();
 	    }
 
@@ -161,6 +167,29 @@ namespace Assets.GameCode.Cards
                 mIsCampaignCardGame ? State.GameScene.CampaignCardGame : State.GameScene.CardGame);
             State.StateHolder.StateManager.SetPassedState(setupState);
             State.StateHolder.StateManager.MoveToNextScene(Assets.GameCode.State.GameScene.CardGallery);
+        }
+
+        public void SaveGame()
+        {
+            Saves.SaveGame theSave = new Assets.GameCode.Saves.SaveGame();
+            if (mIsCampaignCardGame)
+            {
+                theSave.mCampaignState = State.StateHolder.StateManager.LoadCampaignState();
+                theSave.mMapState = State.StateHolder.StateManager.LoadMapState();
+                theSave.mCardGameState = TheCardGameState;
+                theSave.mLoadScene = State.GameScene.CampaignCardGame;
+            }
+            else
+            {
+                theSave.mCampaignState = null;
+                theSave.mMapState = null;
+                theSave.mCardGameState = TheCardGameState;
+                theSave.mLoadScene = State.GameScene.CardGame;
+            }
+            // TODO - maybe? make this work for non-campaign card games
+            // (they will not currently have a save desc set up).
+            State.SaveDescription saveDesc = State.StateHolder.StateManager.GetCurrentSaveDesc();
+            Saves.SaveManager.SaveGame(saveDesc.slot, saveDesc.saveName, theSave);
         }
     }
 }
