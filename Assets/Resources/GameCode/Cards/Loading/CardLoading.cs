@@ -60,6 +60,7 @@ namespace Assets.GameCode.Cards.Loading
                     mActionDict.Add("Unleash Salvo", typeof(UnleashSalvoAction));
                     mActionDict.Add("Ready Salvo", typeof(ReadySalvoAction));
                     mActionDict.Add("ReloadAction", typeof(ReloadAction));
+                    mActionDict.Add("SpawnEntity", typeof(SpawnEntityAction));
                     mActionDict.Add("Buff Selection", typeof(BuffSelection_Action));
                 }
 
