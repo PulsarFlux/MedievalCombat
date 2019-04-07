@@ -281,13 +281,13 @@ namespace Assets.GameCode.Cards.Entities
             switch (Type)
             {
                 case (ModuleType.PreAttack):
-                    AMCombiner.PreAttack.Add((AttackModule)TheModule);
+                    AMCombiner.PreAttack.Add((PreAttackModule)TheModule);
                     break;
                 case (ModuleType.Attack):
                     AMCombiner.Attack.Add((AttackModule)TheModule);
                     break;
                 case (ModuleType.PostAttack):
-                    AMCombiner.PostAttack.Add((AttackModule)TheModule);
+                    AMCombiner.PostAttack.Add((PostAttackModule)TheModule);
                     break;
                 case (ModuleType.Targetting):
                     TMCombiner.Add((TargettingModule)TheModule);
@@ -317,13 +317,13 @@ namespace Assets.GameCode.Cards.Entities
             switch (Type)
             {
                 case (ModuleType.PreAttack):
-                    AMCombiner.PreAttack.Remove((AttackModule)TheModule);
+                    AMCombiner.PreAttack.Remove((PreAttackModule)TheModule);
                     break;
                 case (ModuleType.Attack):
                     AMCombiner.Attack.Remove((AttackModule)TheModule);
                     break;
                 case (ModuleType.PostAttack):
-                    AMCombiner.PostAttack.Remove((AttackModule)TheModule);
+                    AMCombiner.PostAttack.Remove((PostAttackModule)TheModule);
                     break;
                 case (ModuleType.Targetting):
                     TMCombiner.Remove((TargettingModule)TheModule);
@@ -357,7 +357,7 @@ namespace Assets.GameCode.Cards.Entities
                     ModuleInCallingModule = AMCombiner.PreAttack[LinkedModuleIndex];
                     break;
                 case (ModuleType.Attack):
-                    ModuleInCallingModule = AMCombiner.Attack[LinkedModuleIndex];
+                    ModuleInCallingModule = (Module)AMCombiner.Attack[LinkedModuleIndex];
                     break;
                 case (ModuleType.PostAttack):
                     ModuleInCallingModule = AMCombiner.PostAttack[LinkedModuleIndex];
