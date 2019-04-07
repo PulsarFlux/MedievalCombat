@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Assets.GameCode.Cards.Modules.NewTurn
 {
     [Serializable()]
-    class Attached_NewTurn : NewTurnModule
+    class Attached_NewTurn : NewTurnModule, INewTurnModule
     {
         Entities.Unit Parent;
         string AttachedToName;

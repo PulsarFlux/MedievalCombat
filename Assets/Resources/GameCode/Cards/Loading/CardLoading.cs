@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +39,9 @@ namespace Assets.GameCode.Cards.Loading
                     mModuleDict.Add("Reloading", typeof(Modules.Target.Reloading));
                     mModuleDict.Add("OnAttackStatus", typeof(Modules.Attack.OnAttackStatus));
                     mModuleDict.Add("NeedsUnit", typeof(Modules.Persistance.NeedsUnitModule));
+                    mModuleDict.Add("OnUpdate", typeof(Modules.Update.OnUpdateModule));
+                    mModuleDict.Add("OnNewTurn", typeof(Modules.NewTurn.OnNewTurnModule));
+                    mModuleDict.Add("OnAttack", typeof(Modules.Attack.OnAttackModule));
 
                     //TODO Keep up to date - Effects
                     mEffectDict = new Dictionary<string, Type>();

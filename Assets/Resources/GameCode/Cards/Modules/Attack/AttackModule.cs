@@ -5,8 +5,13 @@ using System.Text;
 
 namespace Assets.GameCode.Cards.Modules.Attack
 {
+    public interface IAttackModule
+    {
+        void Run(Entities.Unit Target);
+    }
+
     [Serializable()]
-    public abstract class AttackModule : Module
+    public abstract class AttackModule : Module, IAttackModule
     {
         protected Entities.Unit Parent;
         public AttackModule() 

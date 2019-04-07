@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,9 +33,9 @@ namespace Assets.GameCode.Cards.Entities
         protected List<BeingTargetedModule> BeingTargetedModules = new List<BeingTargetedModule>();
         protected List<BlockingModule> BlockingModules = new List<BlockingModule>();
         protected List<RemovedModule> RemovedModules = new List<RemovedModule>();
-        protected List<NewTurnModule> NewTurnModules = new List<NewTurnModule>();
-        protected List<UpdateModule> UpdateModules = new List<UpdateModule>();
-        protected List<Module> NewTurnGenericModules = new List<Module>();
+        protected List<INewTurnModule> NewTurnModules = new List<INewTurnModule>();
+        protected List<IUpdateModule> UpdateModules = new List<IUpdateModule>();
+        protected List<Module> AllModules = new List<Module>();
 
         protected List<string> Classes;
 
@@ -275,6 +275,27 @@ namespace Assets.GameCode.Cards.Entities
             return results;
         }
 
+        // Helper function
+        public void AddModulesFromData(List<Loading.ModuleData> moduleDatas)
+        {
+            if (moduleDatas != null)
+            {
+                foreach (Loading.ModuleData moduleData in moduleDatas)
+                {
+                    Modules.Module module = Loading.CardLoading.GetModuleFromData(moduleData);
+                    module.Setup(this, moduleData);
+                    this.AddModule(moduleData.Type, module);
+                }
+            }
+        }
+        // Helper function
+        public Module AddModuleFromData(Loading.ModuleData moduleData)
+        {
+            Modules.Module module = Loading.CardLoading.GetModuleFromData(moduleData);
+            module.Setup(this, moduleData);
+            this.AddModule(moduleData.Type, module);
+            return module;
+        }
         public void AddModule(ModuleType Type, Module TheModule)
         {
             //TODO Keep up to date - ModuleTypes
@@ -284,7 +305,7 @@ namespace Assets.GameCode.Cards.Entities
                     AMCombiner.PreAttack.Add((PreAttackModule)TheModule);
                     break;
                 case (ModuleType.Attack):
-                    AMCombiner.Attack.Add((AttackModule)TheModule);
+                    AMCombiner.Attack.Add((IAttackModule)TheModule);
                     break;
                 case (ModuleType.PostAttack):
                     AMCombiner.PostAttack.Add((PostAttackModule)TheModule);
@@ -302,14 +323,14 @@ namespace Assets.GameCode.Cards.Entities
                     RemovedModules.Add((RemovedModule)TheModule);
                     break;
                 case (ModuleType.NewTurn):
-                    NewTurnModules.Add((NewTurnModule)TheModule);
+                    NewTurnModules.Add((INewTurnModule)TheModule);
                     break;
                 case (ModuleType.Update):
-                    UpdateModules.Add((UpdateModule)TheModule);
+                    UpdateModules.Add((IUpdateModule)TheModule);
                     break;
             }
 
-            NewTurnGenericModules.Add(TheModule);
+            AllModules.Add(TheModule);
         }
         public void RemoveModule(ModuleType Type, Module TheModule)
         {
@@ -345,7 +366,7 @@ namespace Assets.GameCode.Cards.Entities
                     break;
             }
 
-            NewTurnGenericModules.Remove(TheModule);
+            AllModules.Remove(TheModule);
         }
         public void LinkModules(ref Module ModuleInCallingModule, int LinkedModuleIndex, string MT)
         {
@@ -372,10 +393,10 @@ namespace Assets.GameCode.Cards.Entities
                     ModuleInCallingModule = RemovedModules[LinkedModuleIndex];
                     break;
                 case (ModuleType.NewTurn):
-                    ModuleInCallingModule = NewTurnModules[LinkedModuleIndex];
+                    ModuleInCallingModule = (Module)NewTurnModules[LinkedModuleIndex];
                     break;
                 case (ModuleType.Update):
-                    ModuleInCallingModule = UpdateModules[LinkedModuleIndex];
+                    ModuleInCallingModule = (Module)UpdateModules[LinkedModuleIndex];
                     break;
             }
         }
@@ -537,12 +558,20 @@ namespace Assets.GameCode.Cards.Entities
             {
                 AddStatus("Was Deployed");
             }
-            foreach (NewTurnModule TM in NewTurnModules)
+
+            // Check if any modules have reached their lifetimes
+            // (they will remove themselves, so iterate through a copied list).
+            List<Module> allModulesCopy = new List<Module>(AllModules);
+            foreach (Module module in allModulesCopy)
             {
-                Debug.Log(TM.ToString());
+                module.CheckLifetime(this);
+            }
+
+            foreach (INewTurnModule TM in NewTurnModules)
+            {
                 TM.NewTurn();
             }
-            foreach (Module M in NewTurnGenericModules)
+            foreach (Module M in AllModules)
             {
                 M.NewTurnGeneric();
             }
@@ -554,7 +583,7 @@ namespace Assets.GameCode.Cards.Entities
             AttackModifier = 0;
 			AttackCostModifier = 0;
             VPModifier = 0;
-            foreach (UpdateModule UM in UpdateModules)
+            foreach (IUpdateModule UM in UpdateModules)
             {
                 UM.Run();
             }

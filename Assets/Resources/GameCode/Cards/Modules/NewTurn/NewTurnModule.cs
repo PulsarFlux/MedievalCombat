@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Assets.GameCode.Cards.Modules.NewTurn
 {
+    public interface INewTurnModule
+    {
+        void NewTurn();
+    }
+
     [Serializable()]
-    public abstract class NewTurnModule : Module
+    public abstract class NewTurnModule : Module, INewTurnModule
     {
         public NewTurnModule()
         {

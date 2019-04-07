@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ namespace Assets.GameCode.Cards.Modules.Attack
     public class AtkModCombiner
     {
         public List<PreAttackModule> PreAttack = new List<PreAttackModule>();
-        public List<AttackModule> Attack = new List<AttackModule>();
+        public List<IAttackModule> Attack = new List<IAttackModule>();
         public List<PostAttackModule> PostAttack = new List<PostAttackModule>();
         public void Run(Unit Runner, Unit Target)
         {
@@ -18,7 +18,7 @@ namespace Assets.GameCode.Cards.Modules.Attack
             {
                 AM.Run(Target);
             }
-            foreach (AttackModule AM in Attack)
+            foreach (IAttackModule AM in Attack)
             {
                 AM.Run(Target);
             }
