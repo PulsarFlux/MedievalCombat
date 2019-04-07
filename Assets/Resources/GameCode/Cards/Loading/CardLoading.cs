@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -87,11 +87,11 @@ namespace Assets.GameCode.Cards.Loading
         public static CardList ProduceDeck(CardPool CP, DeckSpec DS)
         {
             CardList resultList = new CardList();
-            foreach (CardEntry CE in DS.Cards)
+            foreach (KeyValuePair<string, int> cardEntry in DS.Cards)
             {
-                for (int i = 0; i < CE.mNumber; i++)
+                for (int i = 0; i < cardEntry.Value; i++)
                 {
-                    resultList.AddCard(CardLoading.ProduceCard(CE.mName, CP));
+                    resultList.AddCard(CardLoading.ProduceCard(cardEntry.Key, CP));
                 }
             }
             return resultList;
@@ -218,7 +218,15 @@ namespace Assets.GameCode.Cards.Loading
             {
                 if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "card")
                 {
-                    DS.Cards.Add(new CardEntry(xmlReader["name"], xmlReader["number"]));
+                    int number = 0;
+                    if (int.TryParse(xmlReader["number"], out number) == true)
+                    {
+                        DS.SetEntry(xmlReader["name"], number);
+                    }
+                    else
+                    {
+                        Debug.Log("Non integer number in Deck spec");
+                    }
                 }
             }
         }
@@ -241,6 +249,7 @@ namespace Assets.GameCode.Cards.Loading
                     result = CardType.Effect;
                     break;
                 default:
+                    UnityEngine.Debug.LogError("Unhandled card type string: " + Type);
                     result = CardType.Other;
                     break;
             }
@@ -287,6 +296,7 @@ namespace Assets.GameCode.Cards.Loading
                     result = ModuleType.Persistance;
                     break;
                 default:
+                    UnityEngine.Debug.LogError("Unhandled module type string: " + Type);
                     result = ModuleType.Removed;
                     break;
             }
