@@ -22,22 +22,6 @@ namespace Assets.GameCode.Cards.Effects
         {
             TheEntity = E;
         }
-        public EffectNode(EffectNode toCopy, EffectHolder holder)
-        {
-            mHolder = holder;
-            OwnerIndex = toCopy.OwnerIndex;
-           // UniqueName = new string(toCopy.UniqueName);
-         //   TheEffect = toCopy.TheEffect.DeepCopy(this);
-        //    TheEntity = toCopy.TheEntity.DeepCopy();
-            HasEffect = toCopy.HasEffect;
-        }
-
-        /*
-        private EffectNode(Effect E)
-        {
-            TheEffect = E;
-        }
-        */
 
         public void SetHolder(EffectHolder EH)
         {

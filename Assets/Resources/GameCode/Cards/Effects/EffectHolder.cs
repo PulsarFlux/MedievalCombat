@@ -20,16 +20,6 @@ namespace Assets.GameCode.Cards.Effects
             this.OwnerIndex = OwnerIndex;
             mCardZoneType = new CardZoneType(Shared ? ZoneType.SharedEffect : ZoneType.Effect, Range.NA, OwnerIndex);
         }
-        /*public EffectHolder(EffectHolder toCopy, CardGameState GS)
-        {
-            TheCardGameState = GS;
-            this.Shared = toCopy.Shared;
-            this.OwnerIndex = toCopy.OwnerIndex;
-            foreach (EffectNode EN in toCopy.Nodes)
-            {
-              //  Nodes.Add(new EffectNode(EN));
-            }
-        }*/
 
         public void AddNode(EffectNode EN)
         {
@@ -43,6 +33,10 @@ namespace Assets.GameCode.Cards.Effects
         public void EndEffect(EffectNode EN)
         {
             Nodes.Remove(EN);
+            if (EN.GetEntity() == null)
+            {
+                EN.GetEntity().RemovedFromBoard();
+            }
         }
         public void NewTurn()
         {
