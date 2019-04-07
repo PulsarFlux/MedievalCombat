@@ -12,7 +12,16 @@ namespace Assets.GameCode.Cards.Modules
         private int mMaxLifetime = -1;
         private int mCurrentLifetime = 0;
         public abstract void Message();
-        public abstract void Setup(Entities.Entity Parent, Loading.ModuleData MD);
+        public void Setup(Entities.Entity parent, Loading.ModuleData moduleData)
+        {
+            if (moduleData != null)
+            {
+                mConditions = new Components.Conditional.ConditionChecker(moduleData.mConditionals);
+                mMaxLifetime = moduleData.mLifetime;
+            }
+            SetupInternal(parent, moduleData);
+        }
+        protected abstract void SetupInternal(Entities.Entity parent, Loading.ModuleData moduleData);
         // Called on NewTurn on every module
         // Intended for management of statuses rather than actual effects.
         public abstract void NewTurnGeneric();
@@ -26,5 +35,6 @@ namespace Assets.GameCode.Cards.Modules
                 }
             }
         }
+        protected Components.Conditional.ConditionChecker mConditions;
     }
 }

@@ -27,7 +27,7 @@ namespace Assets.GameCode.Cards.Modules.Update
             }
         }
 
-        public override void Setup(Entity Parent, ModuleData MD)
+        protected override void SetupInternal(Entity Parent, ModuleData MD)
         {
             this.Parent = (Unit)Parent;
             if (MD.Data.Count > 0)

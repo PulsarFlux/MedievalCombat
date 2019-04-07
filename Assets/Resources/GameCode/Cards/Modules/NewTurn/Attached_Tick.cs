@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +16,9 @@ namespace Assets.GameCode.Cards.Modules.NewTurn
         {
             this.Parent = Parent;
             AttachedToName = Name;
+            this.Type = ModuleType.NewTurn;
         }
-        public override void Setup(Entities.Entity Parent, Loading.ModuleData MD)
+        protected override void SetupInternal(Entities.Entity Parent, Loading.ModuleData MD)
         {
 
         }

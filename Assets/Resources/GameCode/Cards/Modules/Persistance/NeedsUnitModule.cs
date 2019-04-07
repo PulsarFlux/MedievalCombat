@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Assets.GameCode.Cards.Modules.Persistance
 {
@@ -28,7 +28,7 @@ namespace Assets.GameCode.Cards.Modules.Persistance
                 mParentEffectEntity.GetEffect().End();
             }
         }
-        public override void Setup(Entities.Entity Parent, Loading.ModuleData MD)
+        protected override void SetupInternal(Entities.Entity Parent, Loading.ModuleData MD)
         {
             mParentEffectEntity = (Entities.Effect_Entity)Parent;
             mRequiredUnitName = MD.Data[0];

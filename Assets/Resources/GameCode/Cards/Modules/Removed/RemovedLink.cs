@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,7 @@ namespace Assets.GameCode.Cards.Modules.Removed
         Effects.Effect LinkedEffect;
 
         public RemovedLink() : base() {}
-        public override void Setup(Entities.Entity Parent, Loading.ModuleData MD)
+        protected override void SetupInternal(Entities.Entity Parent, Loading.ModuleData MD)
         {
 
         }

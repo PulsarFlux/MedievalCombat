@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +22,7 @@ namespace Assets.GameCode.Cards.Modules.NewTurn
         {
         }
 
-        public override void Setup(Entities.Entity parent, Loading.ModuleData MD)
+        protected override void SetupInternal(Entities.Entity parent, Loading.ModuleData MD)
         {
             this.Parent = (Entities.Unit)parent;
             mStatusText = MD.Data[0];
