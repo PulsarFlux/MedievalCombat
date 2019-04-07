@@ -1,0 +1,24 @@
+﻿TODO
+Implement the rest of the cards in the rules document -- nearly done?
+Cards that are added to the hand by other cards
+Allow persistance modules for units?
+
+TODO FOR ALPHA V1
+Pause menu - Can save/load game and quit to main menu/desktop
+Improve AI --  (AI) synergy metadata?
+More cards - need more cards in tiers
+Starting deck choice? Or at least sort out starting cards
+Better generation of opponent decks -- use more tiers, more curated, use synergies?
+Better generation of rewards -- less duplicates? control types? somewhat defined reward packages?
+Expanded cards that dont just appear in the centre of the screen.
+
+IDEAS
+Developing, multi-stage, contextual battles with non-binary outcomes
+eg.
+Siege battle:
+2 rounds to break down the wall (one needed to pass), final round in city if successful, outside if not.
+3 outcomes: win siege, forces repelled, forces counter-attacked.
+
+BUGS
+AI not using defensive formations order - 'Not a bug' since units gain 'cant attack'
+	after the order and we then do not score their attack value.
