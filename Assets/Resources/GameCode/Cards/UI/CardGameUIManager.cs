@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +29,8 @@ namespace Assets.GameCode.Cards.UI
         public GameObject CardPrefab;
         public GameObject ExpandedUnitCardPrefab;
         public GameObject ExpandedCardPrefab;
+        public GameObject ExpandedEffectCardPrefab;
+        public GameObject EffectCardPrefab;
 
         public GameObject[] BoardAreas1 = new GameObject[2];
         public GameObject[] BoardAreas2 = new GameObject[2];
@@ -78,15 +80,25 @@ namespace Assets.GameCode.Cards.UI
 
         public void StartPlacedAction(PlayingCard PlacedCard)
         {
-            ResetActions();
-            ResetSelections();
-            PlacedCard.ToggleSelect(false);
-            ActiveCard = PlacedCard;
-            CurrentPossibleActions = new List<ActionInfo>();
-            CurrentPossibleActions.Add(PlacedCard.GetEntity().PAHolder.getAction());
-            CurrentActionIndex = 0;
-            ActionButton.GetComponentInChildren<Text>().text = CurrentPossibleActions[CurrentActionIndex].ActionName;
-            StartSecondarySelect();
+            if (PlacedCard.GetEntity().PAHolder.GetAction().Max == 0)
+            {
+                SendAction(new ActionOrder(PlacedCard.GetEntity().PAHolder.GetAction().mAction, PlacedCard.GetEntity(), new List<Entities.Entity>()));
+                ResetActions();
+                ResetSelections();
+                UpdateUI();
+            }
+            else
+            {
+                ResetActions();
+                ResetSelections();
+                PlacedCard.ToggleSelect(false);
+                ActiveCard = PlacedCard;
+                CurrentPossibleActions = new List<ActionInfo>();
+                CurrentPossibleActions.Add(PlacedCard.GetEntity().PAHolder.GetAction());
+                CurrentActionIndex = 0;
+                ActionButton.GetComponentInChildren<Text>().text = CurrentPossibleActions[CurrentActionIndex].ActionName;
+                StartSecondarySelect();
+            }
         }
 
         public void CardSelected(PlayingCard SelectedCard)
@@ -96,12 +108,12 @@ namespace Assets.GameCode.Cards.UI
                 if (SecondSelect)
                 {
                     if (CurrentPossibleActions[CurrentActionIndex].SelectType == PlayerType.Ally &&
-                        SelectedCard.GetEntity().getOwnerIndex() != TheTurnInformation.GetCPI())
+                        SelectedCard.GetEntity().GetOwnerIndex() != TheTurnInformation.GetCPI())
                     {
                         return;
                     }
                     if (CurrentPossibleActions[CurrentActionIndex].SelectType == PlayerType.Enemy &&
-                        SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.GetCPI())
+                        SelectedCard.GetEntity().GetOwnerIndex() == TheTurnInformation.GetCPI())
                     {
                         return;
                     }
@@ -120,7 +132,7 @@ namespace Assets.GameCode.Cards.UI
                     TestActionConditions();
                     return;
                 }
-                if (SelectedCard.GetEntity().getOwnerIndex() == TheTurnInformation.GetCPI())
+                if (SelectedCard.GetEntity().GetOwnerIndex() == TheTurnInformation.GetCPI())
                 {
                     if (SelectedCard.ToggleSelect(false))
                     {
@@ -164,7 +176,20 @@ namespace Assets.GameCode.Cards.UI
                 NumSel = Selection.Count;
                 if (NumSel <= CurrentActionInfo.Max && NumSel >= CurrentActionInfo.Min)
                 {
-                    ActionButton.interactable = true;
+                    List<Entities.Entity> selectedEntities = new List<Entities.Entity>();
+                    foreach (PlayingCard C in Selection)
+                    {
+                        selectedEntities.Add(C.GetEntity());
+                    }
+                    if (CurrentActionInfo.mAction.CheckValidity(ActiveCard.GetEntity(), 
+                            selectedEntities, TheTurnInformation))
+                    {
+                        ActionButton.interactable = true;
+                    }
+                    else
+                    {
+                        ActionButton.interactable = false;
+                    }
                 }
                 else
                 {
@@ -250,7 +275,7 @@ namespace Assets.GameCode.Cards.UI
 
         public override void UpdateUI()
         {
-            TheCardGameManager.Update();
+            TheCardGameManager.UpdateLogic();
             UpdateDisplay();
             UpdateCards();
 
@@ -358,14 +383,17 @@ namespace Assets.GameCode.Cards.UI
         }
         private void UpdateCard(Entities.Entity E, Transform UnityArea)
         {
-            UpdateCard<PlayingCard, UnitDisplayCard, UnitExpandingCard, DisplayCard, ExpandingCard>(
+            UpdateCard<PlayingCard, UnitDisplayCard, UnitExpandingCard, 
+            DisplayCard, ExpandingCard, EffectDisplayCard, ExpandingCard>(
                 E, 
                 UnityArea,
                 Cards,
                 CardPrefab,
                 ExpandedCardPrefab,
                 UnitCardPrefab,
-                ExpandedUnitCardPrefab);
+                ExpandedUnitCardPrefab,
+                EffectCardPrefab,
+                ExpandedEffectCardPrefab);
         }
 
         public void ContinueButtonPressed()
@@ -396,12 +424,12 @@ namespace Assets.GameCode.Cards.UI
                 }
                 else
                 {
-                    List<Entities.Entity> Result = new List<Entities.Entity>();
+                    List<Entities.Entity> selectedEntities = new List<Entities.Entity>();
                     foreach (PlayingCard C in Selection)
                     {
-                        Result.Add(C.GetEntity());
+                        selectedEntities.Add(C.GetEntity());
                     }
-                    SendAction(new ActionOrder(CurrentAction.mAction, ActiveCard.GetEntity(), Result));
+                    SendAction(new ActionOrder(CurrentAction.mAction, ActiveCard.GetEntity(), selectedEntities));
                     ResetActions();
                     ResetSelections();
                     UpdateUI();

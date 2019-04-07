@@ -23,19 +23,26 @@ namespace Assets.GameCode.Cards.UI
 
         public abstract void UpdateUI();
 
-        protected void UpdateCard<CardObject, UnitDisplayObject, UnitExpandingObject, DisplayObject, ExpandingObject>
+        protected void UpdateCard<CardObject, 
+        UnitDisplayObject, UnitExpandingObject, 
+        DisplayObject, ExpandingObject,
+        EffectDisplayObject, EffectExpandingObject>
             (Entities.Entity E,
             Transform UnityArea,
             List<CardObject> cardList,
             GameObject DisplayPrefab,
             GameObject ExpandedPrefab,
             GameObject UnitDisplayPrefab,
-            GameObject UnitExpandedPrefab)
+            GameObject UnitExpandedPrefab,
+            GameObject EffectDisplayPrefab,
+            GameObject EffectExpandedPrefab)
             where CardObject : UICard, new()
             where UnitDisplayObject : DisplayCard, new()
             where UnitExpandingObject : ExpandingCard, new()
             where DisplayObject : DisplayCard, new()
             where ExpandingObject : ExpandingCard, new()
+            where EffectDisplayObject : DisplayCard, new()
+            where EffectExpandingObject : ExpandingCard, new()
         {
             CardObject C = FindCardForEntity(E, cardList);
             if (C == null)
@@ -47,11 +54,11 @@ namespace Assets.GameCode.Cards.UI
                 }
                 else
                 {
-                    switch (E.getType())
+                    switch (E.GetCardType())
                     {
                         case CardType.Effect:
-                            C = AddCard<CardObject, DisplayObject, ExpandingObject>
-                            (E, cardList, DisplayPrefab, ExpandedPrefab); 
+                            C = AddCard<CardObject, EffectDisplayObject, EffectExpandingObject>
+                            (E, cardList, EffectDisplayPrefab, EffectExpandedPrefab);
                             break;
                     }
                 }
