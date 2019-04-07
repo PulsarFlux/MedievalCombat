@@ -10,7 +10,7 @@ namespace Assets.GameCode.Cards.Entities
         public string Name;
         public Player Owner;
         //protected CardList List;
-        protected List<Actions.ActionInfo> Actions;
+        protected List<Actions.ActionInfo> Actions = new List<Actions.ActionInfo>();
         public Actions.PlacedActionHolder PAHolder = new Actions.PlacedActionHolder();
         public CardZoneType Zone;
         abstract public bool CanBePlaced(TurnInfo TI, CardZoneType CZ);
