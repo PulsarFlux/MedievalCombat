@@ -358,6 +358,9 @@ namespace Assets.GameCode.Cards.Loading
                 case "Target":
                     result = ModuleType.Targetting;
                     break;
+                case "BeingTargeted":
+                    result = ModuleType.BeingTargeted;
+                    break;
                 case "Blocking":
                     result = ModuleType.Blocking;
                     break;

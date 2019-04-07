@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +7,12 @@ using Assets.GameCode.Cards.Entities;
 namespace Assets.GameCode.Cards.Modules.Target
 {
     [Serializable()]
-    class Attached : TargettingModule
+    class Attached : BeingTargetedModule
     {
         public Unit AttachedTo;
         private string mAttachedToName;
         public Attached() : base() {}
-        public Attached(Unit Parent, Unit AttachedTo)
+        public Attached(Unit Parent, Unit AttachedTo) : base()
         {
             this.Parent = Parent;
             this.AttachedTo = AttachedTo;

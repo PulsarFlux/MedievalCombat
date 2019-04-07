@@ -31,11 +31,12 @@ namespace Assets.GameCode.Cards.Entities
             M3.Setup(this, null);
             TMCombiner.Add(M3);
 
-            Modules.Target.TargettingModule M4 = new Modules.Target.DefaultBlocking();
+            Modules.Target.BlockingModule M4 = new Modules.Target.DefaultBlocking();
             M4.Setup(this, null);
             BlockingModules.Add(M4);
 
-            Modules.Target.TargettingModule M5 = new Modules.Target.DefaultIsBlocked();
+            Modules.Target.BeingTargetedModule
+            M5 = new Modules.Target.DefaultIsBlocked();
             M5.Setup(this, null);
             BeingTargetedModules.Add(M5);
 
@@ -50,7 +51,7 @@ namespace Assets.GameCode.Cards.Entities
 
         //In this class CanBeShort/Long indicate whether the unit can attack from these ranges
 
-        public override CardType getType()
+        public override CardType GetCardType()
         {
             return CardType.Character;
         }

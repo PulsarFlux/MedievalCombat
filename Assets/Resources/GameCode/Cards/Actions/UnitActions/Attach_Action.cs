@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,8 +39,8 @@ namespace Assets.GameCode.Cards.Actions
                 TUnit.AddStatus("Attached:");
                 TUnit.AddStatus("to " + AUnit.Name);
 
-                AUnit.AddModule(ModuleType.Targetting, M1);
-                TUnit.AddModule(ModuleType.NewTurn, M3);
+                AUnit.AddModule(M1.Type, M1);
+                TUnit.AddModule(M3.Type, M3);
                 TUnit.AddModule(ModuleType.Removed, new Modules.Removed.RemovedLink(TUnit, M1, M3));
             }
         }

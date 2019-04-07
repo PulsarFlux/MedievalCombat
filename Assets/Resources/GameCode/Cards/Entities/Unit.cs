@@ -30,8 +30,8 @@ namespace Assets.GameCode.Cards.Entities
 
         protected AtkModCombiner AMCombiner = new AtkModCombiner();
         protected TarModCombiner TMCombiner = new TarModCombiner();
-        protected List<TargettingModule> BeingTargetedModules = new List<TargettingModule>();
-        protected List<TargettingModule> BlockingModules = new List<TargettingModule>();
+        protected List<BeingTargetedModule> BeingTargetedModules = new List<BeingTargetedModule>();
+        protected List<BlockingModule> BlockingModules = new List<BlockingModule>();
         protected List<RemovedModule> RemovedModules = new List<RemovedModule>();
         protected List<NewTurnModule> NewTurnModules = new List<NewTurnModule>();
         protected List<UpdateModule> UpdateModules = new List<UpdateModule>();
@@ -150,16 +150,16 @@ namespace Assets.GameCode.Cards.Entities
 
         public void CheckTargetStatus(Unit Attacker, TargettingData TD, ref int Cost)
         {
-            foreach (TargettingModule TM in BeingTargetedModules)
+            foreach (BeingTargetedModule BTM in BeingTargetedModules)
             {
-                TM.Run(Attacker, this, TD, ref Cost);
+                BTM.Run(Attacker, this, TD, ref Cost);
             }
         }
         public void CheckBlockStatus(Unit Attacker, Unit Target, TargettingData TD)
         {
             int dummy = 0;
             //target parameter in TM is 'this' so blocking must only depend on attacker and blocker, not actual target unit
-            foreach (TargettingModule TM in BlockingModules)
+            foreach (BlockingModule TM in BlockingModules)
             {
                 TM.Run(Attacker, Target, TD, ref dummy);
             }
@@ -284,10 +284,13 @@ namespace Assets.GameCode.Cards.Entities
                     AMCombiner.PostAttack.Add((AttackModule)TheModule);
                     break;
                 case (ModuleType.Targetting):
-                    BeingTargetedModules.Add((TargettingModule)TheModule);
+                    TMCombiner.Add((TargettingModule)TheModule);
+                    break;
+                case (ModuleType.BeingTargeted):
+                    BeingTargetedModules.Add((BeingTargetedModule)TheModule);
                     break;
                 case (ModuleType.Blocking):
-                    BlockingModules.Add((TargettingModule)TheModule);
+                    BlockingModules.Add((BlockingModule)TheModule);
                     break;
                 case (ModuleType.Removed):
                     RemovedModules.Add((RemovedModule)TheModule);
@@ -317,10 +320,13 @@ namespace Assets.GameCode.Cards.Entities
                     AMCombiner.PostAttack.Remove((AttackModule)TheModule);
                     break;
                 case (ModuleType.Targetting):
-                    BeingTargetedModules.Remove((TargettingModule)TheModule);
+                    TMCombiner.Remove((TargettingModule)TheModule);
+                    break;
+                case (ModuleType.BeingTargeted):
+                    BeingTargetedModules.Remove((BeingTargetedModule)TheModule);
                     break;
                 case (ModuleType.Blocking):
-                    BlockingModules.Remove((TargettingModule)TheModule);
+                    BlockingModules.Remove((BlockingModule)TheModule);
                     break;
                 case (ModuleType.Removed):
                     RemovedModules.Remove((RemovedModule)TheModule);
