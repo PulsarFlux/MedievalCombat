@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,7 +79,7 @@ namespace Assets.GameCode.Cards.Entities
 
         public override bool CanBePlaced(TurnInfo TI, CardZoneType CZ)
         {
-            return (CZ.getType() == ZoneType.Field && CZ.getOwnerIndex() == getOwnerIndex() && CanBeRange(CZ.getRange()));
+            return (CZ.getType() == ZoneType.Field && CZ.getOwnerIndex() == GetOwnerIndex() && CanBeRange(CZ.getRange()));
         }
         public override void Placed(CardZoneType CZ, CardList CL, CardGameState GS)
         {
@@ -97,7 +97,7 @@ namespace Assets.GameCode.Cards.Entities
         {
             return true;
         }
-        public override CardType getType()
+        public override CardType GetCardType()
         {
             return CardType.Unit;
         }
@@ -212,9 +212,8 @@ namespace Assets.GameCode.Cards.Entities
         private void Die()
         {
             Owner.UnitDied(this);
-            RemovedFromBoard();
         }
-        private void RemovedFromBoard()
+        public override void RemovedFromBoard()
         {
             IsPlaced = false;
             foreach (RemovedModule RM in RemovedModules)
@@ -224,9 +223,10 @@ namespace Assets.GameCode.Cards.Entities
             HealthModifier = 0;
             TemporaryHP = 0;
             Status.Clear();
+            base.RemovedFromBoard();
         }
 
-        public override int getOwnerIndex()
+        public override int GetOwnerIndex()
         {
             return Owner.getIndex();
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +37,7 @@ namespace Assets.GameCode.Cards.Entities
             M6.Setup(this, null);
             TMCombiner.Add(M6);
         }
-        public override CardType getType()
+        public override CardType GetCardType()
         {
             return CardType.BasicUnit;
         }

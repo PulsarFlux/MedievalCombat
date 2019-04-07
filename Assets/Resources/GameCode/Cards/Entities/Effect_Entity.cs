@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,11 +53,11 @@ namespace Assets.GameCode.Cards.Entities
             }
             else
             {
-                return (CZ.getType() == ZoneType.Effect && CZ.getOwnerIndex() == getOwnerIndex());
+                return (CZ.getType() == ZoneType.Effect && CZ.getOwnerIndex() == GetOwnerIndex());
             }
         }
 
-        public override int getOwnerIndex()
+        public override int GetOwnerIndex()
         {
             return Owner.getIndex();
         }
@@ -67,7 +67,7 @@ namespace Assets.GameCode.Cards.Entities
             return false;
         }
 
-        public override CardType getType()
+        public override CardType GetCardType()
         {
             return CardType.Effect;
         }
@@ -117,7 +117,7 @@ namespace Assets.GameCode.Cards.Entities
             }
             else
             {
-                targetHolder = GS.Players[getOwnerIndex()].mEffects;
+                targetHolder = GS.Players[GetOwnerIndex()].mEffects;
             }
 
             // Only one effect with a given name allowed
@@ -140,7 +140,7 @@ namespace Assets.GameCode.Cards.Entities
             else
             {
                 Owner.RemoveFromList(this);
-                Owner.mGraveyard.AddCard(this);
+                RemovedFromBoard();
             }
         }
 
