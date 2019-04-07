@@ -7,6 +7,7 @@ using Assets.GameCode.Cards.Loading;
 
 namespace Assets.GameCode.Cards.Effects
 {
+    [Serializable()]
     class AttackCostEffect : Effect
     {
         private int Amount;
