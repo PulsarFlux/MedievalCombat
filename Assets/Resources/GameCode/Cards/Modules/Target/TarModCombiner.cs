@@ -33,7 +33,7 @@ namespace Assets.GameCode.Cards.Modules.Target
         {
             TargetModules.Add(TM);
         }
-        public void End(TargettingModule TM)
+        public void Remove(TargettingModule TM)
         {
             TargetModules.Remove(TM);
         }
