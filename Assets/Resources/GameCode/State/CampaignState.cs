@@ -2,15 +2,15 @@
 
 namespace Assets.GameCode.State
 {
+    [Serializable()]
     public class CampaignState
     {
-        public Cards.Loading.DeckSpec mCurrentDeck;
+        public Cards.CardCollection mCurrentCollection;
         public Cards.Loading.DeckSpec mOpposingDeck;
 
         public CampaignState()
         {
-            mCurrentDeck = null;
-            mOpposingDeck = null;
+            mCurrentCollection = new Assets.GameCode.Cards.CardCollection();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine.SceneManagement;
 
 namespace Assets.GameCode.State
@@ -15,7 +15,9 @@ namespace Assets.GameCode.State
         CardGame,
         CampaignMap,
         CampaignCardGame,
-        CardGallery
+        CardGallery,
+        DeckBuilder,
+        LoadOrSave
     }
 
     public class CardGameResult : PassedState
@@ -65,12 +67,31 @@ namespace Assets.GameCode.State
         public Cards.CardList mCardList;
         public GameScene mLastScene;
     }
+
+    public class DeckBuilderSetupState : PassedState
+    {
+        public DeckBuilderSetupState(Cards.Loading.DeckSpec deckCards, 
+            Cards.Loading.DeckSpec libraryCards,
+            Cards.CardCollection cardCollection,
+            GameScene currentScene)
+        {
+            mType = PassedStateType.DeckBuilder;
+            mCardCollection = cardCollection;
+            mCardCollection.mDeck = deckCards;
+            mCardCollection.mLibrary = libraryCards;
+            mLastScene = currentScene;
+        }
+        public Cards.CardCollection mCardCollection;
+        public GameScene mLastScene;
+    }
     public enum PassedStateType
     {
         Map,
         Cards,
         CardGameResult,
-        CardGallery
+        CardGallery,
+        DeckBuilder,
+        LoadOrSave
     }
 
     public abstract class PassedState
@@ -198,6 +219,13 @@ namespace Assets.GameCode.State
                 case GameScene.CardGallery:
                     mCurrentGameScene = GameScene.CardGallery;
                     SceneManager.LoadScene("CardGallery", LoadSceneMode.Single);
+                    break;
+                case GameScene.DeckBuilder:
+                    mCurrentGameScene = GameScene.DeckBuilder;
+                    SceneManager.LoadScene("DeckBuilder", LoadSceneMode.Single);
+                    break;
+                default:
+                    UnityEngine.Debug.DebugBreak(); // Unhandled scene move request
                     break;
             }
         }
