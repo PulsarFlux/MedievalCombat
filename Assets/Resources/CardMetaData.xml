@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+	<basicunit	name="Peasant Militia" tier="0"/>
+
+	<basicunit	name="Spearmen" tier="1"/>
+	<basicunit	name="Crossbows" tier="1"/>
+
+	<basicunit	name="Pikemen" tier="2"/>
+	<basicunit	name="Longbows" tier="2"/>
+	<effect		name="Defensive Formations" tier="2"/>
+	<effect		name="Flanking Assault" tier="2"/>
+
+	<basicunit	name="Swordsmen" tier="3"/>
+	<basicunit	name="Shieldmen" tier="3"/>
+	<effect		name="Spear Wall" tier="3"/>
+	<effect		name="Archer Corps" tier="3"/>
+	<effect		name="Boggy Ground" tier="3"/>
+	<effect		name="Strong Winds" tier="3"/>
+
+	<basicunit	name="Catapult" tier="4"/>
+	<character	name="King" tier="4"/>
+	<effect		name="Infiltration" tier="4"/>
+	<effect		name="Field Medic" tier="4"/>
+
+	<basicunit	name="Askari Raiders" tier="5"/>
+	<basicunit	name="Gremor Guardians" tier="5"/>
+
+	<character	name="Fire Mage" tier="6"/>
+	<basicunit	name="Knights" tier="6"/>
+
+	<!-- -1 means these are generated only cards -->
+	<effect		name="Unleash Salvo" tier="-1"/>
+	<effect		name="Flaming Blades" tier="-1"/>
+</metadata>

@@ -281,6 +281,32 @@ namespace Assets.GameCode.Cards.Loading
             }
         }
 
+        public static MetaDataLibrary LoadMetaData()
+        {
+            MetaDataLibrary metaDataLibrary = new MetaDataLibrary();
+
+            TextAsset metaDataXML = Resources.Load("CardMetaData") as TextAsset;
+            System.IO.StringReader metaDataReader = new System.IO.StringReader(metaDataXML.text);
+            XmlReader xmlReader = XmlReader.Create(metaDataReader);
+            while (xmlReader.Read())
+            {
+                if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name != "metadata")
+                {
+                    CardType cardType = GetCardTypeFromTypeString(xmlReader.Name);
+                    string cardName = xmlReader["name"];
+                    int tier = 0;
+                    if (int.TryParse(xmlReader["tier"], out tier) == false)
+                    {
+                        Debug.LogError("Non integer tier in meta data");
+                    }
+
+                    metaDataLibrary.AddMetaData(new CardMetaData(cardType, cardName, tier));
+                }
+            }
+
+            return metaDataLibrary;
+        }
+
         public static CardType GetCardTypeFromTypeString(string Type)
         {
             CardType result = CardType.Other;
