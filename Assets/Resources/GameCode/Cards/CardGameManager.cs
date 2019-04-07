@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Loading;
 using System.Runtime.Serialization;
@@ -23,7 +23,7 @@ namespace Assets.GameCode.Cards
     }
     public enum ModuleType
     {
-        PreAttack, Attack, PostAttack, Targetting, Blocking, Removed, NewTurn, Update, Persistance
+        PreAttack, Attack, PostAttack, Targetting, BeingTargeted, Blocking, Removed, NewTurn, Update, Persistance
     }
 
     public class CardGameManager : MonoBehaviour
