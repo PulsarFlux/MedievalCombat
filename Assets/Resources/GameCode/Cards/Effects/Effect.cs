@@ -1,10 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Modules.Persistance;
 
 namespace Assets.GameCode.Cards.Effects
 {
     [Serializable()]
+    public enum EffectType
+    {
+        Normal,
+        Order,
+        OrderWithUses
+    }
     public abstract class Effect
     {
         protected EffectNode Node;
@@ -15,17 +21,10 @@ namespace Assets.GameCode.Cards.Effects
         protected Effect()
         {
         }
-        /*protected Effect(Effect toCopy, EffectNode node)
+        public virtual EffectType GetEffectType()
         {
-            Node = toCopy.Node;
-            NewTurnLength = toCopy.NewTurnLength;
-            NumNewTurns = toCopy.NumNewTurns;
-            mPersistanceModules = new List<PersistanceModule>();
-            foreach (PersistanceModule PM in toCopy.mPersistanceModules)
-            {
-              //  mPersistanceModules.Add(PM.DeepCopy());
-            }
-        }*/
+            return EffectType.Normal;
+        }
         public virtual bool NewTurn(CardGameState GS)
         {
             NumNewTurns += 1;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Entities;
 using Assets.GameCode.Cards.Loading;
@@ -8,6 +8,10 @@ namespace Assets.GameCode.Cards.Effects.Orders
     [Serializable()]
     public class Order : Effect
     {
+        public override EffectType GetEffectType()
+        {
+            return EffectType.Order;
+        }
         public virtual bool IsAvailable()
         {
             return !mUsedThisTurn;

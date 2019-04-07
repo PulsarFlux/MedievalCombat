@@ -6,6 +6,11 @@ namespace Assets.GameCode.Cards.Effects.Orders
     [Serializable()]
     public class OrderWithUses : Order
     {
+        public override EffectType GetEffectType()
+        {
+            return EffectType.OrderWithUses;
+        }
+
         private Dictionary<int, int> actionUses = new Dictionary<int, int>();
         public void SetUses(int actionIndex, int numUses)
         {
