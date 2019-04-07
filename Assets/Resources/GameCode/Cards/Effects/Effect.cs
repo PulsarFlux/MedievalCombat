@@ -57,10 +57,13 @@ namespace Assets.GameCode.Cards.Effects
             {
                 foreach (Loading.ModuleData MD in ED.Modules)
                 {
-                    Modules.Persistance.PersistanceModule M =
+                    if (MD.Type == ModuleType.Persistance)
+                    {
+                        Modules.Persistance.PersistanceModule M =
                             (Modules.Persistance.PersistanceModule)Loading.CardLoading.GetModuleFromData(MD);
-                    M.Setup(EN.GetEntity(), MD);
-                    AddPersistanceModule(M);
+                        M.Setup(EN.GetEntity(), MD);
+                        AddPersistanceModule(M);
+                    }
                 }
             }
         }
