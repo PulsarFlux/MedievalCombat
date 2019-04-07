@@ -17,7 +17,7 @@ namespace Assets.GameCode.Cards
 
         private System.Random mRandom;
 
-        const int kNumStartingCards = 10;
+        public const int kNumStartingCards = 10;
 
         public CardGameState()
         {
@@ -43,10 +43,11 @@ namespace Assets.GameCode.Cards
         {
             SharedEffects = new Effects.EffectHolder(this, true, 0);
             Players[0] = new Player(0, this);
-            for (int i = 1; i < Players.Length; i++)
+            Players[1] = new AIPlayer(1, this);
+            /*for (int i = 1; i < Players.Length; i++)
             {
                 Players[i] = new AIPlayer(i, this);
-            }
+            } */
         }
 
         public void GeneratePlayerDecks(DeckSpec playerOneDeck, DeckSpec playerTwoSpec)
@@ -59,7 +60,7 @@ namespace Assets.GameCode.Cards
 
         public Entities.Entity MulliganCard(Entities.Entity card)
         {
-            return Players[card.getOwnerIndex()].MulliganCard(mRandom, card);
+            return Players[card.GetOwnerIndex()].MulliganCard(mRandom, card);
         }
 
         public CardList getCardList(CardZoneType CZ)
@@ -97,6 +98,9 @@ namespace Assets.GameCode.Cards
         {
             Players[TI.GetCPI()].NewTurn(this);
             SharedEffects.NewTurn();
+        }
+        public void PlayerTakeTurn(TurnInfo TI, CardGameManager manager)
+        {
             Players[TI.GetCPI()].TakeTurn(TI, this, manager);
         }
 

@@ -76,6 +76,17 @@ namespace Assets.GameCode.Cards
         {
             TheCardGameState.NewTurn(TheTurnManager.getTI(), this);
         }
+        public void PlayerTakeTurn(TurnInfo TI)
+        {
+            if (TheCardGameState.Players[TI.GetCPI()].HasPassed())
+            {
+                TheTurnManager.Continue();
+            }
+            else
+            {
+                TheCardGameState.Players[TI.GetCPI()].TakeTurn(TI, TheCardGameState, this);
+            }
+        }
 
         public void NewRound()
         {

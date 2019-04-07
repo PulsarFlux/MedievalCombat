@@ -73,18 +73,18 @@ namespace Assets.GameCode.Cards
                 {
                     if (TheCardGameState.Players[1].WonRound(RoundVictoryLimit))
                     {
-                        playerTwoHasWon = false;
+                        playerTwoHasWon = true;
                     }
                 }
                 else
                 {
                     if (TheCardGameState.Players[0].WonRound(RoundVictoryLimit))
                     {
-                        playerOneHasWon = false;
+                        playerOneHasWon = true;
                     }
                     if (TheCardGameState.Players[1].WonRound(RoundVictoryLimit))
                     {
-                        playerTwoHasWon = false;
+                        playerTwoHasWon = true;
                     }
                 }
 
@@ -106,11 +106,7 @@ namespace Assets.GameCode.Cards
                     FinishMulligan();
                 }
                 TheCardGameManager.NewTurn();
-                if (TheCardGameState.Players[TurnInformation.GetCPI()].HasPassed())
-                {
-                    TurnInformation.NewTurn();
-                    TheCardGameManager.NewTurn();
-                }
+                TheCardGameManager.PlayerTakeTurn(TurnInformation);
             }
         }
 
