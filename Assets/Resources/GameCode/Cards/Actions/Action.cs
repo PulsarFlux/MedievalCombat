@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,9 +23,12 @@ namespace Assets.GameCode.Cards.Actions
     public abstract class Action
     {
         // Constructor for data-driven creation
-        public Action() {}
+        public Action() 
+        {
+            mConditions = new Components.Conditional.ConditionChecker(null);
+        }
         // Constructor for manual creation
-        public Action(bool hasCertainCost, int minCost) 
+        public Action(bool hasCertainCost, int minCost) : this()
         {
             SetCostInfo(hasCertainCost, minCost);
         }
@@ -36,7 +39,13 @@ namespace Assets.GameCode.Cards.Actions
             mHasCertainCost = hasCertainCost;
             mMinCost = minCost;
         }
-        public virtual void SetInitialData(List<string> data) {}
+        public void Setup(Loading.ActionData actionData) 
+        {
+            mConditions = new Components.Conditional.ConditionChecker(actionData.mConditionals);
+            mModules = actionData.mModules;
+            SetupInternal(actionData);
+        }
+        protected virtual void SetupInternal(Loading.ActionData actionData) {}
 
         public virtual bool IsAvailable(Entities.Entity Performer)
         {
@@ -54,5 +63,8 @@ namespace Assets.GameCode.Cards.Actions
 
         protected bool mHasCertainCost;
         protected int mMinCost;
+        // List of modules intended to be added to the selection of the action.
+        protected List<Loading.ModuleData> mModules;
+        protected Components.Conditional.ConditionChecker mConditions;
     }
 }

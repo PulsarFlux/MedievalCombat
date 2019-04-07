@@ -318,12 +318,16 @@ namespace Assets.GameCode.Cards.Loading
             return E;
         }
 
-        public static Actions.Action GetActionFromData(string ActionName, bool hasCertainCost, int minCost)
+        public static Actions.ActionInfo GetActionInfoFromData(ActionData actionData)
         {
             Actions.Action A = (Actions.Action)Activator.CreateInstance(
-                StringToClassTypeHolder.Get().GetActionType(ActionName));
-            A.SetCostInfo(hasCertainCost, minCost);
-            return A;
+                StringToClassTypeHolder.Get().GetActionType(actionData.mName));
+            A.SetCostInfo(actionData.mHasCertainCost, actionData.mMinCost);
+            A.Setup(actionData);
+
+            ActionInfo AI = new ActionInfo(actionData.mDisplayName == null ? actionData.mName : actionData.mDisplayName,
+                A, actionData.mSelectType, actionData.mSelectMin, actionData.mSelectMax);
+            return AI;
         }
     }
 }

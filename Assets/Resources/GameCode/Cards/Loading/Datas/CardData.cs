@@ -10,8 +10,7 @@ namespace Assets.GameCode.Cards.Loading
     {
         public string mName;
         public CardType mType;
-        public List<Actions.ActionInfo> mActions;
-        public Actions.ActionInfo mPlacedAction;
+        public List<ActionData> mActions;
         public List<ModuleData> mModules;
         public List<EffectData> mEffects;
         public virtual void AddModule(ModuleData MD)
@@ -30,17 +29,13 @@ namespace Assets.GameCode.Cards.Loading
             }
             mEffects.Add(ED);
         }
-        public virtual void AddAction(Actions.ActionInfo AI)
+        public virtual void AddAction(ActionData AD)
         {
             if (mActions == null)
             {
-                mActions = new List<Actions.ActionInfo>();
+                mActions = new List<ActionData>();
             }
-            mActions.Add(AI);
-        }
-        public virtual void AddPlacedAction(Actions.ActionInfo AI)
-        {
-            mPlacedAction = AI;
+            mActions.Add(AD);
         }
     }
 }
