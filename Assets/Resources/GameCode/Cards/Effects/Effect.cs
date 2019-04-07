@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Modules.Persistance;
 
@@ -10,6 +10,23 @@ namespace Assets.GameCode.Cards.Effects
         Normal,
         Order,
         OrderWithUses
+    }
+    [Serializable()]
+    public class ActionOnlyEffect : Effect
+    {
+        public override void Message(Assets.GameCode.Cards.Entities.Entity Sender)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update(CardGameState GS)
+        {
+        }
+
+        public override void PassSelection(List<Assets.GameCode.Cards.Entities.Entity> Selection)
+        {
+            throw new NotImplementedException();
+        }
     }
     [Serializable()]
     public abstract class Effect
