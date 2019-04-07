@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine.SceneManagement;
 
 namespace Assets.GameCode.State
@@ -250,6 +250,16 @@ namespace Assets.GameCode.State
             returnState = mCurrentPassedState;
             mCurrentPassedState = null;
             return returnState;
+        }
+
+        public void OpenMenu()
+        {
+            SceneManager.LoadScene("PauseMenu", LoadSceneMode.Additive);
+        }
+
+        public void CloseMenu()
+        {
+            SceneManager.UnloadSceneAsync("PauseMenu");
         }
 
         public void MoveToNextScene(GameScene nextSceneType)
