@@ -44,11 +44,11 @@ namespace Assets.GameCode.Cards.Loading
                     mEffectDict = new Dictionary<string, Type>();
 
                     mEffectDict.Add("Weather", typeof(Weather));
-                    mEffectDict.Add("SelectBuff", typeof(SelectionBuff));
                     mEffectDict.Add("Heal", typeof(Heal));
                     mEffectDict.Add("AttackCostEffect", typeof(AttackCostEffect));
                     mEffectDict.Add("Order", typeof(Effects.Orders.Order));
                     mEffectDict.Add("OrderWithUses", typeof(Effects.Orders.OrderWithUses));
+                    mEffectDict.Add("ActionOnly", typeof(Effects.ActionOnlyEffect));
 
                     //TODO Keep up to date - Actions
                     mActionDict = new Dictionary<string, Type>();
@@ -60,6 +60,7 @@ namespace Assets.GameCode.Cards.Loading
                     mActionDict.Add("Unleash Salvo", typeof(UnleashSalvoAction));
                     mActionDict.Add("Ready Salvo", typeof(ReadySalvoAction));
                     mActionDict.Add("ReloadAction", typeof(ReloadAction));
+                    mActionDict.Add("Buff Selection", typeof(BuffSelection_Action));
                 }
 
                 public System.Type GetModuleType(string name)
