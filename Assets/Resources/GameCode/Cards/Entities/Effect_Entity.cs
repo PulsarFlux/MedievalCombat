@@ -37,6 +37,7 @@ namespace Assets.GameCode.Cards.Entities
         public void Setup(CardGameState GS, int Player)
         {
             Owner = GS.Players[Player];
+            Node.OwnerIndex = Player;
         }
 
         public Effects.Effect GetEffect()
