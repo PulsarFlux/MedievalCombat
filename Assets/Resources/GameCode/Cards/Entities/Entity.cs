@@ -30,5 +30,12 @@ namespace Assets.GameCode.Cards.Entities
         /// </summary>
         abstract public void NewTurn();
         abstract public void Update();
+        virtual public void RemovedFromBoard()
+        {
+            if (!mIsGeneratedEntity)
+            {
+                Owner.mGraveyard.AddCard(this);
+            }
+        }
     }
 }
