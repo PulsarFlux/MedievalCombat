@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Assets.GameCode.Cards.Loading
 {
-    [Serializable()]
+    /*[Serializable()]
     public class CardEntry
     {
         public string mName;
@@ -20,10 +20,25 @@ namespace Assets.GameCode.Cards.Loading
             mName = Name;
             mNumber = Number;
         }
-    }
+    }*/
     [Serializable()]
     public class DeckSpec
     {
-        public List<CardEntry> Cards = new List<CardEntry>();
+        public Dictionary<string, int> Cards = new Dictionary<string, int>();
+        public void SetEntry(string name, int number)
+        {
+            Cards[name] = number;
+        }
+        public void IncrementEntry(string name, int difference)
+        {
+            if (Cards.ContainsKey(name))
+            {
+                Cards[name] = Cards[name] + difference;
+            }
+            else
+            {
+                Cards[name] = difference;
+            }
+        }
     }
 }
