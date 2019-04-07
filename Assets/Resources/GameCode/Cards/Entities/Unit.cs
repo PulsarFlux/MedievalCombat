@@ -175,7 +175,7 @@ namespace Assets.GameCode.Cards.Entities
         {
 			if (AttackCost + AttackCostModifier < 0) 
 			{
-				return 1;
+				return 0;
 			}
 			else
 			{
