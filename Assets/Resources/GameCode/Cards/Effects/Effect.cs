@@ -11,6 +11,7 @@ namespace Assets.GameCode.Cards.Effects
         Order,
         OrderWithUses
     }
+    [Serializable()]
     public abstract class Effect
     {
         protected EffectNode Node;
