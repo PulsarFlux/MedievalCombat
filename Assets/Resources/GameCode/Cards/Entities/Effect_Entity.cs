@@ -19,16 +19,19 @@ namespace Assets.GameCode.Cards.Entities
             EData = ECD.EData;
             if (ECD.mActions != null)
             {
-                Actions = new List<Actions.ActionInfo>(ECD.mActions);
+                foreach (Loading.ActionData actionData in ECD.mActions)
+                {
+                    if (actionData.mIsPlaced)
+                    {
+                        PAHolder.AddAction(Loading.CardLoading.GetActionInfoFromData(actionData));
+                    }
+                    else
+                    {
+                        Actions.Add(Loading.CardLoading.GetActionInfoFromData(actionData));
+                    }
+                }
             }
-            else
-            {
-                Actions = new List<Actions.ActionInfo>();
-            }
-            if (ECD.mPlacedAction != null)
-            {
-                PAHolder.AddAction(ECD.mPlacedAction);
-            }
+
             Node = new Effects.EffectNode(this);
         }
         public void Setup(CardGameState GS, int Player)

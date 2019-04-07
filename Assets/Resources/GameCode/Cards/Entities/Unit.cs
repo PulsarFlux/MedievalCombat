@@ -52,19 +52,25 @@ namespace Assets.GameCode.Cards.Entities
             Name = Data.mName;
             CanBeShort = Data.CanBeShort;
             CanBeLong = Data.CanBeLong;
-            if (Data.mActions == null)
-            {
-                Actions = new List<ActionInfo>();
-            }
-            else
-            {
-                Actions = new List<ActionInfo>(Data.mActions);
-            }
+
             Actions.Add(new ActionInfo("Attack", new Attack_Action(false, 0), PlayerType.Enemy, 1, 1));
-            if (Data.mPlacedAction != null)
+
+            if (Data.mActions != null)
             {
-                PAHolder.AddAction(Data.mPlacedAction);
+                foreach (Loading.ActionData actionData in Data.mActions)
+                {
+                    if (actionData.mIsPlaced)
+                    {
+                        PAHolder.AddAction(Loading.CardLoading.GetActionInfoFromData(actionData));
+                    }
+
+                    else
+                    {
+                        Actions.Add(Loading.CardLoading.GetActionInfoFromData(actionData));
+                    }
+                }
             }
+
             if (Data.mModules != null)
             {
                 foreach (Loading.ModuleData MD in Data.mModules)
