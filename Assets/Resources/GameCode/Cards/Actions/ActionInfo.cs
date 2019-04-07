@@ -25,7 +25,7 @@ namespace Assets.GameCode.Cards.Actions
         public int Max;
         public int Min;
 
-        public ActionInfo(string Name, Action Ac, PlayerType ST, int Max, int Min)
+        public ActionInfo(string Name, Action Ac, PlayerType ST, int Min, int Max)
         {
             ActionName = Name;
             mAction = Ac;
