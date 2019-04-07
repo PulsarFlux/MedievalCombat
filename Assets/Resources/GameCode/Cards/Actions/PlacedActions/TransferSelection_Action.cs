@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Entities;
 
@@ -12,7 +12,7 @@ namespace Assets.GameCode.Cards.Actions
 
         protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            return (Performer.getType() == CardType.Effect);
+            return (Performer.GetCardType() == CardType.Effect);
         }
 
         public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)

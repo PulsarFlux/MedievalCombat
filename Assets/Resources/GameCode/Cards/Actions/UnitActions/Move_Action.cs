@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,7 @@ namespace Assets.GameCode.Cards.Actions
 
         protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (TI.GetCPI() == Performer.getOwnerIndex() && Performer.IsUnit())
+            if (TI.GetCPI() == Performer.GetOwnerIndex() && Performer.IsUnit())
             {
                 return true;
             }
@@ -32,15 +32,15 @@ namespace Assets.GameCode.Cards.Actions
                 }
                 if (Performer.Zone.getRange() == Range.Short)
                 {
-                    Performer.Zone = GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Long].Type;
-                    GS.Players[Performer.getOwnerIndex()].RemoveFromList(Performer);
-                    GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Long].List.AddCard(Performer);
+                    Performer.Zone = GS.Players[Performer.GetOwnerIndex()].mBoard.RangeZones[(int)Range.Long].Type;
+                    GS.Players[Performer.GetOwnerIndex()].RemoveFromList(Performer);
+                    GS.Players[Performer.GetOwnerIndex()].mBoard.RangeZones[(int)Range.Long].List.AddCard(Performer);
                 }
                 else
                 {
-                    Performer.Zone = GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Short].Type;
-                    GS.Players[Performer.getOwnerIndex()].RemoveFromList(Performer);
-                    GS.Players[Performer.getOwnerIndex()].mBoard.RangeZones[(int)Range.Short].List.AddCard(Performer);
+                    Performer.Zone = GS.Players[Performer.GetOwnerIndex()].mBoard.RangeZones[(int)Range.Short].Type;
+                    GS.Players[Performer.GetOwnerIndex()].RemoveFromList(Performer);
+                    GS.Players[Performer.GetOwnerIndex()].mBoard.RangeZones[(int)Range.Short].List.AddCard(Performer);
                 }
                 ((Unit)Performer).AddStatus("Moved");
             }

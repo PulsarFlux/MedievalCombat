@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +16,8 @@ namespace Assets.GameCode.Cards.Actions
             Entities.Unit attacker = (Entities.Unit)Performer;
             Entities.Unit target = (Entities.Unit)Selection[0];
 
-            if (Performer.IsUnit() && Selection[0].IsUnit() && Performer.getOwnerIndex() != Selection[0].getOwnerIndex() &&
-                TI.GetCPI() == Performer.getOwnerIndex() && !attacker.HasStatus("Can't attack"))
+            if (Performer.IsUnit() && Selection[0].IsUnit() && Performer.GetOwnerIndex() != Selection[0].GetOwnerIndex() &&
+                TI.GetCPI() == Performer.GetOwnerIndex() && !attacker.HasStatus("Can't attack"))
             {
                 return attacker.CanAttack(target) != -1;
             }

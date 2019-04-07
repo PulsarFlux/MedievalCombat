@@ -19,7 +19,7 @@ namespace Assets.GameCode.Cards.Actions
             mHasAction = true;
             TheActionInfo = AI;
         }
-        public ActionInfo getAction()
+        public ActionInfo GetAction()
         {
             return TheActionInfo;
         }

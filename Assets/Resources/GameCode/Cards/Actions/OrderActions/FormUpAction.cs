@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Assets.GameCode.Cards.Actions
@@ -10,7 +10,7 @@ namespace Assets.GameCode.Cards.Actions
         public FormUpAction(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
         private int mTempHPAmount;
-        private string mClassRestriction;
+        private string mClassRestriction = "";
 
         protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {

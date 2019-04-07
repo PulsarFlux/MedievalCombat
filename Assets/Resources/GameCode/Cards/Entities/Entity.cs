@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Assets.GameCode.Cards.Entities
@@ -17,8 +17,8 @@ namespace Assets.GameCode.Cards.Entities
         abstract public void Placed(CardZoneType CZ, CardList CL, CardGameState GS);
         public bool IsPlaced { get; set; }
         abstract public bool IsUnit();
-        abstract public CardType getType();
-        abstract public int getOwnerIndex();
+        abstract public CardType GetCardType();
+        abstract public int GetOwnerIndex();
         abstract public List<Actions.ActionInfo> GetActions();
         abstract public List<Actions.ActionOrder> GetAIActions(CardGameState gameState, TurnInfo TI);
         /// <summary>

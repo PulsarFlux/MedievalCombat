@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +18,7 @@ namespace Assets.GameCode.Cards.Actions
         }
         protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (PlacedCard.getOwnerIndex() == TI.GetCPI() && !TI.IsMulligan)
+            if (PlacedCard.GetOwnerIndex() == TI.GetCPI() && !TI.IsMulligan)
             {
                   if (!PlacedCard.IsUnit() || !PlacedCard.Owner.WasUnitPlaced())
                   {
