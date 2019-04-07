@@ -123,7 +123,7 @@ namespace Assets.GameCode.Cards
                 List<Entity> Temp = new List<Entity>(CZ.List.Cards);
                 foreach (Entity E in Temp)
                 {
-                    UnitDied((Unit)E);
+                    RemoveCardFromBoard(E);
                 }
             }
             mPassed = false;
@@ -231,10 +231,14 @@ namespace Assets.GameCode.Cards
             maxMulligans = mMaxMulligans;
         }
 
-        public void UnitDied(Unit Unit)
+        private void RemoveCardFromBoard(Entity E)
         {
-            RemoveFromList(Unit);
-            mGraveyard.AddCard(Unit);
+            RemoveFromList(E);
+            E.RemovedFromBoard();
+        }
+        public void UnitDied(Unit unit)
+        {
+            RemoveCardFromBoard(unit);
         }
         public void CheckBlocks(Unit Attacker, Unit Target, Modules.Target.TargettingData TD)
         {
