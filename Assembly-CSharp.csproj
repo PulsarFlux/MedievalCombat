@@ -76,7 +76,6 @@
     <Compile Include="Assets\Resources\GameCode\Cards\Effects\Heal.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Effects\Orders\Order.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Effects\Orders\OrderWithUses.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Effects\SelectionBuff.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Effects\Weather.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Entities\BasicUnit.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Entities\CharacterUnit.cs" />
