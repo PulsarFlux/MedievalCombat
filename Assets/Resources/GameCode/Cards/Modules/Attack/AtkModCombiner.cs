@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +9,9 @@ namespace Assets.GameCode.Cards.Modules.Attack
     [Serializable()]
     public class AtkModCombiner
     {
-        public List<AttackModule> PreAttack = new List<AttackModule>();
+        public List<PreAttackModule> PreAttack = new List<PreAttackModule>();
         public List<AttackModule> Attack = new List<AttackModule>();
-        public List<AttackModule> PostAttack = new List<AttackModule>();
+        public List<PostAttackModule> PostAttack = new List<PostAttackModule>();
         public void Run(Unit Runner, Unit Target)
         {
             foreach (AttackModule AM in PreAttack)
@@ -29,9 +29,18 @@ namespace Assets.GameCode.Cards.Modules.Attack
         }
         public void End(AttackModule AM)
         {
-            PreAttack.Remove(AM);
-            Attack.Remove(AM);
-            PostAttack.Remove(AM);
+            switch (AM.Type)
+            {
+                case ModuleType.PreAttack:
+                    PreAttack.Remove((PreAttackModule)AM);
+                    break;
+                case ModuleType.Attack:
+                    Attack.Remove(AM);
+                    break;
+                case ModuleType.PostAttack:
+                    PostAttack.Remove((PostAttackModule)AM);
+                    break;
+            }
         }
     }
 }
