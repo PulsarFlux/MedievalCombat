@@ -10,13 +10,13 @@ namespace Assets.GameCode.Cards
     {
         private int OwnerIndex;
         private ZoneType Type;
-        private Range _Range;
+        private Range mRange;
 
 
         public CardZoneType(ZoneType ZT, Range R, int Owner)
         {
             Type = ZT;
-            _Range = R;
+            mRange = R;
             OwnerIndex = Owner;
         }
 
@@ -30,7 +30,7 @@ namespace Assets.GameCode.Cards
         }
         public Range getRange()
         {
-            return _Range;
+            return mRange;
         }
     }
 
