@@ -26,6 +26,8 @@ namespace Assets.GameCode.Map.UI
     public class MapUIManager : Cards.UI.CardsUIManager {
 
         public GameObject UnitCardPrefab, ExpandedUnitCardPrefab, CardPrefab, ExpandedCardPrefab;
+        public GameObject ExpandedEffectCardPrefab;
+        public GameObject EffectCardPrefab;
         public GameObject MapTreeLayerPrefab;
         public GameObject MapTreeBranchPrefab;
         public GameObject MapTreeTwigPrefab;
@@ -51,10 +53,12 @@ namespace Assets.GameCode.Map.UI
         private MapManager mMapManager;
         // This is a reference to the state held
         // by mMapManager
+        [System.NonSerialized()]
         private MapState mMapState;
 
         private TreeNode<MapTreeItem> mTreeRoot;
         private List<List<TreeNode<MapTreeItem>>> mTreeLayers;
+        private List<TreeNode<LayerTreeNode>> mLayerTreeList;
 
         private List<Cards.UI.UICard> mRewardCards;
         private Cards.CardList mCurrentRewardCards;
@@ -72,19 +76,59 @@ namespace Assets.GameCode.Map.UI
             mConfirmButton = ConfirmButtonObject.GetComponentInChildren<UnityEngine.UI.Button>();
 
             mMapManager = this.gameObject.GetComponentInChildren<MapManager>();
-            mMapState = mMapManager.mMapState;
+            mLayerTreeList = new List<TreeNode<LayerTreeNode>>();
 
+            SetMapState(mMapManager.GetMapState());
+        }
+
+        public void SetMapState(MapState mapState)
+        {
+            mMapState = mapState;
             // TODO - Take in a tree to parse
             // We kind of do now, but need to move MapState
             // into the overall map manager, should not be
             // in the UI manager.
             TreeNode<MapItem> mapRoot = mMapState.GetMapTree();
 
-            mTreeRoot = BuildTree(mapRoot, null, null);
+            ClearTree();
+
+            mTreeRoot = SetupTree(mapRoot);
+
+            UpdateUI();
+
+            mNumUpdates = 0;
+        }
+
+        private void ClearTree()
+        {
+            ReleaseLayerTrees();
+
+            if (mTreeRoot != null)
+            {
+                mTreeRoot.DoForAll((treeItem) =>
+                    {
+                        if (treeItem.mUILines != null)
+                        {
+                            foreach (GameObject line in treeItem.mUILines)
+                            {
+                                Destroy(line);
+                            }
+                            treeItem.mUILines.Clear();
+                        }
+
+                        Destroy(treeItem.mTreeUIItem);
+                        return true;
+                    });
+            }
+        }
+
+        private TreeNode<MapTreeItem> SetupTree(TreeNode<MapItem> mapRoot)
+        {
+            TreeNode<MapTreeItem> treeRoot = BuildTree(mapRoot, null, null);
 
             mTreeLayers = new List<List<TreeNode<MapTreeItem>>>();
             mTreeLayers.Add(new List<TreeNode<MapTreeItem>>());
-            mTreeLayers[0].Add(mTreeRoot);
+            mTreeLayers[0].Add(treeRoot);
 
             for (int layer = 0; layer < kNumLayers - 1; layer++)
             { 
@@ -105,14 +149,16 @@ namespace Assets.GameCode.Map.UI
             // correct order.
             for (int i = mTreeLayers.Count; i > 0; i--)
             {
-                BuildLayerTree(mTreeRoot, i - 1).mItem.mObject.transform.SetParent(mMap.transform, false);
+                TreeNode<LayerTreeNode> rootNode = BuildLayerTree(treeRoot, i - 1);
+                mLayerTreeList.Add(rootNode);
+                rootNode.mItem.mObject.transform.SetParent(mMap.transform, false);
             }
 
             FillOutTree(mTreeLayers);
 
-            //CreateLines(mTreeRoot);
+            //CreateLines(treeRoot);
 
-            UpdateUI();
+            return treeRoot;
         }
 
         private TreeNode<MapTreeItem> BuildTree(TreeNode<MapItem> mapItemTreeNode, TreeNode<MapTreeItem> currentParent, 
@@ -181,7 +227,7 @@ namespace Assets.GameCode.Map.UI
                 return true;
             });
         }
-
+            
         // The first layer of the tree must have been manually filled out
         // for this to work.
         private void FillOutTree(List<List<TreeNode<MapTreeItem>>> treeLayers)
@@ -298,6 +344,19 @@ namespace Assets.GameCode.Map.UI
             return;
         }
 
+        private void ReleaseLayerTrees()
+        {
+            foreach (TreeNode<LayerTreeNode> treeRoot in mLayerTreeList)
+            {
+                treeRoot.DoForAll((node) =>
+                    {
+                        Destroy(node.mObject);
+                        return true;
+                    });
+            }
+            mLayerTreeList.Clear();
+        }
+
         public static GameObject CreateMapUIItem(MapUIManager uiManager, GameObject mapItemPrefab, TreeNode<MapTreeItem> mapTreeItem, string name)
         {
             GameObject newMapItem = GameObject.Instantiate(mapItemPrefab);
@@ -325,29 +384,26 @@ namespace Assets.GameCode.Map.UI
         {
             mTreeRoot.DoForAll((m) =>
                 {
+                    Color itemColour = Color.grey;
                     if (m.mMapItem.Completed == true)
                     {
-                        m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.green;
+                        itemColour = m.mMapItem.mDidPlayerWin ? Color.green : Color.red;
                     }
                     else if (m.mMapItem.Available == true)
                     {
-                        m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.white;
-                    }
-                    else
-                    {
-                        m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.grey;
+                        itemColour = Color.white;
                     }
 
-                    m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Text>().text =
-                        "world: " + m.mTreeUIItem.transform.position.ToString() + "local: " + m.mTreeUIItem.transform.localPosition.ToString();
+                    m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = itemColour;
+                    m.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Text>().text = m.mMapItem.mName;
 
                     return true;
                 });
 
-            if (mSelectedMapItem != null &&
-                !mSelectedMapItem.mItem.mMapItem.Completed)
+            if (mSelectedMapItem != null)
             {
-                if (mSelectedMapItem.mItem.mMapItem.Available)
+                if (mSelectedMapItem.mItem.mMapItem.Available &&
+                    !mSelectedMapItem.mItem.mMapItem.Completed)
                 {
                     mSelectedMapItem.mItem.mTreeUIItem.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.yellow;
                 }
@@ -359,15 +415,24 @@ namespace Assets.GameCode.Map.UI
                 mCurrentRewardCards = mSelectedMapItem.mItem.mMapItem.Rewards;
             }
 
-            if (mSelectedMapItem != null &&
-                !mSelectedMapItem.mItem.mMapItem.Completed &&
-                mSelectedMapItem.mItem.mMapItem.Available)
+            if (mMapState.IsMapCompleted())
             {
                 mConfirmButton.interactable = true;
+                mConfirmButton.transform.GetComponentInChildren<UnityEngine.UI.Text>().text = "Move to next region";
             }
             else
             {
-                mConfirmButton.interactable = false;
+                mConfirmButton.transform.GetComponentInChildren<UnityEngine.UI.Text>().text = "Start battle";
+                if (mSelectedMapItem != null &&
+                !mSelectedMapItem.mItem.mMapItem.Completed &&
+                mSelectedMapItem.mItem.mMapItem.Available)
+                {
+                    mConfirmButton.interactable = true;
+                }
+                else
+                {
+                    mConfirmButton.interactable = false;
+                }
             }
 
             foreach (Cards.UI.UICard card in mRewardCards)
@@ -382,14 +447,17 @@ namespace Assets.GameCode.Map.UI
             
         private void UpdateCard(Cards.Entities.Entity E, Transform UnityArea)
         {
-            UpdateCard<UICard, UnitDisplayCard, UnitExpandingCard, DisplayCard, ExpandingCard>(
+            UpdateCard<UICard, UnitDisplayCard, UnitExpandingCard,
+            DisplayCard, ExpandingCard, EffectDisplayCard, ExpandingCard>(
                 E, 
                 UnityArea,
                 mRewardCards,
                 CardPrefab,
                 ExpandedCardPrefab,
                 UnitCardPrefab,
-                ExpandedUnitCardPrefab);
+                ExpandedUnitCardPrefab,
+                EffectCardPrefab,
+                ExpandedEffectCardPrefab);
         }
     	
         public void ItemSelected(TreeNode<MapTreeItem> mapTreeItem)
@@ -400,7 +468,14 @@ namespace Assets.GameCode.Map.UI
 
         public void ConfirmButtonPressed()
         {
-            mMapManager.StartBattle(mSelectedMapItem.mItem.mMapItem.mTreeNode);
+            if (mMapState.IsMapCompleted())
+            {
+                mMapManager.MoveToNewRegion();  
+            }
+            else
+            {
+                mMapManager.StartBattle(mSelectedMapItem.mItem.mMapItem.mTreeNode);
+            }
         }
 
         public void ViewDeckButtonPressed()

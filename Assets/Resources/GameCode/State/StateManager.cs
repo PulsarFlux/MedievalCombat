@@ -84,6 +84,16 @@ namespace Assets.GameCode.State
         public Cards.CardCollection mCardCollection;
         public GameScene mLastScene;
     }
+    public class MapSetupState : PassedState
+    {
+        public MapSetupState(bool needsNewMap)
+        {
+            mType = PassedStateType.Map;
+            mCreateNewMap = needsNewMap;
+        }
+
+        public bool mCreateNewMap;
+    }
     public enum PassedStateType
     {
         Map,
@@ -105,10 +115,13 @@ namespace Assets.GameCode.State
         {
             if (mCurrentMapState == null)
             {
-                mCurrentMapState = new Map.MapState();
+                mCurrentMapState = new Map.MapState(7, 0);
             }
-
             return mCurrentMapState;
+        }
+        public void SetMapState(Map.MapState mapState)
+        {
+            mCurrentMapState = mapState;
         }
         public GameCode.Cards.CardGameState LoadCardGameState()
         {
@@ -124,7 +137,7 @@ namespace Assets.GameCode.State
             if (mCurrentCampaignState == null)
             {
                 mCurrentCampaignState = new CampaignState();
-                mCurrentCampaignState.mCurrentDeck = DefaultDeckSpec;
+                mCurrentCampaignState.mCurrentCollection.mDeck = DefaultDeckSpec;
             }
             return mCurrentCampaignState;
         }
@@ -161,14 +174,35 @@ namespace Assets.GameCode.State
             { mDefaultDeckSpec = value; }
         }
 
+        private Cards.Loading.MetaDataLibrary mMetaDataLibrary;
+        public Cards.Loading.MetaDataLibrary MetaDataLibrary
+        { 
+            get
+            {
+                if (mMetaDataLibrary == null)
+                {
+                    mMetaDataLibrary = Cards.Loading.CardLoading.LoadMetaData();
+                }
+                return mMetaDataLibrary;
+            }
+            private set
+            { mMetaDataLibrary = value; }
+        }
+
         private Map.MapState mCurrentMapState;
         private GameCode.Cards.CardGameState mCurrentCardGameState;
         private CampaignState mCurrentCampaignState;
 
+        public GameScene GetCurrentScene()
+        {
+            return mCurrentGameScene;
+        }
         private GameScene mCurrentGameScene;
         // The information last passed to us to hold
         // for the next scene to retrieve.
         private PassedState mCurrentPassedState;
+
+        private SaveDescription mCurrentSaveDesc;
 
         public StateManager()
         {
