@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,7 @@ namespace Assets.GameCode.Cards.Actions
         public ToggleDefending_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
         Entity Defender;
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             return Performer.IsUnit();
         }

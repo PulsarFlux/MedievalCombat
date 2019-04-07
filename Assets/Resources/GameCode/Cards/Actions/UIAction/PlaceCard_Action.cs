@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,7 @@ namespace Assets.GameCode.Cards.Actions
             this.PlacedCard = PlacedCard;
             this.PlacedZone = PlacedZone;
         }
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             if (PlacedCard.getOwnerIndex() == TI.GetCPI() && !TI.IsMulligan)
             {

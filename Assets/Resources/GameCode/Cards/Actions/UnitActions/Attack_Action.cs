@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,7 @@ namespace Assets.GameCode.Cards.Actions
         public Attack_Action() {}
         public Attack_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             Entities.Unit attacker = (Entities.Unit)Performer;
             Entities.Unit target = (Entities.Unit)Selection[0];

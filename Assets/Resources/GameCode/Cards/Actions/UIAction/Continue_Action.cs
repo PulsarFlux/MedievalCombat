@@ -14,7 +14,7 @@ namespace Assets.GameCode.Cards.Actions
         {
             mTurnManager = turnManager;
         }
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             return true;
         }

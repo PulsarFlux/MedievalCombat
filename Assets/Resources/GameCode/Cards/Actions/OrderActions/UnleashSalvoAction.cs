@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Assets.GameCode.Cards.Actions
@@ -12,7 +12,7 @@ namespace Assets.GameCode.Cards.Actions
         private int mActionIndex;
         private string mClassRestriction;
 
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             return ((Entities.Effect_Entity)Performer).Owner.GetCP() >= GetMinCost();
         }
@@ -34,15 +34,24 @@ namespace Assets.GameCode.Cards.Actions
             ((Effects.Orders.OrderWithUses)(((Entities.Effect_Entity)Performer).GetEffect())).SetUses(mActionIndex, numSalvos);
             ((Effects.Orders.Order)((Entities.Effect_Entity)Performer).GetEffect()).OrderUsed();
         }
-        public override void SetInitialData(List<string> data)
+
+        protected override void SetupInternal(Loading.ActionData actionData)
         {
-            int.TryParse(data[0], out mActionIndex);
-        }
-        public override bool IsAvailable(Entities.Entity Performer)
-        {
-            return ((Effects.Orders.Order)(((Entities.Effect_Entity)Performer).GetEffect())).IsAvailable();
+            foreach (Loading.InfoTagData tag in actionData.mInfoTags)
+            {
+                if (tag.mType == "ActionIndex")
+                {
+                    int.TryParse(tag.mTagValue, out mActionIndex);
+                }
+            }
         }
 
+        public override bool IsAvailable(Entities.Entity Performer)
+        {
+            Entities.Effect_Entity effectEntity = (Entities.Effect_Entity)Performer;
+            Effects.Orders.Order order = (Effects.Orders.Order)effectEntity.GetEffect();
+            return order.IsAvailable();
+        }
     }
 
     [Serializable()]
@@ -54,7 +63,7 @@ namespace Assets.GameCode.Cards.Actions
         private int mActionIndex;
         private int mDamage;
 
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             Effects.Orders.OrderWithUses TheOrder = (Effects.Orders.OrderWithUses)(((Entities.Effect_Entity)Performer).GetEffect());
             Entities.Unit TheTarget = (Entities.Unit)Selection[0];
@@ -81,11 +90,22 @@ namespace Assets.GameCode.Cards.Actions
             TheOrder.SetUses(mActionIndex, numSalvos - 1);
             ((Entities.Unit)Selection[0]).Damage(mDamage);
         }
-        public override void SetInitialData(List<string> data)
+
+        protected override void SetupInternal(Loading.ActionData actionData)
         {
-            int.TryParse(data[0], out mActionIndex);
-            int.TryParse(data[1], out mDamage);
+            foreach (Loading.InfoTagData tag in actionData.mInfoTags)
+            {
+                if (tag.mType == "ActionIndex")
+                {
+                    int.TryParse(tag.mTagValue, out mActionIndex);
+                }
+                else if (tag.mType == "Damage")
+                {
+                    int.TryParse(tag.mTagValue, out mDamage);
+                }
+            }
         }
+
         public override bool IsAvailable(Entities.Entity Performer)
         {
             return ((Effects.Orders.OrderWithUses)(((Entities.Effect_Entity)Performer).GetEffect())).GetNumUses(mActionIndex) > 0;

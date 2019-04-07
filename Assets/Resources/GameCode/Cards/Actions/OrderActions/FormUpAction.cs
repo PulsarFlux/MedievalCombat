@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Assets.GameCode.Cards.Actions
@@ -12,7 +12,7 @@ namespace Assets.GameCode.Cards.Actions
         private int mTempHPAmount;
         private string mClassRestriction;
 
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             bool result = Selection[0].Owner.GetCP() >= GetMinCost();
             if (result && mClassRestriction != "")
@@ -34,21 +34,26 @@ namespace Assets.GameCode.Cards.Actions
             Selection[0].Owner.SpendCP(GetMinCost());
             ((Effects.Orders.Order)((Entities.Effect_Entity)Performer).GetEffect()).OrderUsed();
         }
-        public override void SetInitialData(List<string> data)
+        protected override void SetupInternal(Loading.ActionData actionData)
         {
-            int.TryParse(data[0], out mTempHPAmount);
-            if (data.Count > 1)
+            foreach (Loading.InfoTagData tag in actionData.mInfoTags)
             {
-                mClassRestriction = data[1];
-            }
-            else
-            {
-                mClassRestriction = "";
+                if (tag.mType == "TempHPBuff")
+                {
+                    int.TryParse(tag.mTagValue, out mTempHPAmount);
+                }
+                else if (tag.mType == "Class")
+                {
+                    mClassRestriction = tag.mTagValue;
+                }
             }
         }
+
         public override bool IsAvailable(Entities.Entity Performer)
         {
-            return ((Effects.Orders.Order)(((Entities.Effect_Entity)Performer).GetEffect())).IsAvailable();
+            Entities.Effect_Entity effectEntity = (Entities.Effect_Entity)Performer;
+            Effects.Orders.Order order = (Effects.Orders.Order)effectEntity.GetEffect();
+            return order.IsAvailable();
         }
     }
 }

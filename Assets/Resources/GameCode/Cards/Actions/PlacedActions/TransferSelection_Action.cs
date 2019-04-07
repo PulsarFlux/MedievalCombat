@@ -1,7 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Assets.GameCode.Cards.Entities;
 
 namespace Assets.GameCode.Cards.Actions
@@ -12,7 +10,7 @@ namespace Assets.GameCode.Cards.Actions
         public TransferSelection_Action() {}
         public TransferSelection_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             return (Performer.getType() == CardType.Effect);
         }

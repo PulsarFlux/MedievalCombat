@@ -32,7 +32,12 @@ namespace Assets.GameCode.Cards.Actions
         {
             SetCostInfo(hasCertainCost, minCost);
         }
-        public abstract bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI);
+        public bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        {
+            return mConditions.Check(Performer) && CheckValidityInternal(Performer, Selection, TI);
+        }
+        protected abstract bool CheckValidityInternal(Entities.Entity Performer, 
+            List<Entities.Entity> Selection, TurnInfo TI);
         public abstract void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS);
         public void SetCostInfo(bool hasCertainCost, int minCost)
         {
@@ -49,7 +54,7 @@ namespace Assets.GameCode.Cards.Actions
 
         public virtual bool IsAvailable(Entities.Entity Performer)
         {
-            return Performer.Owner.GetCP() >= GetMinCost();
+            return Performer.Owner.GetCP() >= GetMinCost() && mConditions.Check(Performer);
         }
         protected virtual int GetMinCost()
         {

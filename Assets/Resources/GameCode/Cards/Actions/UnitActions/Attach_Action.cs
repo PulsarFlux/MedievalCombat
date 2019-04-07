@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,7 @@ namespace Assets.GameCode.Cards.Actions
         public Attach_Action() {}
         public Attach_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        public override bool CheckValidity(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
+        protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
             return (Performer.getOwnerIndex() == TI.GetCPI() && Performer.IsUnit() && Selection[0].IsUnit());
         }
