@@ -7,6 +7,8 @@ using UnityEngine;
 using Assets.GameCode.Cards.Modules;
 using Assets.GameCode.Cards.Effects;
 using Assets.GameCode.Cards.Actions;
+using Assets.GameCode.Cards.Components.Conditional;
+using Assets.GameCode.Cards.Components;
 
 namespace Assets.GameCode.Cards.Loading
 {
@@ -125,14 +127,20 @@ namespace Assets.GameCode.Cards.Loading
             TextAsset CardTypesXML = Resources.Load("CardPool") as TextAsset;
             System.IO.StringReader CardTypesReader = new System.IO.StringReader(CardTypesXML.text);
             XmlReader xmlReader = XmlReader.Create(CardTypesReader);
-            CardData CurrentCardData = new UnitCardData("a", "a", "a", "a", "a", "a", "a");
+            CardData CurrentCardData = null;
+            bool isInAction = false;
+            BehaviourData PreviousBehaviourData = null;
+            BehaviourData CurrentBehaviourData = null;
+
+            string cachedElementType = "";
             while (xmlReader.Read())
             {
                 if (xmlReader.NodeType == XmlNodeType.Element)
                 {
-                    if (xmlReader.Name  == "card")
+                    cachedElementType = xmlReader.Name;
+                    if (xmlReader.Name == "card")
                     {
-                       switch (xmlReader["type"])
+                        switch (xmlReader["type"])
                         {
                             case "basicunit":
                                 CurrentCardData = new UnitCardData(xmlReader["name"], xmlReader["type"], xmlReader["attack"], xmlReader["health"], xmlReader["victory"], xmlReader["canbeshort"], xmlReader["canbelong"]);
@@ -153,7 +161,7 @@ namespace Assets.GameCode.Cards.Loading
                                 break;
                             case "effect":
                                 EffectData ED = new EffectData(xmlReader["effectname"], xmlReader["cardname"], 
-                                    xmlReader["shared"], xmlReader["turns"]);
+                                                    xmlReader["shared"], xmlReader["turns"]);
                                 for (int i = 5; i < xmlReader.AttributeCount; i++)
                                 {
                                     ED.AddData(xmlReader[i]);
@@ -168,42 +176,84 @@ namespace Assets.GameCode.Cards.Loading
                         // To link modules here include an index and a moduletype in the data, 
                         // the index should be a zero based count of the the linked module's position in the data file relative to modules OF THE SAME TYPE
                         // the module with this data must appear after the module it will be linked to
-                        ModuleData MD = new ModuleData(xmlReader["name"], xmlReader["type"]);
-                        for (int i = 2; i < xmlReader.AttributeCount; i++)
+                        ModuleData moduleData = new ModuleData(xmlReader["name"], xmlReader["type"]);
+                        int startOfData = 2;
+                        if (xmlReader["lifetime"] != null)
                         {
-                            MD.AddData(xmlReader[i]);
+                            startOfData = 3;
+                            bool result = int.TryParse(xmlReader["lifetime"], out moduleData.mLifetime);
+                            UnityEngine.Debug.Assert(result);
                         }
-                        CurrentCardData.AddModule(MD);
-                    }
-                    else if (xmlReader.Name == "action")
-                    {
-                        bool hasCertainCost;
-                        int minCost;
-                        bool.TryParse(xmlReader["hascertaincost"], out hasCertainCost);
-                        int.TryParse(xmlReader["mincost"], out minCost);
-                        Actions.Action action = GetActionFromData(xmlReader["name"], hasCertainCost, minCost);
-                        if (xmlReader.AttributeCount > 7)
+                        for (int i = startOfData; i < xmlReader.AttributeCount; i++)
                         {
-                            List<string> actionData = new List<string>();
-                            for (int i = 7; i < xmlReader.AttributeCount; i++)
-                            {
-                                actionData.Add(xmlReader[i]);
-                            }
-                            action.SetInitialData(actionData);
+                            moduleData.AddData(xmlReader[i]);
                         }
-                            
-                        ActionInfo AI = new ActionInfo(xmlReader["name"], action, xmlReader["selecttype"], xmlReader["min"], xmlReader["max"]);
-                        bool isPlacedAction;
-                        bool.TryParse(xmlReader["placed"], out isPlacedAction);
-                        if (isPlacedAction == false)
+
+                        PreviousBehaviourData = CurrentBehaviourData;
+                        CurrentBehaviourData = moduleData;
+
+                        if (isInAction)
                         {
-                            CurrentCardData.AddAction(AI);
+                            ((ActionData)PreviousBehaviourData).AddModule(moduleData);
                         }
                         else
                         {
-                            CurrentCardData.AddPlacedAction(AI);
+                            CurrentCardData.AddModule(moduleData);
                         }
-                       
+                    }
+                    else if (xmlReader.Name == "action")
+                    {
+                        isInAction = true;
+
+                        bool hasCertainCost;
+                        int minCost;
+                        bool isPlacedAction;
+
+                        bool.TryParse(xmlReader["hascertaincost"], out hasCertainCost);
+                        int.TryParse(xmlReader["mincost"], out minCost);
+                        bool.TryParse(xmlReader["placed"], out isPlacedAction);
+
+                        ActionData actionData = new ActionData(hasCertainCost, minCost, xmlReader["name"],
+                                                    isPlacedAction, xmlReader["selecttype"], xmlReader["min"], xmlReader["max"]);
+
+                        int customDataStart = 7;
+                        if (xmlReader["displayname"] != null)
+                        {
+                            customDataStart = 8;
+                            actionData.mDisplayName = xmlReader["displayname"];
+                        }
+
+                        if (xmlReader.AttributeCount > customDataStart)
+                        {
+                            List<string> customData = new List<string>();
+                            for (int i = customDataStart; i < xmlReader.AttributeCount; i++)
+                            {
+                                customData.Add(xmlReader[i]);
+                            }
+                            actionData.mCustomData = customData;
+                        }
+                            
+                        CurrentBehaviourData = actionData;
+                        CurrentCardData.AddAction(actionData);
+                    }
+                    else if (xmlReader.Name == "infotag")
+                    {
+                        CurrentBehaviourData.AddInfoTag(new InfoTagData(xmlReader[0], xmlReader[1]));
+                    }
+                    else if (xmlReader.Name == "conditional")
+                    {
+                        CurrentBehaviourData.AddConditional(new ConditionalData(xmlReader[0], xmlReader[1]));
+                    }
+                }
+                else if (xmlReader.NodeType == XmlNodeType.EndElement)
+                {
+                    if (xmlReader.Name == "action")
+                    {
+                        isInAction = false;
+                    }
+                    else if (xmlReader.Name == "module")
+                    {
+                        CurrentBehaviourData = PreviousBehaviourData;
                     }
                 }
             }
