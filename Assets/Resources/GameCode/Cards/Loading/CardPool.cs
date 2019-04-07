@@ -18,6 +18,7 @@ namespace Assets.GameCode.Cards.Loading
                     return CD;
                 }
             }
+            UnityEngine.Debug.Log("Failed to find card data in card pool with name: " + Name);
             return null;
         }
     }
