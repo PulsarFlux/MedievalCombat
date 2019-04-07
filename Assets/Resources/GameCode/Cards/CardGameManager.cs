@@ -88,7 +88,8 @@ namespace Assets.GameCode.Cards
 		{
 		}
 
-        public void Update()
+        // Weird name to avoid conflicting with the MonoBehaviour Update function.
+        public void UpdateLogic()
         {
             TheCardGameState.Update(TheTurnManager.getTI());
         }
