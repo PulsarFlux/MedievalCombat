@@ -24,7 +24,7 @@ namespace Assets.GameCode.Cards.UI
             mUIManager = UIM;
             mEntity = E;
             UnityCard = mainDisplayCard.UnityCard;
-            UnityCard.GetComponent<Scripts.CardHolder>().OwningCard = this;
+            UnityCard.GetComponentInChildren<Scripts.CardHolder>().OwningCard = this;
             mExpandingCard = expandingCard;
             mDisplayCard = mainDisplayCard;
         }

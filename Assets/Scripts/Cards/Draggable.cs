@@ -14,7 +14,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-            TheUIManager = (GameCode.Cards.UI.ICardPlacedHandler)this.gameObject.GetComponent<CardHolder>().OwningCard.GetUIM();
+            TheUIManager = (GameCode.Cards.UI.ICardPlacedHandler)this.gameObject.GetComponentInChildren<CardHolder>().OwningCard.GetUIM();
         }
         void Awake()
         {

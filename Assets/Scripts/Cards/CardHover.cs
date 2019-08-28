@@ -22,6 +22,9 @@ namespace Assets.Scripts
         private GameObject mDisplayCard;
         private CardHolder mCardHolder;
 
+        private float mDisplayCardHeight;
+        private float mCardHeight;
+
         public void SetOverlapArea(bool dat)
         {
             OnOverlapArea = dat;
@@ -80,10 +83,30 @@ namespace Assets.Scripts
             GameCode.Cards.UI.UICard playingCard = mCardHolder.OwningCard;
 
             mDisplayCard = playingCard.CreateExpandedCard();
+
+            Transform displayCardTransform = mDisplayCard.transform.Find("Card");
+
             mDisplayCard.transform.SetParent(this.transform.GetComponentInParent<Canvas>().gameObject.transform, false);
-            mDisplayCard.transform.localPosition = Vector3.zero;
+
+            Rect displayCardRect = displayCardTransform.GetComponent<RectTransform>().rect;
+            mDisplayCardHeight = displayCardRect.height * displayCardTransform.lossyScale.y;
+
+            mDisplayCard.transform.position = GetDisplayCardPos();
 
             mIsShowingDisplayCard = true;
+        }
+
+        private Vector3 GetDisplayCardPos()
+        {
+            float yOffset = (mDisplayCardHeight + mCardHeight) / 2;
+            float yPos = this.gameObject.transform.position.y;
+
+            yPos += ((yPos + yOffset * 2) > 900) ? (-1 * yOffset) : yOffset;
+
+            Vector3 result = new Vector3(Input.mousePosition.x, yPos,
+                this.gameObject.transform.position.z);
+
+            return result;
         }
 
         private void ShowDisplayCard()
@@ -100,6 +123,10 @@ namespace Assets.Scripts
             mShouldShowDisplayCard = false;
             mIsShowingPlaceholders = false;
             mIsShowingDisplayCard = false;
+
+            Transform cardTransform = this.gameObject.transform.Find("Card");
+            Rect cardRect = cardTransform.GetComponent<RectTransform>().rect;
+            mCardHeight = cardRect.height * cardTransform.lossyScale.y;
         }
 
         // Update is called once per frame
@@ -132,6 +159,10 @@ namespace Assets.Scripts
                 if (mShouldShowDisplayCard && !mIsShowingDisplayCard)
                 {
                     CreateDisplayCard();
+                }
+                else if (mShouldShowDisplayCard)
+                {
+                    mDisplayCard.transform.position = GetDisplayCardPos();
                 }
             }
         }

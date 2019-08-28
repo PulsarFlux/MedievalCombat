@@ -12,13 +12,13 @@ namespace Assets.Scripts
 
         public void OnPointerClick(PointerEventData data)
         {
-            TheUIManager.CardSelected((PlayingCard)this.gameObject.GetComponent<CardHolder>().OwningCard);
+            TheUIManager.CardSelected((PlayingCard)this.gameObject.GetComponentInChildren<CardHolder>().OwningCard);
         }
 
         // Use this for initialization
         void Start()
         {
-            TheUIManager = (ICardSelectedHandler)this.gameObject.GetComponent<CardHolder>().OwningCard.GetUIM();
+            TheUIManager = (ICardSelectedHandler)this.gameObject.GetComponentInChildren<CardHolder>().OwningCard.GetUIM();
         }
 
         // Update is called once per frame
