@@ -50,7 +50,6 @@ namespace Assets.Scripts
             if (OriginalParent != ReturnObject)
             {
                 TheUIManager.CardPlaced(this.gameObject.GetComponent<CardHolder>().OwningCard, ReturnObject.gameObject.GetComponent<BoardArea>().getCardZoneType());
-                this.gameObject.GetComponent<CardHover>().SetOverlapArea(ReturnObject.gameObject.GetComponent<BoardArea>().IsOverlapArea);
             }
             TheUIManager.UpdateUI();
         }

@@ -18,7 +18,6 @@ namespace Assets.Scripts
         public GameObject CardDragParent = null;
 
         private GameCode.Cards.CardZoneType Zone;
-        public bool IsOverlapArea;
 
         public void OnDrop(PointerEventData data)
         {
