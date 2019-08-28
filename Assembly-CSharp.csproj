@@ -127,7 +127,6 @@
     <Compile Include="Assets\Resources\GameCode\Map\UI\MapUIManager.cs" />
     <Compile Include="Assets\Resources\GameCode\Menus\MainMenu\MainMenuUIManager.cs" />
     <Compile Include="Assets\Resources\GameCode\State\CampaignState.cs" />
-    <Compile Include="Assets\Resources\GameCode\State\PrefabManager.cs" />
     <Compile Include="Assets\Resources\GameCode\State\StateManager.cs" />
     <Compile Include="Assets\Resources\GameCode\Utility\Serialiser.cs" />
     <Compile Include="Assets\Resources\GameCode\Utility\Tree.cs" />
