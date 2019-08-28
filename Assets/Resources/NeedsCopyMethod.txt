@@ -1,4 +1,0 @@
-﻿Entity - deep
-	Effect 
-Modules - deep
-	Persistance

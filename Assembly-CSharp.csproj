@@ -185,7 +185,6 @@
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Persistance\PersistanceModule.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Persistance\NeedsUnitModule.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\AIPlayer.cs" />
-    <None Include="Assets\Resources\NeedsCopyMethod.txt" />
     <Compile Include="Assets\Resources\GameCode\Cards\UI\CardGallery\DeckBuilderUIManager.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\UI\EffectDisplayCard.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\NewTurn\NewTurnModule.cs" />
