@@ -23,8 +23,6 @@ namespace Assets.Scripts
         {
             Draggable Temp = data.pointerDrag.GetComponent<Draggable>();
             Temp.ReturnObject = this.transform;
-            //TODO - Need to sort out placeholders if wanted. 
-            //data.pointerDrag.GetComponent<CardHover>().SetOverlapArea(IsOverlapArea);
         }
         public GameCode.Cards.CardZoneType getCardZoneType()
         {
