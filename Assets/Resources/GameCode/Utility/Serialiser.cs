@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using Assets.GameCode.Cards;
 using Assets.GameCode.Cards.Actions;
+using System.Collections.Generic;
 
 namespace Assets.Utility
 {
@@ -35,6 +36,35 @@ namespace Assets.Utility
             StateAndActionHolder holderCopy = (StateAndActionHolder)formatter.Deserialize(stream);
             actionToReturn = holderCopy.actionOrder;
             stateToReturn = holderCopy.cardGameState;
+        }
+
+        public static void CreateActionsAndGameStateSet(
+            CardGameState stateToCopy, List<ActionOrder> actionsToCopy, 
+            out ActionsAndGameStateSet setToReturn)
+        {
+            MemoryStream stream = new MemoryStream();
+            BinaryFormatter formatter = new BinaryFormatter();
+
+            // Use a set with only one card game state so that everything gets serialised together.
+            ActionsAndGameStateSet set = new ActionsAndGameStateSet();
+            set.mAvailableActions = new List<ActionOrder>(actionsToCopy);
+            set.mCardGameStates = new List<CardGameState>();
+            set.mCardGameStates.Add(stateToCopy);
+
+            formatter.Serialize(stream, set);
+
+            ActionsAndGameStateSet returnSet = new ActionsAndGameStateSet();
+            returnSet.mAvailableActions = new List<ActionOrder>();
+            returnSet.mCardGameStates = new List<CardGameState>();
+
+            for (int i = 0; i < actionsToCopy.Count; i++)
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                ActionsAndGameStateSet setCopy = (ActionsAndGameStateSet)formatter.Deserialize(stream);
+                returnSet.mAvailableActions.Add(setCopy.mAvailableActions[i]);
+                returnSet.mCardGameStates.Add(setCopy.mCardGameStates[0]);
+            }
+            setToReturn = returnSet;
         }
     }
 }

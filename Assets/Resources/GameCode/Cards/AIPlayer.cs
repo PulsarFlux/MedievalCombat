@@ -7,6 +7,13 @@ using Assets.GameCode.Cards.Entities;
 namespace Assets.GameCode.Cards
 {
     [Serializable()]
+    public struct ActionsAndGameStateSet
+    {
+        public List<Actions.ActionOrder> mAvailableActions;
+        public List<CardGameState> mCardGameStates;
+    }
+
+    [Serializable()]
     public class AIPlayer : Player
     {
         private System.Random mRandom;
@@ -35,22 +42,27 @@ namespace Assets.GameCode.Cards
 
                 while (!shouldContinue && availableActions.Count > 0)
                 {
+                    ActionsAndGameStateSet actionSet;
+                    Utility.Serialiser.CreateActionsAndGameStateSet(gameState, availableActions, out actionSet);
                     float continueScore = EvaluateMatchWinChance(getIndex(), gameState, manager.GetRoundVictoryLimit(), !hasTakenAction);
                     float maxScore = 0;
-                    Actions.ActionOrder bestAction = null;
-                    foreach (Actions.ActionOrder action in availableActions)
+                    int bestActionIndex = -1;
+                    for (int actionIndex = 0; actionIndex < actionSet.mAvailableActions.Count; actionIndex++)
                     {
-                        float actionScore = EvaluateAction(getIndex(), action, gameState, manager.GetRoundVictoryLimit());
+                        float actionScore = EvaluateAction(getIndex(), actionSet.mAvailableActions[actionIndex],
+                            actionSet.mCardGameStates[actionIndex], manager.GetRoundVictoryLimit());
+
                         if (actionScore > maxScore)
                         {
                             maxScore = actionScore;
-                            bestAction = action;
+                            bestActionIndex = actionIndex;
                         }
                     }
                     if (maxScore > continueScore)
                     {
+                        UnityEngine.Debug.Assert(bestActionIndex > -1);
                         // Update real game state with action.
-                        manager.PassAction(bestAction);
+                        manager.PassAction(availableActions[bestActionIndex]);
                         availableActions = GetAvailableActions(turnInfo, gameState);
                         hasTakenAction = HasSpentCP() || WasCardPlaced();
                     }
@@ -211,9 +223,8 @@ namespace Assets.GameCode.Cards
         // This assumes the action is valid, it will not check!
         private static float EvaluateAction(int playerIndex, Actions.ActionOrder action, CardGameState gameState, int roundVictoryLimit)
         {
-            Actions.ActionOrder actionCopy = null;
-            CardGameState stateCopy = null;
-            Utility.Serialiser.CopyCardGameStateAndAction(gameState, out stateCopy, action, out actionCopy);
+            Actions.ActionOrder actionCopy = action;
+            CardGameState stateCopy = gameState;
 
             // We assume this is a valid action otherwise this action should never have been made available.
             actionCopy.Action.Execute(actionCopy.Performer, actionCopy.Selection, stateCopy);
