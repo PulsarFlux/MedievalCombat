@@ -20,7 +20,7 @@ namespace Assets.GameCode.Cards
             TheCardGameManager = GM;
         }
 
-        public TurnInfo getTI()
+        public TurnInfo GetTurnInfo()
         {
             return TurnInformation;
         }

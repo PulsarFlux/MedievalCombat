@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Loading;
 using System.Runtime.Serialization;
@@ -74,7 +74,7 @@ namespace Assets.GameCode.Cards
 
         public void NewTurn()
         {
-            TheCardGameState.NewTurn(TheTurnManager.getTI(), this);
+            TheCardGameState.NewTurn(TheTurnManager.GetTurnInfo(), this);
         }
         public void PlayerTakeTurn(TurnInfo TI)
         {
@@ -102,7 +102,7 @@ namespace Assets.GameCode.Cards
         // Weird name to avoid conflicting with the MonoBehaviour Update function.
         public void UpdateLogic()
         {
-            TheCardGameState.Update(TheTurnManager.getTI());
+            TheCardGameState.Update(TheTurnManager.GetTurnInfo());
         }
 
         public void PlayerHasWon(bool inPlayerOneWon)
@@ -138,7 +138,7 @@ namespace Assets.GameCode.Cards
             TheTurnManager = new TurnManager(TheCardGameState, this);
 
             TheUIManager = this.gameObject.GetComponent<UI.CardGameUIManager>();
-            TheUIManager.SetUp(this, TheCardGameState, TheTurnManager.getTI());
+            TheUIManager.SetUp(this, TheCardGameState, TheTurnManager.GetTurnInfo());
 
             if (setupState == null || setupState.mNeedsInit)
             {

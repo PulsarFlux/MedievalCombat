@@ -21,22 +21,22 @@ namespace Assets.GameCode.Cards.Actions
 
         public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
-            if (GS.Players[mTurnManager.getTI().GetCPI()].WasCardPlaced() ||
-                GS.Players[mTurnManager.getTI().GetCPI()].HasSpentCP() ||
-                mTurnManager.getTI().IsDeployment() ||
-                mTurnManager.getTI().IsMulligan)
+            if (GS.Players[mTurnManager.GetTurnInfo().GetCPI()].WasCardPlaced() ||
+                GS.Players[mTurnManager.GetTurnInfo().GetCPI()].HasSpentCP() ||
+                mTurnManager.GetTurnInfo().IsDeployment() ||
+                mTurnManager.GetTurnInfo().IsMulligan)
             {
                 mTurnManager.Continue();
             }
             else
             {
-                if (GS.Players[mTurnManager.getTI().GetCPI()].SpendCP(1))
+                if (GS.Players[mTurnManager.GetTurnInfo().GetCPI()].SpendCP(1))
                 {
                     mTurnManager.Continue();
                 }
                 else
                 {
-                    GS.Players[mTurnManager.getTI().GetCPI()].Pass();
+                    GS.Players[mTurnManager.GetTurnInfo().GetCPI()].Pass();
                     mTurnManager.Continue();
                 }
             }
