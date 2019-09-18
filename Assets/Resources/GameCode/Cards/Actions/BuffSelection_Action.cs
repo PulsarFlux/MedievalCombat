@@ -5,25 +5,29 @@ using Assets.GameCode.Cards.Entities;
 namespace Assets.GameCode.Cards.Actions
 {
     [Serializable()]
+    // Customisable action that can effect a variety of changes
+    // upon the selection depending on the infotags specified in
+    // the data. (and more can be added options can be added if desired!)
     public class BuffSelection_Action : Action
     {
         public BuffSelection_Action() {}
         public BuffSelection_Action(bool hasCertainCost, int minCost) : base(hasCertainCost, minCost) {}
 
-        // Why cant i use System.Tuple? Doesnt think it exists?
-        // private System.Tuple<string, bool> hello;
+        // Why cant I use System.Tuple? Doesn't think it exists?
         [Serializable()]
-        private struct StatusTagPair
+        // The 'operation' is whether we should add the status (true)
+        // or remove the status (false)
+        private struct StatusOperationPair
         {
-            public StatusTagPair(string tag, bool shouldAdd)
+            public StatusOperationPair(string tag, bool shouldAdd)
             {
                 mTag = tag;
-                mAdd = shouldAdd;
+                mShouldAdd = shouldAdd;
             }
             public string mTag;
-            public bool mAdd;
+            public bool mShouldAdd;
         }
-        private List<StatusTagPair> mStatusTags;
+        private List<StatusOperationPair> mStatusTags;
         private List<Components.InfoTag> mClassTags;
 
         private int mTempHPBuff;
@@ -46,17 +50,17 @@ namespace Assets.GameCode.Cards.Actions
                 {
                     if (mStatusTags == null)
                     {
-                        mStatusTags = new List<StatusTagPair>();
+                        mStatusTags = new List<StatusOperationPair>();
                     }
-                    mStatusTags.Add(new StatusTagPair(infoTagData.mTagValue, true));
+                    mStatusTags.Add(new StatusOperationPair(infoTagData.mTagValue, true));
                 }
                 else if (infoTagData.mType == "RemoveStatus")
                 {
                     if (mStatusTags == null)
                     {
-                        mStatusTags = new List<StatusTagPair>();
+                        mStatusTags = new List<StatusOperationPair>();
                     }
-                    mStatusTags.Add(new StatusTagPair(infoTagData.mTagValue, false));
+                    mStatusTags.Add(new StatusOperationPair(infoTagData.mTagValue, false));
                 }
                 else if (infoTagData.mType == "TempHPBuff")
                 {
@@ -128,9 +132,9 @@ namespace Assets.GameCode.Cards.Actions
             }
             if (mStatusTags != null)
             {
-                foreach (StatusTagPair pair in mStatusTags)
+                foreach (StatusOperationPair pair in mStatusTags)
                 {
-                    if (pair.mAdd)
+                    if (pair.mShouldAdd)
                     {
                         if (!unit.HasStatus(pair.mTag))
                         {

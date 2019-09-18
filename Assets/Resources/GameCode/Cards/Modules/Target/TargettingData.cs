@@ -38,17 +38,18 @@ namespace Assets.GameCode.Cards.Modules.Target
         /// </summary>
         public bool Result()
         {
+            bool result = false;
             if (TargetType.Long && CanTarget.Long)
             {
-                if (AttackType.Short && CanBeTargeted.Short && !(CanBlock.ShortOnLong && !CanBypass.ShortOnLong)) { return true; }
-                if (AttackType.Long && CanBeTargeted.Long && !(CanBlock.LongOnLong && !CanBypass.LongOnLong)) { return true; }
+                if (AttackType.Short && CanBeTargeted.Short && !(CanBlock.ShortOnLong && !CanBypass.ShortOnLong)) { result = true; }
+                if (AttackType.Long && CanBeTargeted.Long && !(CanBlock.LongOnLong && !CanBypass.LongOnLong)) { result = true; }
             }
             else if (TargetType.Short && CanTarget.Short)
             {
-                if (AttackType.Short && CanBeTargeted.Short && !(CanBlock.ShortOnShort && !CanBypass.ShortOnShort)) { return true; }
-                if (AttackType.Long && CanBeTargeted.Long && !(CanBlock.LongOnShort && !CanBypass.LongOnShort)) { return true; }
+                if (AttackType.Short && CanBeTargeted.Short && !(CanBlock.ShortOnShort && !CanBypass.ShortOnShort)) { result = true; }
+                if (AttackType.Long && CanBeTargeted.Long && !(CanBlock.LongOnShort && !CanBypass.LongOnShort)) { result = true; }
             }
-            return false;
+            return result;
         }
     }
 }

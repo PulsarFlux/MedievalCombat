@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using Assets.GameCode.Cards.Loading;
 using System.Runtime.Serialization;
@@ -50,27 +50,6 @@ namespace Assets.GameCode.Cards
         {
             TheTurnManager.RecieveAction(new Actions.ActionOrder(new Actions.Continue_Action(TheTurnManager), null, null));
         }
-
-       /* private void AddCardListToUI(CardList Hand)
-        {
-            foreach (Entities.Entity E in Hand.Cards)
-            {
-                AddCardToUI(E);
-            }
-        }
-        private void AddCardToUI(Entities.Entity E)
-        {
-            if (E.IsUnit())
-            {
-                TheUIManager.AddUnitCard(E);
-            }
-            switch (E.getType())
-            {
-                case CardType.Effect:
-                    TheUIManager.AddEffectCard(E);
-                    break;
-            }
-        }*/
 
         public void NewTurn()
         {

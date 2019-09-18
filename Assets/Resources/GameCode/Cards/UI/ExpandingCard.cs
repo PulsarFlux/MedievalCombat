@@ -41,6 +41,10 @@ namespace Assets.GameCode.Cards.UI
             mExpandedCard = null;
         }
 
+        /// <summary>
+        /// Draw this instance.
+        /// Can always call this as it will handle whether the UI object actually exists
+        /// </summary>
         public void Draw()
         {
             if (mExpandedCard != null)

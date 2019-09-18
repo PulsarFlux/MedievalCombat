@@ -9,7 +9,8 @@ namespace Assets.GameCode.Cards
     [Serializable()]
     public class Player
     {
-        const int MaxCP = 10;
+        const int kMaxCP = 10;
+        const int kMaxMulligans = 5;
 
         private int mPlayerIndex;
         private int mRoundVictories;
@@ -33,10 +34,10 @@ namespace Assets.GameCode.Cards
         public Player(int index, CardGameState GS)
         {
             mPlayerIndex = index;
-            mCommandPoints = MaxCP;
+            mCommandPoints = kMaxCP;
             mBoard = new PlayerBoard(index);
             mEffects = new Effects.EffectHolder(GS, false, mPlayerIndex);
-            mMaxMulligans = 5;
+            mMaxMulligans = kMaxMulligans;
             mMulligansUsed = 0;
             mUnitCardsPlaced = 0;
             mOtherCardsPlaced = 0;
@@ -127,7 +128,7 @@ namespace Assets.GameCode.Cards
                 }
             }
             mPassed = false;
-            mCommandPoints = MaxCP;
+            mCommandPoints = kMaxCP;
         }
         public bool CanSpendCP(int cost)
         {
@@ -146,7 +147,7 @@ namespace Assets.GameCode.Cards
         /// </summary>
         public bool SpendCP(int Cost)
         {
-            if (mCommandPoints - Cost >= 0)
+            if (CanSpendCP(Cost))
             {
                 mCommandPoints -= Cost;
                 mSpentCP = true;

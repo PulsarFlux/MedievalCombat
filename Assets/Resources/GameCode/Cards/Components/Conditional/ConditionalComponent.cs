@@ -3,6 +3,8 @@
 namespace Assets.GameCode.Cards.Components.Conditional
 { 
     [Serializable()]
+    // Conditionalises the availability of a 'behaviour' (an action or a module)
+    // based on a test that takes in just the parent entity of the behaviour.
     public abstract class ConditionalComponent
     {
         public ConditionalComponent()
@@ -14,7 +16,7 @@ namespace Assets.GameCode.Cards.Components.Conditional
         public static ConditionalComponent CreateFromData(Loading.ConditionalData data)
         {
             ConditionalComponent newConditional = null;
-            // TODO - Keep up to date
+            // TODO - Keep conditionals up to date
             switch (data.mType)
             {
                 case "HasStatus":

@@ -24,7 +24,7 @@ namespace Assets.GameCode.Cards.Modules.Target
         {
             if (!Attacker.HasStatus("Placed this turn"))
             {
-                Cost += Attacker.getAttackCost();
+                Cost += Attacker.GetAttackCost();
             }
             
         }

@@ -9,16 +9,10 @@ namespace Assets.GameCode.Cards.Entities
     [Serializable()]
     public class CharacterUnit : Unit
     {
+        //For this class CanBeShort/Long indicate whether the unit can attack from these ranges
         public CharacterUnit(Loading.UnitCardData Data) : base(Data)
         {
             AttackCost = 1;
-            BaseAttack = Data.Attack;
-            BaseHealth = Data.Health;
-            BaseVP = Data.Victory;
-            Name = Data.mName;
-            //In this class CanBeShort/Long indicate whether the unit can attack from these ranges
-            CanBeShort = Data.CanBeShort;
-            CanBeLong = Data.CanBeLong;
             Modules.Attack.AttackModule M1 = new Modules.Attack.BasicAttack();
             M1.Setup(this, null);
             AMCombiner.Attack.Add(M1);
@@ -49,8 +43,6 @@ namespace Assets.GameCode.Cards.Entities
 
         }
 
-        //In this class CanBeShort/Long indicate whether the unit can attack from these ranges
-
         public override CardType GetCardType()
         {
             return CardType.Character;
@@ -64,7 +56,7 @@ namespace Assets.GameCode.Cards.Entities
         public override int CanAttack(Unit Target)
         {
             int result = -1;
-            if ((getCurrentRange() == Range.Short && CanBeShort) | (getCurrentRange() == Range.Long && CanBeLong))
+            if ((GetCurrentRange() == Range.Short && CanBeShort) || (GetCurrentRange() == Range.Long && CanBeLong))
             {
                 result = TMCombiner.Run(this, Target);
                 if (result == -1 || !Owner.CanSpendCP(result))

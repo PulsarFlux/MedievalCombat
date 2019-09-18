@@ -44,6 +44,7 @@ namespace Assets.GameCode.Cards.UI
 
         PlayingCard ActiveCard;
         List<ActionInfo> CurrentPossibleActions = new List<ActionInfo>();
+        // Use a list to hold the mulligan action so CurrentPossibleActions can be directly assigned to it
         List<ActionInfo> mMulliganAction = new List<ActionInfo>();
         int CurrentActionIndex = 0;
         List<PlayingCard> Selection = new List<PlayingCard>();

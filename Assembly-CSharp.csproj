@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\Action.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\ActionInfo.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Actions\OrderActions\FormUpAction.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\OrderActions\UnleashSalvoAction.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\PlacedActions\PlacedActionHolder.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\PlacedActions\TransferSelection_Action.cs" />
@@ -61,14 +60,11 @@
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\UIAction\PlaceCard_Action.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\UnitActions\Attach_Action.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\UnitActions\Attack_Action.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Actions\UnitActions\DamageAction.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\UnitActions\Move_Action.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\UnitActions\ReloadAction.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Actions\UnitActions\ToggleDefending_Action.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\CardGameManager.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\CardGameState.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Cards\Card.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Cards\UnitCard.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Effects\AttackCostEffect.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Effects\Effect.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Effects\EffectHolder.cs" />
@@ -90,11 +86,7 @@
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Attack\BasicAttack.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Attack\CondDmg_Post.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Attack\CondDmg_Pre.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Modules\Attack\OnAttackStatus.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Module.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Modules\NewTurn\Attached_Tick.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Modules\NewTurn\AttackLastCheck.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Modules\NewTurn\StatusTextModule.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\Attached.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\Bypass.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\DefaultBlocking.cs" />
@@ -103,11 +95,9 @@
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\DefaultTargetting.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\DefendingBlock.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\OneAttackPerTurn.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\Reloading.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\TargettingData.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\TargettingModule.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Target\TarModCombiner.cs" />
-    <Compile Include="Assets\Resources\GameCode\Cards\Modules\Update\Charge.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Modules\Update\UpdateModule.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Player.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\TurnInfo.cs" />
@@ -210,6 +200,7 @@
     <Compile Include="Assets\Resources\GameCode\Cards\Loading\Datas\ModuleData.cs" />
     <Compile Include="Assets\Resources\GameCode\Cards\Loading\Datas\UnitCardData.cs" />
     <Compile Include="Assets\Resources\GameCode\Menus\PauseMenu\PauseMenuUIManager.cs" />
+    <Compile Include="Assets\Resources\GameCode\Cards\Modules\NewTurn\Attached_NewTurn.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -233,5 +224,6 @@
     <Folder Include="Assets\Resources\GameCode\Cards\Loading\Datas\" />
     <Folder Include="Assets\Resources\GameCode\Cards\Modules\Attack\" />
     <Folder Include="Assets\Resources\GameCode\Menus\PauseMenu\" />
+    <Folder Include="Assets\Resources\GameCode\Cards\" />
   </ItemGroup>
 </Project>

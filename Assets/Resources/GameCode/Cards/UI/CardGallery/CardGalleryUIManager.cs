@@ -85,8 +85,6 @@ namespace Assets.GameCode.Cards.UI
             }
             State.StateHolder.StateManager.MoveToNextScene(mLastScene);
         }
-
-
     }
 }
 

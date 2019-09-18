@@ -13,9 +13,6 @@ namespace Assets.GameCode.Cards
         bool mIsFirstDeployment;
         bool mIsDeployment;
         bool mIsMulligan;
-        /// <summary>
-        /// Gets the index of the current player
-        /// </summary>
         public int GetCPI()
         {
             return CurrentPlayerIndex;

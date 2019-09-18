@@ -14,7 +14,7 @@ namespace Assets.GameCode.Cards.Actions
 
         protected override bool CheckValidityInternal(Entities.Entity Performer, List<Entities.Entity> Selection, TurnInfo TI)
         {
-            if (((Unit)Performer).HasStatus("Needs reloading"))
+            if (((Unit)Performer).HasStatus("Needs reloading") && ((Unit)Performer).Owner.CanSpendCP(mMinCost))
             {
                 return true;
             }

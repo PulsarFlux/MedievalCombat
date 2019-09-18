@@ -12,14 +12,8 @@ namespace Assets.GameCode.Cards.Actions
         public Action mAction;
         public string ActionName
         {
-            get
-            {
-                return mAction.GetNameText(mActionName);
-            }
-            set
-            {
-                mActionName = value;
-            }
+            get { return mAction.GetNameText(mActionName); }
+            set { mActionName = value; }
         }
         public PlayerType SelectType;
         public int Max;
@@ -69,7 +63,8 @@ namespace Assets.GameCode.Cards.Actions
                 }
                 if (SelectType == PlayerType.Enemy)
                 {
-                    selections = GetPossibleSelections(gameState.Players[(performer.Owner.getIndex() + 1) % 2].mBoard, performer, (uint)Min, (uint)Max);
+                    selections = GetPossibleSelections(gameState.Players[(performer.Owner.getIndex() + 1) % 2].mBoard, 
+                        performer, (uint)Min, (uint)Max);
                 }
                 foreach (List<Entities.Entity> selection in selections)
                 {
@@ -79,7 +74,8 @@ namespace Assets.GameCode.Cards.Actions
             return possibleActions;
         }
 
-        private List<List<Entities.Entity>> GetPossibleSelections(PlayerBoard board, Entities.Entity performer, uint minSelections, uint maxSelections)
+        private static List<List<Entities.Entity>> GetPossibleSelections(
+            PlayerBoard board, Entities.Entity performer, uint minSelections, uint maxSelections)
         {
             List<List<Entities.Entity>> selections = new List<List<Entities.Entity>>();
 
@@ -98,8 +94,13 @@ namespace Assets.GameCode.Cards.Actions
             return selections;
         }
 
-        private static List<List<Entities.Entity>> GetSelectionsFromDepth(List<List<Entities.Entity>> selections, PlayerBoard board, int totalCards,
-                                                                          Entities.Entity performer, uint maxDepth, uint currentDepth, int startingCardIndex)
+        // 'Depth' refers to the number of cards in the selection, but currentDepth starts from
+        // 1 more than we already have selected eg. if our current depth is 2 and max depth is 3
+        // then we already have selected one card and wish to find all the selections of 2 from the
+        // remaining cards.
+        private static List<List<Entities.Entity>> GetSelectionsFromDepth(
+            List<List<Entities.Entity>> selections, PlayerBoard board, int totalCards,
+            Entities.Entity performer, uint maxDepth, uint currentDepth, int startingCardIndex)
         {
             // Cache the selections containing cards added at this depth.
             List<List<Entities.Entity>> newSelections = new List<List<Entities.Entity>>();
@@ -135,7 +136,8 @@ namespace Assets.GameCode.Cards.Actions
                     }
                     else
                     {
-                        List<List<Entities.Entity>> returnSelections = GetSelectionsFromDepth(selections, board, totalCards, performer, maxDepth, currentDepth + 1, i + 1);
+                        List<List<Entities.Entity>> returnSelections = GetSelectionsFromDepth(
+                            selections, board, totalCards, performer, maxDepth, currentDepth + 1, i + 1);
                         foreach (List<Entities.Entity> list in returnSelections)
                         {
                             list.Add(currentCard);

@@ -23,6 +23,8 @@ namespace Assets.GameCode.Cards.Actions
 
         void SetCustomData(List<string> data) 
         {
+            // Elements 0, 1, 2, 3, 4
+            // 0: Name, 1: number, 2: is it unique, 3: zone, 4: range
             mSpawnEntityName = data[0];
             bool result = int.TryParse(data[1], out mSpawnEntityNumber);
             result = bool.TryParse(data[2], out mUniqueEntity);

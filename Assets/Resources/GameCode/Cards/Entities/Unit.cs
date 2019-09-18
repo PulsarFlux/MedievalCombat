@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Assets.GameCode.Cards.Actions;
 using Assets.GameCode.Cards.Modules;
 using Assets.GameCode.Cards.Modules.Attack;
@@ -113,7 +111,7 @@ namespace Assets.GameCode.Cards.Entities
             return BaseVP + VPModifier;
         }
 
-        public Range getCurrentRange()
+        public Range GetCurrentRange()
         {
             if (Zone != null)
             {
@@ -171,7 +169,7 @@ namespace Assets.GameCode.Cards.Entities
             }
         }
 
-        public int getAttackCost()
+        public int GetAttackCost()
         {
 			if (AttackCost + AttackCostModifier < 0) 
 			{
@@ -368,38 +366,6 @@ namespace Assets.GameCode.Cards.Entities
 
             AllModules.Remove(TheModule);
         }
-        public void LinkModules(ref Module ModuleInCallingModule, int LinkedModuleIndex, string MT)
-        {
-            //TODO Keep up to date - ModuleTypes
-            ModuleType _MT = Loading.CardLoading.GetModuleTypeFromString(MT);
-            switch (_MT)
-            {
-                case (ModuleType.PreAttack):
-                    ModuleInCallingModule = AMCombiner.PreAttack[LinkedModuleIndex];
-                    break;
-                case (ModuleType.Attack):
-                    ModuleInCallingModule = (Module)AMCombiner.Attack[LinkedModuleIndex];
-                    break;
-                case (ModuleType.PostAttack):
-                    ModuleInCallingModule = AMCombiner.PostAttack[LinkedModuleIndex];
-                    break;
-                case (ModuleType.Targetting):
-                    ModuleInCallingModule = BeingTargetedModules[LinkedModuleIndex];
-                    break;
-                case (ModuleType.Blocking):
-                    ModuleInCallingModule = BlockingModules[LinkedModuleIndex];
-                    break;
-                case (ModuleType.Removed):
-                    ModuleInCallingModule = RemovedModules[LinkedModuleIndex];
-                    break;
-                case (ModuleType.NewTurn):
-                    ModuleInCallingModule = (Module)NewTurnModules[LinkedModuleIndex];
-                    break;
-                case (ModuleType.Update):
-                    ModuleInCallingModule = (Module)UpdateModules[LinkedModuleIndex];
-                    break;
-            }
-        }
         public List<Module> GetModules(ModuleType Type, Type ModuleClass)
         {
             List<Module> Result = new List<Module>();
@@ -517,35 +483,36 @@ namespace Assets.GameCode.Cards.Entities
             this.Status.Remove(Status);
         }
         /// <summary>
-        /// Remember during NewTurn this function looks at the statuses from last turn, but you are still acting on the current (cleared) status
+        /// Remember during our NewTurn this function looks at the statuses from last turn, 
+        /// but you are still acting on the current (cleared) status
         /// </summary>
-        public bool HasStatus(string Status)
+        public bool HasStatus(string status)
         {
             if (TempStatus != null)
             {
-                return this.TempStatus.Contains(Status);
+                return TempStatus.Contains(status);
             }
             else
             {
-                return this.Status.Contains(Status);
+                return Status.Contains(status);
             }
             
         }
         public string StatusString()
         {
-            string Sstring = "";
+            string statusString = "";
             foreach (string S in Status)
             {
-                if (Sstring == "")
+                if (statusString == "")
                 {
-                    Sstring += S;
+                    statusString += S;
                 }
                 else
                 {
-                    Sstring += ", " + S;
+                    statusString += ", " + S;
                 }
             }
-            return Sstring;
+            return statusString;
         }       
 
         public override void NewTurn()

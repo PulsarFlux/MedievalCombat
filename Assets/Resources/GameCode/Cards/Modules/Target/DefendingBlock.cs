@@ -32,7 +32,7 @@ namespace Assets.GameCode.Cards.Modules.Target
 
         public override void Run(Unit Attacker, Unit Target, TargettingData TD, ref int Cost)
         {
-            if (Attacker.getCurrentRange() == Range.Short & !Target.HasStatus("Defending") & Parent.HasStatus("Defending"))
+            if (Attacker.GetCurrentRange() == Range.Short & !Target.HasStatus("Defending") & Parent.HasStatus("Defending"))
             {
                 TD.CanBlock.ShortOnLong = true;
                 TD.CanBlock.ShortOnShort = true;

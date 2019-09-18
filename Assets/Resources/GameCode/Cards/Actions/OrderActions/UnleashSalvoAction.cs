@@ -18,8 +18,11 @@ namespace Assets.GameCode.Cards.Actions
         }
         public override void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS)
         {
+            Entities.Effect_Entity performerEffectEntity = (Entities.Effect_Entity)Performer;
+            performerEffectEntity.Owner.SpendCP(GetMinCost());
+
             int numSalvos = 0;
-            foreach (CardZone CZ in ((Entities.Effect_Entity)Performer).Owner.mBoard.RangeZones)
+            foreach (CardZone CZ in performerEffectEntity.Owner.mBoard.RangeZones)
             {
                 foreach (Entities.Entity E in CZ.List.Cards)
                 {
@@ -30,9 +33,10 @@ namespace Assets.GameCode.Cards.Actions
                     }
                 }
             }
-            ((Entities.Effect_Entity)Performer).Owner.SpendCP(GetMinCost());
-            ((Effects.Orders.OrderWithUses)(((Entities.Effect_Entity)Performer).GetEffect())).SetUses(mActionIndex, numSalvos);
-            ((Effects.Orders.Order)((Entities.Effect_Entity)Performer).GetEffect()).OrderUsed();
+
+            Effects.Orders.OrderWithUses order = (Effects.Orders.OrderWithUses)(performerEffectEntity.GetEffect());
+            order.SetUses(mActionIndex, numSalvos);
+            order.OrderUsed();
         }
 
         protected override void SetupInternal(Loading.ActionData actionData)
@@ -70,11 +74,11 @@ namespace Assets.GameCode.Cards.Actions
 
             Modules.Target.TargettingData TD = new Modules.Target.TargettingData();
             TD.AttackType.Long = true;
-            if (TheTarget.getCurrentRange() == Range.Long)
+            if (TheTarget.GetCurrentRange() == Range.Long)
             {
                 TD.TargetType.Long = true;
             }
-            else if (TheTarget.getCurrentRange() == Range.Short)
+            else if (TheTarget.GetCurrentRange() == Range.Short)
             {
                 TD.TargetType.Short = true;
             }

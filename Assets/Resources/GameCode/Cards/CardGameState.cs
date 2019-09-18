@@ -26,28 +26,12 @@ namespace Assets.GameCode.Cards
             mDefaultDeckSpec = State.StateHolder.StateManager.DefaultDeckSpec;
             mTurnInfo = new TurnInfo();
         }
-        /*public CardGameState(CardGameState toCopy)
-        {
-            SharedEffects = new Effects.EffectHolder(toCopy.SharedEffects, this);
-            for (int i = 0; i < Players.Length; i++)
-            {
-         //       Players[i] = new Player(toCopy.Players[i]);
-            }
-         //   mRandom = new System.Random(toCopy.mRandom);
-            mCardPool = State.StateHolder.StateManager.CardPool;
-            mDefaultDeckSpec = State.StateHolder.StateManager.DefaultDeckSpec;
-          //  mTurnInfo = new TurnInfo(toCopy.mTurnInfo);
-        }*/
 
         public void Init()
         {
             SharedEffects = new Effects.EffectHolder(this, true, 0);
             Players[0] = new Player(0, this);
             Players[1] = new AIPlayer(1, this);
-            /*for (int i = 1; i < Players.Length; i++)
-            {
-                Players[i] = new AIPlayer(i, this);
-            } */
         }
 
         public void GeneratePlayerDecks(DeckSpec playerOneDeck, DeckSpec playerTwoSpec)
@@ -87,6 +71,8 @@ namespace Assets.GameCode.Cards
         }
         public void Update(TurnInfo TI)
         {
+            // We need to update the persistance of effects
+            // before updating anything they might affect.
             SharedEffects.UpdatePersistance();
             foreach (Player P in Players)
             {

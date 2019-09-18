@@ -1,4 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Unit data: name, type, attack, health, victory, canbeshort, canbelong, attributes after these are its classes. -->
+<!-- Effect data: cardname, type, effectname, shared, turns, attributes after these are custom data. -->
+<!-- Module data: name, type, potentially lifetime, attributes after these are custom data. -->
+<!-- Action data: name, potentially displayname, placed, selecttype, min, max, hascertaincost, mincost, attributes after these are custom data -->
+
 <cards>
   <card type="basicunit" name="Peasant Militia" attack="2" health="6" victory="1" canbeshort="true" canbelong="false" class1="Melee" class2="Rabble"></card>
 

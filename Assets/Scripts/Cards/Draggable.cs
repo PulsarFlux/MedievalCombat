@@ -2,19 +2,20 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using Assets.GameCode.Cards.UI;
 
 namespace Assets.Scripts
 {
     public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        private GameCode.Cards.UI.ICardPlacedHandler TheUIManager;
+        private ICardPlacedHandler TheUIManager;
         public Transform ReturnObject;
         Transform OriginalParent;
         Vector2 dragoffset;
 
         void Start()
         {
-            TheUIManager = (GameCode.Cards.UI.ICardPlacedHandler)this.gameObject.GetComponentInChildren<CardHolder>().OwningCard.GetUIM();
+            TheUIManager = (ICardPlacedHandler)this.gameObject.GetComponentInChildren<CardHolder>().OwningCard.GetUIM();
         }
         void Awake()
         {
@@ -49,7 +50,8 @@ namespace Assets.Scripts
             this.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
             if (OriginalParent != ReturnObject)
             {
-                TheUIManager.CardPlaced(this.gameObject.GetComponent<CardHolder>().OwningCard, ReturnObject.gameObject.GetComponent<BoardArea>().getCardZoneType());
+                TheUIManager.CardPlaced(this.gameObject.GetComponent<CardHolder>().OwningCard, 
+                    ReturnObject.gameObject.GetComponent<BoardArea>().getCardZoneType());
             }
             TheUIManager.UpdateUI();
         }

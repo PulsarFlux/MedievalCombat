@@ -9,7 +9,7 @@ namespace Assets.GameCode.Cards.Actions
     public class PlacedActionHolder
     {
         private bool mHasAction = false;
-        private ActionInfo TheActionInfo;
+        private ActionInfo mActionInfo;
         public bool HasAction()
         {
             return mHasAction;
@@ -17,11 +17,11 @@ namespace Assets.GameCode.Cards.Actions
         public void AddAction(ActionInfo AI)
         {
             mHasAction = true;
-            TheActionInfo = AI;
+            mActionInfo = AI;
         }
         public ActionInfo GetAction()
         {
-            return TheActionInfo;
+            return mActionInfo;
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Assets.GameCode.Cards.Entities
 {
     [Serializable()]
+    // This class handles the concepts of effects that are tied to the card or interaction with the card,
+    // such as placing them or activating actions. However the actual logic of what the effect does is
+    // handled by the specific class 'Effect' (which is wrapped and accessed from here via an 'EffectNode').
     public class Effect_Entity : Entity
     {
         private bool mIsShared;

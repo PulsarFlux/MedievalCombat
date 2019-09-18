@@ -6,6 +6,8 @@ using Assets.GameCode.Cards.Loading;
 namespace Assets.GameCode.Cards.Effects.Orders
 {
     [Serializable()]
+    // Orders are effects that have an associated activateable action,
+    // by default the action can only be used once per turn.
     public class Order : Effect
     {
         public override EffectType GetEffectType()

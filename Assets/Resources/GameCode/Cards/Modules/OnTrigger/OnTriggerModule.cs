@@ -49,6 +49,9 @@ namespace Assets.GameCode.Cards.Modules
     }
 
     [Serializable()]
+    // A more generic module class that can provide a range of customisable
+    // effects when it is 'triggered'. Uses wrapper classes above to be able 
+    // to pretend to be specific types of triggered modules.
     public abstract class OnTriggerModule : Module
     {
         public OnTriggerModule()

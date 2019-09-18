@@ -11,6 +11,8 @@ namespace Assets.GameCode.Cards.Modules
         public ModuleType Type { get; protected set; }
         private int mMaxLifetime = -1;
         private int mCurrentLifetime = 0;
+        // Can be used to send a 'signal' to a module,
+        // what it means is completely dependant on the module type.
         public abstract void Message();
         public void Setup(Entities.Entity parent, Loading.ModuleData moduleData)
         {

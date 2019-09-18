@@ -6,11 +6,14 @@ using System.Text;
 namespace Assets.GameCode.Cards.Effects
 {
     [Serializable()]
+    // Handles containing multiple effects via their effectnodes.
     public class EffectHolder
     {
         public bool Shared;
-        private CardGameState TheCardGameState;
         public int OwnerIndex;
+
+        private CardGameState TheCardGameState;
+
         public List<EffectNode> Nodes = new List<EffectNode>();
         public CardZoneType mCardZoneType { get; private set; }
         public EffectHolder(CardGameState GS, bool Shared, int OwnerIndex)
@@ -26,20 +29,17 @@ namespace Assets.GameCode.Cards.Effects
            Nodes.Add(EN);
            EN.SetHolder(this);
         }
-        public void CreateNode(Effect E, Loading.EffectData ED)
-        {
-            
-        }
         public void EndEffect(EffectNode EN)
         {
             Nodes.Remove(EN);
-            if (EN.GetEntity() == null)
+            if (EN.GetEntity() != null)
             {
                 EN.GetEntity().RemovedFromBoard();
             }
         }
         public void NewTurn()
         {
+            // Copy list since elements might remove themselves.
             List<EffectNode> TempNodes = new List<EffectNode>(Nodes);
             foreach (EffectNode EN in TempNodes)
             {
@@ -55,6 +55,7 @@ namespace Assets.GameCode.Cards.Effects
         }
         public void UpdatePersistance()
         {
+            // Copy list since elements might remove themselves.
             List<EffectNode> TempNodes = new List<EffectNode>(Nodes);
             foreach (EffectNode EN in TempNodes)
             {

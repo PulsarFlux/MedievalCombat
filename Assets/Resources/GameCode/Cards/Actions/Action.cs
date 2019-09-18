@@ -36,9 +36,12 @@ namespace Assets.GameCode.Cards.Actions
         {
             return mConditions.Check(Performer) && CheckValidityInternal(Performer, Selection, TI);
         }
-        protected abstract bool CheckValidityInternal(Entities.Entity Performer, 
+
+        protected abstract bool CheckValidityInternal(Entities.Entity Performer,
             List<Entities.Entity> Selection, TurnInfo TI);
+        
         public abstract void Execute(Entities.Entity Performer, List<Entities.Entity> Selection, CardGameState GS);
+
         public void SetCostInfo(bool hasCertainCost, int minCost)
         {
             mHasCertainCost = hasCertainCost;
@@ -68,7 +71,7 @@ namespace Assets.GameCode.Cards.Actions
 
         protected bool mHasCertainCost;
         protected int mMinCost;
-        // List of modules intended to be added to the selection of the action.
+        // List of modules intended to be added to the target selection of the action.
         protected List<Loading.ModuleData> mModules;
         protected Components.Conditional.ConditionChecker mConditions;
     }

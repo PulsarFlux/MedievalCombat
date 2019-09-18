@@ -23,6 +23,9 @@ namespace Assets.GameCode.Cards.UI
 
         public abstract void UpdateUI();
 
+        // The following monstrous generics allow CardsUIManager subclasses to control
+        // the prefabs and classes used for different types of card without having to 
+        // have the these functions copied to each class just with different classes specified.
         protected void UpdateCard<CardObject, 
         UnitDisplayObject, UnitExpandingObject, 
         DisplayObject, ExpandingObject,

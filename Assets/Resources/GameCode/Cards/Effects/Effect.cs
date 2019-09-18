@@ -33,7 +33,7 @@ namespace Assets.GameCode.Cards.Effects
     {
         protected EffectNode Node;
         protected int NewTurnLength = -1;
-        protected int NumNewTurns;
+        protected int NumNewTurns = 0;
         protected List<PersistanceModule> mPersistanceModules;
 
         protected Effect()

@@ -9,6 +9,10 @@ namespace Assets.GameCode.Cards.Modules.Target
     public class TarModCombiner
     {
         private List<TargettingModule> TargetModules = new List<TargettingModule>();
+        /// <summary>
+        /// Returns the CP cost for Runner to attack Target if possible
+        /// or -1 if this attack is not possible.
+        /// </summary>
         public int Run(Entities.Unit Runner, Entities.Unit Target)
         {
             int Cost = 0;

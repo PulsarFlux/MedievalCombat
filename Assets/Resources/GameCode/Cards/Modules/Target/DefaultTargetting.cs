@@ -22,26 +22,26 @@ namespace Assets.GameCode.Cards.Modules.Target
         {
         }
 
-        public override void Run(Unit Spare, Unit Target, TargettingData TD, ref int Cost)
+        public override void Run(Unit Unused, Unit Target, TargettingData TD, ref int Cost)
         {
             if (Parent.HasStatus("Was Deployed") || Parent.HasStatus("Deployed"))
             {
                 TD.CanTarget.Short = false;
                 TD.CanTarget.Long = false;
             }
-            if (Parent.getCurrentRange() == Range.Long)
+            if (Parent.GetCurrentRange() == Range.Long)
             {
                 TD.AttackType.Long = true;
             }
-            else if (Parent.getCurrentRange() == Range.Short)
+            else if (Parent.GetCurrentRange() == Range.Short)
             {
                 TD.AttackType.Short = true;
             }
-            if (Target.getCurrentRange() == Range.Long)
+            if (Target.GetCurrentRange() == Range.Long)
             {
                 TD.TargetType.Long = true;
             }
-            else if (Target.getCurrentRange() == Range.Short)
+            else if (Target.GetCurrentRange() == Range.Short)
             {
                 TD.TargetType.Short = true;
             }

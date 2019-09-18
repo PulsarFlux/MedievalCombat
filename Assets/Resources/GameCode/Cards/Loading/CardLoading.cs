@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using UnityEngine;
 using Assets.GameCode.Cards.Modules;
@@ -31,13 +29,8 @@ namespace Assets.GameCode.Cards.Loading
                     mModuleDict.Add("BasicAttack", typeof(Modules.Attack.BasicAttack));
                     mModuleDict.Add("CondDmgPre", typeof(Modules.Attack.CondDmg_Pre));
                     mModuleDict.Add("CondDmgPost", typeof(Modules.Attack.CondDmg_Post));
-                    mModuleDict.Add("AttackLastCheck", typeof(Modules.NewTurn.AttackLastCheck));
-                    mModuleDict.Add("Charge", typeof(Modules.Update.Charge));
                     mModuleDict.Add("DefendingBlock", typeof(Modules.Target.DefendingBlock));
                     mModuleDict.Add("Bypass", typeof(Modules.Target.Bypass));
-                    mModuleDict.Add("StatusText", typeof(Modules.NewTurn.StatusTextModule));
-                    mModuleDict.Add("Reloading", typeof(Modules.Target.Reloading));
-                    mModuleDict.Add("OnAttackStatus", typeof(Modules.Attack.OnAttackStatus));
                     mModuleDict.Add("NeedsUnit", typeof(Modules.Persistance.NeedsUnitModule));
                     mModuleDict.Add("OnUpdate", typeof(Modules.Update.OnUpdateModule));
                     mModuleDict.Add("OnNewTurn", typeof(Modules.NewTurn.OnNewTurnModule));
@@ -59,7 +52,6 @@ namespace Assets.GameCode.Cards.Loading
                     mActionDict.Add("Move", typeof(Move_Action));
                     mActionDict.Add("Choose Selection", typeof(TransferSelection_Action));
                     mActionDict.Add("Toggle Defence", typeof(ToggleDefending_Action));
-                    mActionDict.Add("Form Up", typeof(FormUpAction));
                     mActionDict.Add("Unleash Salvo", typeof(UnleashSalvoAction));
                     mActionDict.Add("Ready Salvo", typeof(ReadySalvoAction));
                     mActionDict.Add("ReloadAction", typeof(ReloadAction));
@@ -122,6 +114,9 @@ namespace Assets.GameCode.Cards.Loading
                 case CardType.Effect:
                     newEntity = new Entities.Effect_Entity((EffectCardData)cardData);
                     break;
+                default:
+                    UnityEngine.Debug.LogError("Tried to produce card of unknown type: " + cardData.mType.ToString());
+                    break;
             }
 
             return newEntity;
@@ -132,115 +127,44 @@ namespace Assets.GameCode.Cards.Loading
             TextAsset CardTypesXML = Resources.Load("CardPool") as TextAsset;
             System.IO.StringReader CardTypesReader = new System.IO.StringReader(CardTypesXML.text);
             XmlReader xmlReader = XmlReader.Create(CardTypesReader);
+
             CardData CurrentCardData = null;
             bool isInAction = false;
             BehaviourData PreviousBehaviourData = null;
             BehaviourData CurrentBehaviourData = null;
 
-            string cachedElementType = "";
             while (xmlReader.Read())
             {
                 if (xmlReader.NodeType == XmlNodeType.Element)
                 {
-                    cachedElementType = xmlReader.Name;
                     if (xmlReader.Name == "card")
                     {
                         switch (xmlReader["type"])
                         {
-                            case "basicunit":
-                                CurrentCardData = new UnitCardData(xmlReader["name"], xmlReader["type"], xmlReader["attack"], xmlReader["health"], xmlReader["victory"], xmlReader["canbeshort"], xmlReader["canbelong"]);
-                                CP.Data.Add(CurrentCardData);
-                                for (int i = 7; i < xmlReader.AttributeCount; i++)
-                                {
-                                    ((UnitCardData)CurrentCardData).AddClass(xmlReader[i]);
-                                }
-                                break;
                             case "character":
-                                // CanBeLong/Short here say whether the character can attak from that range
-                                CurrentCardData = new UnitCardData(xmlReader["name"], xmlReader["type"], xmlReader["attack"], xmlReader["health"], xmlReader["victory"], xmlReader["canbeshort"], xmlReader["canbelong"]);
+                            case "basicunit":
+                                ParseUnitData(ref CurrentCardData, xmlReader);
                                 CP.Data.Add(CurrentCardData);
-                                for (int i = 7; i < xmlReader.AttributeCount; i++)
-                                {
-                                    ((UnitCardData)CurrentCardData).AddClass(xmlReader[i]);
-                                }
                                 break;
                             case "effect":
-                                EffectData ED = new EffectData(xmlReader["effectname"], xmlReader["cardname"], 
-                                                    xmlReader["shared"], xmlReader["turns"]);
-                                for (int i = 5; i < xmlReader.AttributeCount; i++)
-                                {
-                                    ED.AddData(xmlReader[i]);
-                                }
-                                CurrentCardData = new EffectCardData(xmlReader["cardname"], xmlReader["type"], ED);
+                                ParseEffectData(ref CurrentCardData, xmlReader);
                                 CP.Data.Add(CurrentCardData);
                                 break;
                         }
                     }
                     else if (xmlReader.Name == "module")
                     {
-                        // To link modules here include an index and a moduletype in the data, 
-                        // the index should be a zero based count of the the linked module's position in the data file relative to modules OF THE SAME TYPE
-                        // the module with this data must appear after the module it will be linked to
-                        ModuleData moduleData = new ModuleData(xmlReader["name"], xmlReader["type"]);
-                        int startOfData = 2;
-                        if (xmlReader["lifetime"] != null)
-                        {
-                            startOfData = 3;
-                            bool result = int.TryParse(xmlReader["lifetime"], out moduleData.mLifetime);
-                            UnityEngine.Debug.Assert(result);
-                        }
-                        for (int i = startOfData; i < xmlReader.AttributeCount; i++)
-                        {
-                            moduleData.AddData(xmlReader[i]);
-                        }
-
-                        PreviousBehaviourData = CurrentBehaviourData;
-                        CurrentBehaviourData = moduleData;
-
-                        if (isInAction)
-                        {
-                            ((ActionData)PreviousBehaviourData).AddModule(moduleData);
-                        }
-                        else
-                        {
-                            CurrentCardData.AddModule(moduleData);
-                        }
+                        ParseModuleData(CurrentCardData, xmlReader, isInAction, 
+                            ref PreviousBehaviourData, ref CurrentBehaviourData);
                     }
                     else if (xmlReader.Name == "action")
                     {
                         isInAction = true;
-
-                        bool hasCertainCost;
-                        int minCost;
-                        bool isPlacedAction;
-
-                        bool.TryParse(xmlReader["hascertaincost"], out hasCertainCost);
-                        int.TryParse(xmlReader["mincost"], out minCost);
-                        bool.TryParse(xmlReader["placed"], out isPlacedAction);
-
-                        ActionData actionData = new ActionData(hasCertainCost, minCost, xmlReader["name"],
-                                                    isPlacedAction, xmlReader["selecttype"], xmlReader["min"], xmlReader["max"]);
-
-                        int customDataStart = 7;
-                        if (xmlReader["displayname"] != null)
-                        {
-                            customDataStart = 8;
-                            actionData.mDisplayName = xmlReader["displayname"];
-                        }
-
-                        if (xmlReader.AttributeCount > customDataStart)
-                        {
-                            List<string> customData = new List<string>();
-                            for (int i = customDataStart; i < xmlReader.AttributeCount; i++)
-                            {
-                                customData.Add(xmlReader[i]);
-                            }
-                            actionData.mCustomData = customData;
-                        }
-                            
-                        CurrentBehaviourData = actionData;
-                        CurrentCardData.AddAction(actionData);
+                        ParseActionData(CurrentCardData, xmlReader, 
+                            ref PreviousBehaviourData, ref CurrentBehaviourData);
                     }
+                    // Info tags and conditionals use the first attribute to determine their type
+                    // and then take only the second as a piece of custom data.
                     else if (xmlReader.Name == "infotag")
                     {
                         CurrentBehaviourData.AddInfoTag(new InfoTagData(xmlReader[0], xmlReader[1]));
@@ -252,16 +176,114 @@ namespace Assets.GameCode.Cards.Loading
                 }
                 else if (xmlReader.NodeType == XmlNodeType.EndElement)
                 {
+                    // No longer inside an action element
                     if (xmlReader.Name == "action")
                     {
                         isInAction = false;
                     }
+                    // May have just ended a nested module so shuffle
+                    // up the behaviour data.
                     else if (xmlReader.Name == "module")
                     {
                         CurrentBehaviourData = PreviousBehaviourData;
                     }
                 }
             }
+        }
+
+        public static void ParseUnitData(ref CardData CurrentCardData, XmlReader xmlReader)
+        {
+            // Unit data: name, type, attack, health, victory, canbeshort,
+            // canbelong, attributes after these are its classes.
+            CurrentCardData = new UnitCardData(xmlReader["name"], xmlReader["type"], xmlReader["attack"], 
+                xmlReader["health"], xmlReader["victory"], xmlReader["canbeshort"], xmlReader["canbelong"]);
+            for (int i = 7; i < xmlReader.AttributeCount; i++)
+            {
+                ((UnitCardData)CurrentCardData).AddClass(xmlReader[i]);
+            }
+        }
+
+        public static void ParseEffectData(ref CardData CurrentCardData, XmlReader xmlReader)
+        {
+            // Effect data: cardname, type, effectname, shared, turns, attributes after these are custom data
+            EffectData ED = new EffectData(xmlReader["effectname"], xmlReader["cardname"], 
+                xmlReader["shared"], xmlReader["turns"]);
+            for (int i = 5; i < xmlReader.AttributeCount; i++)
+            {
+                ED.AddData(xmlReader[i]);
+            }
+            CurrentCardData = new EffectCardData(xmlReader["cardname"], xmlReader["type"], ED);
+        }
+
+        public static void ParseModuleData(CardData CurrentCardData, XmlReader xmlReader,
+            bool isInAction, ref BehaviourData PreviousBehaviourData, ref BehaviourData CurrentBehaviourData)
+        {
+            // Module data: name, type, potentially lifetime, attributes after these are custom data.
+            ModuleData moduleData = new ModuleData(xmlReader["name"], xmlReader["type"]);
+            int startOfData = 2;
+            if (xmlReader["lifetime"] != null)
+            {
+                startOfData = 3;
+                bool result = int.TryParse(xmlReader["lifetime"], out moduleData.mLifetime);
+                UnityEngine.Debug.Assert(result);
+            }
+            for (int i = startOfData; i < xmlReader.AttributeCount; i++)
+            {
+                moduleData.AddData(xmlReader[i]);
+            }
+
+            // Keep track of the previous behaviour since we can have nested behaviours (a module in an action)
+            // and may want to be able to add other modules etc once we have finished with this module
+            PreviousBehaviourData = CurrentBehaviourData;
+            CurrentBehaviourData = moduleData;
+
+            // Modules inside action elements in the xml are added to them.
+            if (isInAction)
+            {
+                ((ActionData)PreviousBehaviourData).AddModule(moduleData);
+            }
+            else
+            {
+                CurrentCardData.AddModule(moduleData);
+            }
+        }
+
+        public static void ParseActionData(CardData CurrentCardData, XmlReader xmlReader,
+            ref BehaviourData PreviousBehaviourData, ref BehaviourData CurrentBehaviourData)
+        {
+            bool hasCertainCost;
+            int minCost;
+            bool isPlacedAction;
+
+            // Action data: name, potentially displayname, placed, selecttype, min, max, hascertaincost, mincost
+            // attributes after these are custom data
+
+            bool.TryParse(xmlReader["hascertaincost"], out hasCertainCost);
+            int.TryParse(xmlReader["mincost"], out minCost);
+            bool.TryParse(xmlReader["placed"], out isPlacedAction);
+
+            ActionData actionData = new ActionData(hasCertainCost, minCost, xmlReader["name"],
+                isPlacedAction, xmlReader["selecttype"], xmlReader["min"], xmlReader["max"]);
+
+            int customDataStart = 7;
+            if (xmlReader["displayname"] != null)
+            {
+                customDataStart = 8;
+                actionData.mDisplayName = xmlReader["displayname"];
+            }
+
+            if (xmlReader.AttributeCount > customDataStart)
+            {
+                List<string> customData = new List<string>();
+                for (int i = customDataStart; i < xmlReader.AttributeCount; i++)
+                {
+                    customData.Add(xmlReader[i]);
+                }
+                actionData.mCustomData = customData;
+            }
+
+            CurrentBehaviourData = actionData;
+            CurrentCardData.AddAction(actionData);
         }
 
         public static void LoadDeckSpec(DeckSpec DS)

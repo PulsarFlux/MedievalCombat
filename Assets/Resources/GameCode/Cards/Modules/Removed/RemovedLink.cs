@@ -8,10 +8,8 @@ namespace Assets.GameCode.Cards.Modules.Removed
     [Serializable()]
     class RemovedLink : RemovedModule
     {
-        Module LinkedModule1;
-        Module LinkedModule2;
-        Module LinkedModule3;
-        Effects.Effect LinkedEffect;
+        List<Module> mLinkedModules = new List<Module>();
+        Effects.Effect mLinkedEffect;
 
         public RemovedLink() : base() {}
         protected override void SetupInternal(Entities.Entity Parent, Loading.ModuleData MD)
@@ -21,25 +19,25 @@ namespace Assets.GameCode.Cards.Modules.Removed
         public RemovedLink(Entities.Entity Parent, Effects.Effect LinkedEffect)
         {
             this.Parent = (Entities.Unit)Parent;
-            this.LinkedEffect = LinkedEffect;
+            mLinkedEffect = LinkedEffect;
         }
         public RemovedLink(Entities.Entity Parent, Module LinkedModule1)
         {
             this.Parent = (Entities.Unit)Parent;
-            this.LinkedModule1 = LinkedModule1;
+            mLinkedModules.Add(LinkedModule1);
         }
         public RemovedLink(Entities.Entity Parent, Module LinkedModule1, Module LinkedModule2)
         {
             this.Parent = (Entities.Unit)Parent;
-            this.LinkedModule1 = LinkedModule1;
-            this.LinkedModule2 = LinkedModule2;
+            mLinkedModules.Add(LinkedModule1);
+            mLinkedModules.Add(LinkedModule2);
         }
         public RemovedLink(Entities.Entity Parent, Module LinkedModule1, Module LinkedModule2, Module LinkedModule3)
         {
             this.Parent = (Entities.Unit)Parent;
-            this.LinkedModule1 = LinkedModule1;
-            this.LinkedModule2 = LinkedModule2;
-            this.LinkedModule3 = LinkedModule3;
+            mLinkedModules.Add(LinkedModule1);
+            mLinkedModules.Add(LinkedModule2);                    
+            mLinkedModules.Add(LinkedModule3);
         }
 
 
@@ -52,21 +50,13 @@ namespace Assets.GameCode.Cards.Modules.Removed
 
         public override void Run()
         {
-            if (LinkedEffect != null)
+            if (mLinkedEffect != null)
             {
-                LinkedEffect.Message(Parent);
+                mLinkedEffect.Message(Parent);
             }
-            if (LinkedModule1 != null)
+            foreach (Module M in mLinkedModules)
             {
-                LinkedModule1.Message();
-            }
-            if (LinkedModule2 != null)
-            {
-                LinkedModule2.Message();
-            }
-            if (LinkedModule3 != null)
-            {
-                LinkedModule3.Message();
+                M.Message();
             }
         }
     }

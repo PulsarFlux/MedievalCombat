@@ -30,6 +30,8 @@ namespace Assets.GameCode.Cards.Loading
     }
 
     [Serializable()]
+    // Used for both Action and Module datas
+    // as they share use of infotags and conditionals
     public class BehaviourData
     {
         public BehaviourData()

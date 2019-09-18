@@ -6,6 +6,7 @@ using System.Text;
 namespace Assets.GameCode.Cards.Effects
 {
     [Serializable()]
+    // Contains a single effect for which it forms an interface and handles lifetime.
     public class EffectNode
     {
         EffectHolder mHolder;
